@@ -1,7 +1,7 @@
 // routes/menus.js
 const express = require('express');
 const router = express.Router();
-const Menu = require('../models/menu'); // تأكّد من المسار الصحيح للسكيمة
+const Menu = require('../models/menu');
 
 
 router.get('/menus', async (req, res) => {
