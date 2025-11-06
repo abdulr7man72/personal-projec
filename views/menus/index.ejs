@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Menus</title>
+  <style>
+    body{font-family:system-ui,Arial,sans-serif;margin:16px}
+    table{width:100%;border-collapse:collapse}
+    th,td{border:1px solid #e5e7eb;padding:8px;text-align:left}
+    th{background:#f8fafc}
+    a.btn{padding:8px 10px;border:1px solid #e5e7eb;border-radius:8px;text-decoration:none}
+  </style>
+</head>
+<body>
+  <h2>Menus</h2>
+  <p><a class="btn" href="/menus/new">+ New Menu Item</a></p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Catagory</th>
+        <th>inStore</th>
+        <th>goFood</th>
+        <th>grabFood</th>
+        <th>shopeeFood</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% (menus||[]).forEach(m => { %>
+        <tr>
+          <td><%= m.name %></td>
+          <td><%= m.catagory || '-' %></td>
+          <td><%= (m.prices?.inStore||0).toLocaleString('id-ID') %></td>
+          <td><%= (m.prices?.goFood||0).toLocaleString('id-ID') %></td>
+          <td><%= (m.prices?.grabFood||0).toLocaleString('id-ID') %></td>
+          <td><%= (m.prices?.shopeeFood||0).toLocaleString('id-ID') %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</body>
+</html>

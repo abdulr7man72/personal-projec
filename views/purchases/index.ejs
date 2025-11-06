@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pembelian</title>
+  <style>
+    *{box-sizing:border-box} body{font-family:system-ui,Arial,sans-serif;background:#f8fafc;margin:0}
+    .wrap{max-width:1100px;margin:24px auto;padding:16px}
+    .card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;box-shadow:0 1px 2px rgba(0,0,0,.04);padding:16px;margin-bottom:18px}
+    h2{margin:0 0 12px}
+    label{display:block;font-size:12px;color:#475569;margin-bottom:4px}
+    input,select,button{font-family:inherit}
+    input,select{width:100%;padding:10px;border:1px solid #e5e7eb;border-radius:10px;background:#fff}
+    .grid{display:grid;gap:12px}
+    .g2{grid-template-columns: repeat(2,minmax(0,1fr))}
+    .g3{grid-template-columns: repeat(3,minmax(0,1fr))}
+    .row{display:flex;gap:10px;align-items:center}
+    .btn{padding:10px 12px;border-radius:10px;border:1px solid #e5e7eb;background:#0ea5e9;color:#fff;cursor:pointer}
+    .btn.ghost{background:#fff;color:#0f172a}
+    .muted{color:#64748b;font-size:12px}
+    .stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+    .stat{background:#0b1220;color:#e5e7eb;border-radius:12px;padding:12px}
+    .stat b{display:block;font-size:12px;color:#9ca3af}
+    .stat .v{font-size:18px;font-weight:700}
+    .list .row-head{display:flex;justify-content:space-between;align-items:center;cursor:pointer;padding:10px;border:1px solid #e5e7eb;border-radius:10px;background:#fff}
+    .list .row-head:hover{background:#f8fafc}
+    .list .row-body{display:none;padding:10px 14px;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 10px 10px;background:#fcfcfd}
+    .tag{font-size:12px;background:#eef2ff;color:#3730a3;border-radius:999px;padding:2px 8px;margin-left:6px}
+    .money{font-weight:700}
+    .filters .grid{align-items:end}
+    .pill{padding:4px 8px;border-radius:999px;background:#eef2ff;color:#111827;font-size:11px}
+    /* Modal */
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,.32);display:none;align-items:center;justify-content:center;z-index:1000}
+    .modal .panel{width:min(920px,92vw);max-height:90vh;overflow:auto;background:#fff;border-radius:14px;padding:16px;border:1px solid #e5e7eb}
+    .addon{display:grid;grid-template-columns:1.2fr 1fr 1fr 70px;gap:10px;align-items:end}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <!-- FILTTER -->
+    <div class="card filters">
+      <h2>Filter</h2>
+      <form method="get" action="/purchases" class="grid g3">
+        <div>
+          <label>Dari Tanggal</label>
+          <input type="date" name="from" value="<%= filters?.from || '' %>">
+        </div>
+        <div>
+          <label>Sampai Tanggal</label>
+          <input type="date" name="to" value="<%= filters?.to || '' %>">
+        </div>
+        <div class="g2" style="display:grid;gap:10px">
+          <div>
+            <label>Cabang</label>
+            <input name="branch" placeholder="BGR01 / SPL01" value="<%= filters?.branch || '' %>">
+          </div>
+          <div>
+            <label>Metode Pembayaran</label>
+            <input name="payment" placeholder="cash / transfer / qris" value="<%= filters?.payment || '' %>">
+          </div>
+        </div>
+        <div class="row" style="gap:10px">
+          <button class="btn" type="submit">Terapkan</button>
+          <a class="btn ghost" href="/purchases">Reset</a>
+          <span class="pill"><%= (purchases||[]).length %> hasil</span>
+        </div>
+      </form>
+    </div>
+
+    <!-- STATS -->
+    <div class="card">
+      <h2>Statistik</h2>
+      <div class="stats">
+        <div class="stat"><b>Total Transaksi</b><div class="v">Rp <%= Number(stats.totalSum||0).toLocaleString('id-ID') %></div></div>
+        <div class="stat"><b>Biaya Kirim</b><div class="v">Rp <%= Number(stats.deliverySum||0).toLocaleString('id-ID') %></div></div>
+        <div class="stat"><b>Diskon</b><div class="v">Rp <%= Number(stats.discountSum||0).toLocaleString('id-ID') %></div></div>
+        <div class="stat"><b>Fee</b><div class="v">Rp <%= Number(stats.feeSum||0).toLocaleString('id-ID') %></div></div>
+        <div class="stat"><b>Jumlah</b><div class="v"><%= stats.count || 0 %> trx</div></div>
+      </div>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="card">
+      <div class="row" style="justify-content:space-between">
+        <h2>Pembelian</h2>
+        <button class="btn" id="btnOpen">+ Tambah Pembelian</button>
+      </div>
+      <!-- LIST -->
+      <div class="list" id="list">
+        <% (purchases||[]).forEach(p => { %>
+          <div class="row-wrap" style="margin-bottom:10px">
+            <div class="row-head" data-toggle>
+              <div>
+                <b><%= new Date(p.createdAt).toLocaleString('id-ID') %></b>
+                <span class="tag"><%= p.PaymentMethod || '-' %></span>
+              </div>
+              <div class="money">Rp <%= Number(p.total||0).toLocaleString('id-ID') %></div>
+            </div>
+            <div class="row-body">
+              <div class="row" style="justify-content:space-between;flex-wrap:wrap">
+                <div>
+                  <div><b>Cabang:</b> <%= p.branchCode || '-' %></div>
+                  <div><b>Order Type:</b> <%= p.orderType || '-' %></div>
+                  <div><b>Seller:</b> <%= p.seller || '-' %></div>
+                </div>
+                <div>
+                  <div><b>Biaya Kirim:</b> Rp <%= Number(p.subtotalDelivery||0).toLocaleString('id-ID') %></div>
+                  <div><b>Diskon:</b> Rp <%= Number(p.subtotalDiscount||0).toLocaleString('id-ID') %></div>
+                  <div><b>Fee:</b> Rp <%= Number(p.fee||0).toLocaleString('id-ID') %></div>
+                </div>
+              </div>
+              <div style="margin-top:10px">
+                <b>Item:</b>
+                <% (p.items||[]).forEach(it => { %>
+                  <div>- <%= it.name %> × <%= it.quantity %> — Rp <%= Number(it.price||0).toLocaleString('id-ID') %></div>
+                <% }) %>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL FORM -->
+  <div class="modal" id="modal">
+    <div class="panel">
+      <div class="row" style="justify-content:space-between">
+        <h2>Tambah Pembelian</h2>
+        <button class="btn ghost" id="btnClose">Tutup</button>
+      </div>
+
+      <div class="grid g3" style="margin-top:8px">
+        <div>
+          <label>Cabang (branchCode)</label>
+          <input id="branchCode" placeholder="BGR01 / SPL01">
+        </div>
+        <div>
+          <label>Order Type</label>
+          <input id="orderType" placeholder="supplier / internal / lainnya">
+        </div>
+        <div>
+          <label>Metode Pembayaran</label>
+          <input id="PaymentMethod" placeholder="cash / transfer / qris">
+        </div>
+        <div>
+          <label>Seller</label>
+          <input id="seller" placeholder="Nama penjual / toko">
+        </div>
+        <div>
+          <label>Tanggal & Waktu</label>
+          <input id="createdAt" type="datetime-local">
+        </div>
+      </div>
+
+      <div class="row" style="justify-content:space-between;margin:12px 0 8px">
+        <h3 style="margin:0;font-size:16px">Item</h3>
+        <button type="button" class="btn ghost" id="addItemBtn">+ Tambah Item</button>
+      </div>
+
+      <div id="itemsBox" class="grid" style="gap:10px"></div>
+
+      <div class="grid g2" style="margin-top:8px">
+        <div>
+          <label>Biaya Kirim (subtotalDelivery)</label>
+          <input id="subtotalDelivery" type="number" min="0" value="0">
+        </div>
+        <div>
+          <label>Diskon (subtotalDiscount)</label>
+          <input id="subtotalDiscount" type="number" min="0" value="0">
+        </div>
+      </div>
+      <div class="grid g2" style="margin-top:8px">
+        <div>
+          <label>Fee</label>
+          <input id="fee" type="number" min="0" value="0">
+        </div>
+        <div>
+          <label>Total (otomatis)</label>
+          <input id="total" type="number" min="0" value="0" readonly style="background:#f1f5f9">
+        </div>
+      </div>
+
+      <div class="row" style="justify-content:space-between;margin-top:12px">
+        <button type="button" class="btn ghost" id="previewBtn">Lihat JSON</button>
+        <button type="button" class="btn" id="saveBtn">Simpan</button>
+      </div>
+
+      <pre id="jsonPreview" class="card muted" style="margin-top:12px;white-space:pre-wrap;max-height:220px;overflow:auto"></pre>
+    </div>
+  </div>
+
+  <script>
+    // ===== Helpers
+    const $$ = s => document.querySelector(s);
+    const toNum = v => { const n = Number(v); return Number.isFinite(n) ? n : 0; };
+    const money = n => Number(n||0).toLocaleString('id-ID');
+
+    // ===== Expand/Collapse list
+    document.getElementById('list')?.addEventListener('click', (e)=>{
+      const head = e.target.closest('[data-toggle]');
+      if(!head) return;
+      const body = head.nextElementSibling;
+      body.style.display = body.style.display === 'block' ? 'none' : 'block';
+    });
+
+    // ===== Modal
+    const modal = $$('#modal');
+    $$('#btnOpen')?.addEventListener('click', ()=> { modal.style.display='flex'; initDateNow(); });
+    $$('#btnClose')?.addEventListener('click', ()=> modal.style.display='none');
+
+    // ===== Items in modal
+    const itemsBox = $$('#itemsBox');
+    function newItemRow(data=null){
+      const row = document.createElement('div');
+      row.className = 'addon';
+      row.innerHTML = `
+        <div>
+          <label>Nama</label>
+          <input class="it-name" placeholder="Ayam 1kg" value="${data?.name ?? ''}">
+        </div>
+        <div>
+          <label>Harga (price)</label>
+          <input class="it-price" type="number" min="0" value="${data?.price ?? ''}">
+        </div>
+        <div>
+          <label>Qty</label>
+          <input class="it-qty" type="number" min="1" value="${data?.quantity ?? 1}">
+        </div>
+        <button type="button" class="btn ghost" onclick="this.parentElement.remove(); computeTotal();">Hapus</button>
+      `;
+      row.querySelectorAll('input').forEach(inp => inp.addEventListener('input', computeTotal));
+      itemsBox.appendChild(row);
+    }
+
+    function collectPayload(){
+      const items = [];
+      itemsBox.querySelectorAll('.addon').forEach(row=>{
+        const name = row.querySelector('.it-name').value.trim();
+        const price = toNum(row.querySelector('.it-price').value);
+        const quantity = toNum(row.querySelector('.it-qty').value) || 1;
+        if(!name) return;
+        items.push({ name, price, quantity });
+      });
+
+      const subtotalDelivery = toNum($$('#subtotalDelivery').value);
+      const subtotalDiscount = toNum($$('#subtotalDiscount').value);
+      const fee = toNum($$('#fee').value);
+
+      const itemsTotal = items.reduce((s,i)=> s + (toNum(i.price)*toNum(i.quantity)), 0);
+      const total = itemsTotal + fee + subtotalDelivery - subtotalDiscount;
+
+      return {
+        items,
+        total,
+        subtotalDelivery,
+        subtotalDiscount,
+        fee,
+        orderType: $$('#orderType').value.trim(),
+        branchCode: $$('#branchCode').value.trim(),
+        PaymentMethod: $$('#PaymentMethod').value.trim(),
+        seller: $$('#seller').value.trim(),
+        createdAt: $$('#createdAt').value // datetime-local string
+      };
+    }
+
+    function computeTotal(){
+      const p = collectPayload();
+      $$('#total').value = p.total;
+    }
+
+    function initDateNow(){
+      const el = $$('#createdAt');
+      if(!el.value){
+        const now = new Date();
+        const pad = n => String(n).padStart(2,'0');
+        const s = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
+        el.value = s;
+      }
+    }
+
+    // Buttons
+    $$('#addItemBtn')?.addEventListener('click', ()=> newItemRow());
+    $$('#previewBtn')?.addEventListener('click', ()=>{
+      const p = collectPayload();
+      $$('#jsonPreview').textContent = JSON.stringify(p, null, 2);
+    });
+    $$('#saveBtn')?.addEventListener('click', async ()=>{
+      const payload = collectPayload();
+      $$('#jsonPreview').textContent = JSON.stringify(payload, null, 2);
+      try{
+        const res = await fetch('/purchases', {
+          method:'POST',
+          headers:{ 'Content-Type':'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if(res.ok){ alert('✅ Tersimpan'); location.reload(); }
+        else{
+          const out = await res.json().catch(()=>({}));
+          alert('❌ Gagal: ' + (out.message || res.status));
+        }
+      }catch(e){ console.error(e); alert('❌ Jaringan bermasalah'); }
+    });
+
+    // init
+    newItemRow({ name:'Contoh: Kentang 1kg', price:15000, quantity:1 });
+    computeTotal();
+  </script>
+</body>
+</html>
