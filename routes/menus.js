@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const Menu = require('../models/menu'); // تأكّد من المسار الصحيح للسكيمة
 
-// قائمة المنيو
+
 router.get('/menus', async (req, res) => {
   try {
     const menus = await Menu.find().lean();
