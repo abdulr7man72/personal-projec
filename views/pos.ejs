@@ -1,186 +1,926 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="id">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>pos</title>
-    <link rel="stylesheet" href="css/styles.css">
-    <script src="/js/javascript.js" defer></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title || "POS System" %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet">
+    <style>
+      body { font-family: 'Inter', sans-serif; }
+      ::-webkit-scrollbar { width: 6px; height: 6px; }
+      ::-webkit-scrollbar-track { background: transparent; }
+      ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+      ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+      .fade-in { animation: fadeIn 0.2s ease-in-out; }
+      @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
   </head>
 
-  <body>
-    <main>
-      <div class="menu">
-        <div class="catagory">
-          <button>View Cart</button>
-          <button>Checkout</button>
+  <body
+    class="bg-slate-50 text-slate-800 h-screen overflow-hidden flex flex-col">
+
+
+
+
+
+    <div class="flex flex-1 h-[calc(100vh-4rem)] overflow-hidden">
+
+<aside
+    id="sidebar"
+    class="w-16 transition-all duration-300 ease-in-out shrink-0
+           bg-white shadow-lg p-4 h-full overflow-y-auto
+           hidden lg:block z-20"
+    data-expanded="false"
+>
+<button id="toggle-sidebar-btn-header" class="p-2 rounded-lg text-slate-700 hover:bg-slate-200 hidden lg:block">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+    </svg>
+</button>
+    <nav>
+        <ul class="space-y-2">
+            <li>
+                <a href="/"
+                   class="flex items-center p-2 rounded-lg text-slate-700 hover:bg-slate-100 hover:text-indigo-600 font-medium group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0"
+                         fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                         stroke-width="2"><path stroke-linecap="round"
+                                                 stroke-linejoin="round"
+                                                 d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0h6m-6 0v-5m6 5v-5" /></svg>
+                    <span
+                        class="ml-3 whitespace-nowrap opacity-0 transition-opacity duration-200 sidebar-text">الرئيسية</span>
+                </a>
+            </li>
+            <li>
+                <a href="/<%= cabang %>/pos"
+                   class="flex items-center p-2 rounded-lg text-indigo-600 bg-indigo-50 font-bold group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0"
+                         fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                         stroke-width="2"><path stroke-linecap="round"
+                                                 stroke-linejoin="round" d="M6 18h2" /><path
+                        d="M12 18h6" /><rect width="14" height="8" x="5" y="2"
+                                             rx="2" /><rect width="20" height="8" x="2" y="14"
+                                                            rx="2" /></svg>
+                    <span
+                        class="ml-3 whitespace-nowrap opacity-0 transition-opacity duration-200 sidebar-text">كاشير</span>
+                </a>
+            </li>
+            <li>
+                <a href="/<%= cabang %>/stats"
+                   class="flex items-center p-2 rounded-lg text-slate-700 hover:bg-slate-100 hover:text-indigo-600 font-medium group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0"
+                         fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                         stroke-width="2"><path stroke-linecap="round"
+                                                 stroke-linejoin="round"
+                                                 d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" /><path
+                        stroke-linecap="round" stroke-linejoin="round"
+                        d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" /></svg>
+                    <span
+                        class="ml-3 whitespace-nowrap opacity-0 transition-opacity duration-200 sidebar-text">إحصائيات
+                        <%= cabang %></span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</aside>
+
+      <div class="flex-1 flex bg-slate-50 h-full relative overflow-hidden">
+
+        <div class="flex-1 flex flex-col h-full relative">
+
+          <div class="md:hidden p-3 bg-white border-b border-slate-200">
+            <input type="text" onkeyup="filterMenu()" id="mobileSearchInput"
+              placeholder="Cari menu..."
+              class="w-full px-4 py-2 rounded-lg border border-slate-300 text-sm">
+          </div>
+
+          <div id="categoryTabs"
+            class="hidden md:block bg-white border-b border-slate-200 p-3 overflow-x-auto no-scrollbar whitespace-nowrap shadow-sm">
+            <div class="inline-flex space-x-2">
+              <button
+                type="button"
+                onclick="filterByCategory('')"
+                class="category-btn px-4 py-2 rounded-full text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 transition-colors"
+                data-category>
+                Semua Menu (All)
+              </button>
+              <%
+              const uniqueCategories = [...new Set((menuItems || []).map(item =>
+              item.category).filter(c => c))];
+              uniqueCategories.forEach(category => {
+              %>
+              <button
+                type="button"
+                onclick="filterByCategory('<%= category %>')"
+                class="category-btn px-4 py-2 rounded-full text-sm font-medium text-slate-700 hover:bg-slate-100 transition-colors"
+                data-category="<%= category %>">
+                <%= category %>
+              </button>
+              <% }); %>
+            </div>
+          </div>
+
+          <div class="flex-1 overflow-y-auto p-4" id="menuContainer">
+            <div
+              class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 pb-24 md:pb-0"
+              id="menuGrid">
+              <% (menuItems || []).forEach(item => { %>
+              <button
+                type="button"
+                class="menu-item-card group bg-white border border-slate-200 hover:border-indigo-500 rounded-xl overflow-hidden text-left shadow-sm hover:shadow-md transition-all duration-200 active:scale-[0.98] flex flex-col h-full"
+                onclick="quickAddToCart('<%= item._id %>')"
+                data-name="<%= item.name.toLowerCase() %>"
+                data-category="<%= (item.category || '').toLowerCase() %>">
+                <div
+                  class="relative w-full h-32 bg-slate-100 overflow-hidden border-b border-slate-100">
+                  <% if (item.imageUrl) { %>
+                  <img src="<%= item.imageUrl %>" alt="<%= item.name %>"
+                    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    loading="lazy"
+                    onerror="this.parentElement.innerHTML='<div class=\'flex items-center justify-center h-full text-slate-300\'><svg class=\'w-8 h-8\' fill=\'none\' stroke=\'currentColor\' viewBox=\'0 0 24 24\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'1.5\' d=\'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z\'/></svg></div>'">
+                  <% } else { %>
+                  <div
+                    class="flex items-center justify-center h-full text-slate-300">
+                    <svg class="w-10 h-10" fill="none" stroke="currentColor"
+                      viewBox="0 0 24 24"><path stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width="1.5"
+                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                  </div>
+                  <% } %>
+                  <div
+                    class="absolute bottom-2 right-2 bg-indigo-600 text-white rounded-full p-1.5 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                      stroke="currentColor"><path stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width="2"
+                        d="M12 4v16m8-8H4" /></svg>
+                  </div>
+                </div>
+
+                <div class="p-3 flex flex-col flex-1">
+                  <div class="flex-1">
+                    <% if (item.category) { %>
+                    <span
+                      class="text-[10px] font-bold text-slate-400 uppercase tracking-wider"><%=
+                      item.category %></span>
+                    <% } %>
+                    <div
+                      class="font-bold text-slate-800 text-sm leading-tight mt-0.5 group-hover:text-indigo-700"><%=
+                      item.name %></div>
+                  </div>
+                  <div class="mt-3 font-bold text-slate-900 text-sm">
+                    <span class="text-xs text-slate-500 font-normal">Rp</span>
+                    <span class="menu-price" data-menu-id="<%= item._id %>"
+                      data-price-instore="<%= item.prices?.inStore || 0 %>"
+                      data-price-gofood="<%= item.prices?.goFood || 0 %>"
+                      data-price-grabfood="<%= item.prices?.grabFood || 0 %>"
+                      data-price-shopeefood="<%= item.prices?.shopeeFood || 0 %>">
+                      <%= (item.prices?.inStore || 0).toLocaleString('id-ID') %>
+                    </span>
+                  </div>
+                </div>
+              </button>
+              <% }) %>
+            </div>
+            <div id="noResult"
+              class="hidden flex-col items-center justify-center py-20 text-slate-400 h-full">
+              <svg class="h-16 w-16 mb-3 opacity-50" fill="none"
+                viewBox="0 0 24 24" stroke="currentColor"><path
+                  stroke-linecap="round" stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+              <p>Menu tidak ditemukan</p>
+            </div>
+          </div>
         </div>
-        <div class="center-menu">
-          
 
-  <div class="card" data-id="id_of_product_1" data-name="shawarma" data-category="food" data-prices='{"inStore":30000,"goFood":32000,"grabFood":31000,"shopeeFood":33000}' data-addons='[{"name":"extra_sauce","prices":{"inStore":5000,"goFood":6000,"grabFood":5500,"shopeeFood":7000}}]'>
+        <div id="cartWrapper"
+          class="bg-white border-l border-slate-200 w-full md:w-[400px] lg:w-[450px] flex-none flex flex-col h-full fixed inset-0 z-40 md:static transform translate-y-full md:translate-y-0 transition-transform duration-300">
+          <div
+            class="md:hidden bg-slate-100 p-2 flex justify-center border-b border-slate-200"
+            onclick="toggleMobileCart()">
+            <div class="w-12 h-1.5 bg-slate-300 rounded-full"></div>
+          </div>
 
-    <div class="product-content">
-      <img style="width: 100%;" src="https://www.sugacoffee.id/wp-content/uploads/2024/07/23.-Burger-Sejarah-Pengertian-Jenis-Bahan-dan-Cara-Membuatnya-Suga-Coffee-1.jpg" alt="bgr">
-      <h3 class="title">shawarma</h3>
+          <form id="pos-form" action="/<%= cabang %>/pos" method="POST"
+            class="flex flex-col h-full">
+            <div
+              class="px-5 py-4 border-b border-slate-100 bg-white shadow-[0_2px_10px_rgba(0,0,0,0.02)] z-10">
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label
+                    class="block text-[10px] uppercase font-bold text-slate-400 mb-1">Pelanggan</label>
+                  <input type="text" name="customerName"
+                    class="w-full bg-slate-50 border-none rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500"
+                    placeholder="Nama...">
+                </div>
+                <div>
+                  <label
+                    class="block text-[10px] uppercase font-bold text-slate-400 mb-1">Tipe
+                    Order</label>
+                  <select name="source" id="sourceSelect"
+                    class="w-full bg-slate-50 border-none rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 font-medium text-slate-700"
+                    onchange="onSourceChange()">
+                    <option value="inStore">In-Store</option>
+                    <option value="goFood">GoFood</option>
+                    <option value="grabFood">GrabFood</option>
+                    <option value="shopeeFood">ShopeeFood</option>
+                  </select>
+                </div>
+              </div>
+            </div>
 
-      <!-- عرض سريع لأسعار القنوات -->
-      <ul class="prices text-sm">
-        <li>Rp 30.000</li>
-      </ul>
+            <div class="flex-1 overflow-y-auto relative bg-slate-50/30">
+              <div id="emptyCartState"
+                class="absolute inset-0 flex flex-col items-center justify-center text-slate-300 select-none">
+                <svg class="h-20 w-20 mb-3 opacity-30" fill="none"
+                  viewBox="0 0 24 24" stroke="currentColor"><path
+                    stroke-linecap="round" stroke-linejoin="round"
+                    stroke-width="1"
+                    d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
+                <span class="text-sm font-medium opacity-60">Keranjang
+                  Kosong</span>
+              </div>
+              <div id="cart-body" class="p-3 space-y-2"></div>
+            </div>
+
+            <div
+              class="bg-white border-t border-slate-200 p-5 z-20 shadow-[0_-4px_20px_rgba(0,0,0,0.04)]">
+              <div class="space-y-3 mb-5">
+                <div class="flex justify-between items-center text-sm">
+                  <div class="text-slate-500">Subtotal</div>
+                  <div class="font-semibold" id="subtotalDisplay">Rp 0</div>
+                </div>
+                <div
+                  class="flex justify-between items-center text-sm cursor-pointer group"
+                  onclick="openDiscountModal()">
+                  <div
+                    class="text-slate-500 flex items-center gap-1 group-hover:text-indigo-600 transition-colors">
+                    Diskon
+                    <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24"
+                      stroke="currentColor"><path stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width="2"
+                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+                  </div>
+                  <div class="font-mono text-red-500" id="discountLabel">- Rp
+                    0</div>
+                </div>
+                <div
+                  class="pt-3 border-t border-slate-100 flex justify-between items-end">
+                  <div class="text-slate-600 font-bold">Total</div>
+                  <div
+                    class="text-2xl font-bold text-indigo-600 font-mono leading-none"
+                    id="totalDisplay">Rp 0</div>
+                </div>
+              </div>
+
+              <input type="hidden" name="itemsJson" id="itemsJsonInput" />
+              <input type="hidden" name="discount" id="discountInput"
+                value="0" />
+              <input type="hidden" name="paymentMethod"
+                id="paymentMethodInput" />
+
+              <div class="grid grid-cols-4 gap-3">
+                <button type="button" onclick="clearCart()"
+                  class="col-span-1 h-12 rounded-xl border border-slate-200 text-slate-500 hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors flex items-center justify-center">
+                  <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor"><path stroke-linecap="round"
+                      stroke-linejoin="round" stroke-width="2"
+                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                </button>
+                <button type="button" onclick="handleSaveClick()"
+                  class="col-span-3 h-12 rounded-xl bg-indigo-600 text-white font-bold text-base shadow-lg shadow-indigo-200 hover:bg-indigo-700 active:scale-[0.98] transition-all">
+                  Bayar Sekarang
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
 
-    <div class="actions">
-      <button type="button" class="btn-add">Tambah / Add</button>
-      <button type="button" class="btn-notes">Notes</button>
-    </div>
-  </div>
+    <script>
+        // إضافة CSS لإخفاء شريط التمرير الأفقي في الفئات
+        const style = document.createElement('style');
+        style.textContent = `
+            .no-scrollbar::-webkit-scrollbar {
+                display: none;
+            }
+            .no-scrollbar {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+        `;
+        document.head.appendChild(style);
 
 
-          <div class="card" data-name="shawarma">
-            <img style="width: 100%;"
-              src="https://img.freepik.com/free-psd/roasted-chicken-dinner-platter-delicious-feast_632498-25445.jpg?semt=ais_hybrid&w=740&q=80"
-              alt>
-            <div class="nitme">
-              <p class="textsize">shawarma jumbo</p>
-              <p>30.000</p>
-            </div>
-          </div>
-          <div class="card">
-            <img style="width: 100%;"
-              src="https://img.freepik.com/free-psd/roasted-chicken-dinner-platter-delicious-feast_632498-25445.jpg?semt=ais_hybrid&w=740&q=80"
-              alt>
-            <div class="nitme">
-              <p class="textsize">shrrrrrrrrrr</p>
-              <p>30.000</p>
-            </div>
-          </div>
-          <div class="card">
-            <img style="width: 100%;"
-              src="https://img.freepik.com/free-psd/roasted-chicken-dinner-platter-delicious-feast_632498-25445.jpg?semt=ais_hybrid&w=740&q=80"
-              alt>
-            <div class="nitme">
-              <p class="textsize">shawarma ثسشق</p>
-              <p>30.000</p>
-            </div>
-          </div>
-          <% menu.forEach(card => { %>
-                     <div class="card">
-            <img style="width: 100%;"
-              src="<%= card.imageUrl %>"
-              alt>
-            <div class="nitme">
-              <p id="name" class="textsize"><card class="name"><%= card.name %></card></p>
-              <p id="price"><%= card.prices.inStore %></p>
-            </div>
+        // ----------------------------------------------------
+        //  JS للتحكم بالشريط الجانبي (Side for Navigation)
+        // ----------------------------------------------------
+        const sidebar = document.getElementById('sidebar');
+        const toggleBtnHeader = document.getElementById('toggle-sidebar-btn-header');
+        const sidebarTexts = document.querySelectorAll('.sidebar-text');
 
-          </div>
-          <% }) %>
-            <script>
-                document.querySelectorAll('.card').forEach(card => {
-                  card.addEventListener('click', () => {
-                    const name = card.querySelector('#name').innerText;
-                    const price = card.querySelector('#price').innerText;
-                    alert(`Item: ${name}\nPrice: ${price}`);
-                  });
+        function toggleSidebar() {
+            const isExpanded = sidebar.getAttribute('data-expanded') === 'true';
+
+            if (isExpanded) {
+                // تصغير الشريط الجانبي
+                sidebar.style.width = '4rem'; // w-16
+                sidebar.setAttribute('data-expanded', 'false');
+                sidebarTexts.forEach(span => {
+                    span.classList.remove('opacity-100');
+                    span.classList.add('opacity-0');
                 });
-            </script>
-          <div class="card">
-            <img style="width: 100%;"
-              src="https://img.freepik.com/free-psd/roasted-chicken-dinner-platter-delicious-feast_632498-25445.jpg?semt=ais_hybrid&w=740&q=80"
-              alt>
-            <div class="nitme">
-              <p class="textsize">shadfgdgmbo</p>
-              <p>30.000</p>
-            </div>
-          </div>
-          <div class="card" data-name="shawarma">
-            <img style="width: 100%;"
-              src="https://img.freepik.com/free-psd/roasted-chicken-dinner-platter-delicious-feast_632498-25445.jpg?semt=ais_hybrid&w=740&q=80"
-              alt>
-            <div class="nitme" >
-              <p class="textsize">shawa34534eumfbo</p>
-              <p>30.000</p>
-            </div>
-                      <div id="listContainer">
 
+            } else {
+                // توسيع الشريط الجانبي
+                sidebar.style.width = '16rem'; // w-64
+                sidebar.setAttribute('data-expanded', 'true');
+                
+                setTimeout(() => {
+                    sidebarTexts.forEach(span => {
+                        span.classList.remove('opacity-0');
+                        span.classList.add('opacity-100');
+                    });
+                }, 100); 
+            }
+        }
+
+        if (toggleBtnHeader) {
+            toggleBtnHeader.addEventListener('click', toggleSidebar);
+            // الإعدادات الأولية (مصغرة)
+            sidebar.style.width = '4rem'; 
+            sidebar.setAttribute('data-expanded', 'false');
+        }
+        
+        // ----------------------------------------------------
+        //  JS للتحكم بشريط الفئات (Category Tabs) والتصفية
+        // ----------------------------------------------------
+
+        function filterByCategory(category) {
+            const categoryButtons = document.querySelectorAll('.category-btn');
+            const menuItems = document.querySelectorAll('.menu-item-card');
+            const noResult = document.getElementById('noResult');
+            let visibleCount = 0;
+            const normalizedCategory = category.toLowerCase();
+
+            // 1. تحديث زر الفئة النشط (أزرار بدون خلفية)
+            categoryButtons.forEach(btn => {
+                const btnCategory = btn.getAttribute('data-category').toLowerCase();
+                
+                // إعادة تعيين الألوان للوضع الافتراضي
+                btn.classList.remove('bg-indigo-600', 'text-white', 'font-bold');
+                btn.classList.add('text-slate-700', 'hover:bg-slate-100', 'font-medium');
+                
+                // تطبيق الألوان على الزر النشط
+                if (btnCategory === normalizedCategory) {
+                    btn.classList.add('bg-indigo-600', 'text-white', 'font-bold');
+                    btn.classList.remove('text-slate-700', 'hover:bg-slate-100', 'font-medium');
+                }
+            });
+
+            // 2. تصفية بطاقات القائمة
+            menuItems.forEach(item => {
+                const itemCategory = item.getAttribute('data-category');
+                if (normalizedCategory === '' || itemCategory === normalizedCategory) {
+                    item.style.display = 'flex';
+                    visibleCount++;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            // 3. عرض رسالة "لا توجد نتائج"
+            if (visibleCount === 0) {
+                noResult.style.display = 'flex';
+            } else {
+                noResult.style.display = 'none';
+            }
+        }
+        
+        // استدعاء دالة التصفية عند تحميل الصفحة لتحديد فئة "الكل"
+        window.addEventListener('DOMContentLoaded', () => {
+             filterByCategory('');
+             // تأكد من وجود onSourceChange هنا إذا كانت تغير الأسعار (POS specific function)
+             if (typeof onSourceChange === 'function') {
+                onSourceChange(); 
+             }
+        });
+
+        // **ملاحظة:** يجب أن تكون دوال مثل `quickAddToCart()`, `filterMenu()`, `onSourceChange()`, `openDiscountModal()`, `clearCart()`, `handleSaveClick()`, و `toggleMobileCart()` معرفة في مكان ما آخر في السكريبت الخاص بك.
+
+    </script>
+
+    <div id="mobileCartBar"
+      class="md:hidden fixed bottom-0 left-0 right-0 bg-slate-900 text-white px-4 py-3 flex items-center justify-between shadow-[0_-5px_20px_rgba(0,0,0,0.2)] z-50 cursor-pointer translate-y-full transition-transform duration-300"
+      onclick="toggleMobileCart()">
+      <div class="flex items-center gap-3">
+        <div
+          class="bg-indigo-500 text-xs font-bold px-2 py-1 rounded text-white animate-pulse"
+          id="mobileCartCount">0</div>
+        <div class="flex flex-col">
+          <span
+            class="text-[10px] text-slate-400 uppercase tracking-wider">Total
+            Tagihan</span>
+          <span class="text-sm font-bold font-mono" id="mobileCartTotal">Rp
+            0</span>
+        </div>
+      </div>
+      <div class="text-xs font-bold text-indigo-300 flex items-center">LIHAT
+        KERANJANG <span class="ml-1">▲</span></div>
+    </div>
+
+    <div id="itemModal" class="fixed inset-0 z-50 hidden">
+      <div
+        class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity"
+        onclick="closeItemModal()"></div>
+      <div
+        class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-sm p-4">
+        <div
+          class="bg-white rounded-2xl shadow-2xl overflow-hidden animate-scale-up">
+          <div
+            class="bg-slate-50 px-4 py-3 border-b border-slate-100 flex justify-between items-center">
+            <h3 class="font-bold text-slate-800" id="itemModalName">Edit
+              Item</h3>
+            <button onclick="closeItemModal()"
+              class="text-slate-400 hover:text-slate-600 text-xl leading-none">&times;</button>
           </div>
+
+          <div class="p-4">
+            <div class="flex items-center justify-center gap-4 mb-6">
+              <button onclick="changeItemModalQty(-1)"
+                class="w-10 h-10 rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200 text-lg font-bold flex items-center justify-center transition-colors">&minus;</button>
+              <span id="itemModalQty"
+                class="text-xl font-bold text-slate-800 w-12 text-center">1</span>
+              <button onclick="changeItemModalQty(1)"
+                class="w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 hover:bg-indigo-200 text-lg font-bold flex items-center justify-center transition-colors">&plus;</button>
+            </div>
+
+            <div class="mb-4">
+              <label
+                class="text-xs font-semibold text-slate-500 mb-1 block">Catatan
+                Khusus</label>
+              <input type="text" id="itemModalNote"
+                class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+                placeholder="Cth: Jangan pedas, tanpa bawang...">
+            </div>
+
+            <div class="mb-4">
+              <div class="flex justify-between items-center mb-2">
+                <label class="text-xs font-semibold text-slate-500">Tambahan
+                  (Add-ons)</label>
+                <span id="itemModalPricePreview"
+                  class="text-[10px] bg-slate-100 px-2 py-0.5 rounded text-slate-600"></span>
+              </div>
+              <div id="itemModalAddons"
+                class="space-y-2 max-h-40 overflow-y-auto pr-1"></div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 mt-2">
+              <button onclick="closeItemModal()"
+                class="py-2.5 rounded-xl border border-slate-300 text-slate-600 font-semibold text-sm hover:bg-slate-50">Batal</button>
+              <button onclick="confirmEditItem()"
+                class="py-2.5 rounded-xl bg-indigo-600 text-white font-semibold text-sm hover:bg-indigo-700 shadow-lg shadow-indigo-200">Simpan
+                Perubahan</button>
+            </div>
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="cart-summary">
-        <select>
-          <option value="instore">instore</option>
-          <option value="online">online</option>
-        </select>
-        <div class="cart-item">
-          <div class="litem">
-            <div class="item">
-              <p></p>
-              <p></p>
-            </div>
-            <div class="price">
-              <p></p>
-            </div>
+    <div id="discountModal" class="fixed inset-0 z-50 hidden">
+      <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+        onclick="closeDiscountModal()"></div>
+      <div
+        class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-xs p-4">
+        <div class="bg-white rounded-2xl shadow-2xl p-4">
+          <div class="text-center mb-4">
+            <h3 class="font-bold text-slate-800 mb-1">Atur Diskon</h3>
+            <div
+              class="text-3xl font-mono font-bold text-indigo-600 my-3 tracking-tight"
+              id="discountValueDisplay">0</div>
           </div>
-                      <div id="listContainer">
-
+          <div class="bg-slate-100 p-1 rounded-xl flex mb-4">
+            <button id="discTypeFlatBtn" onclick="setDiscountType('flat')"
+              class="flex-1 py-1.5 rounded-lg text-xs font-bold transition-all bg-white shadow text-slate-800">Rp
+              (Nominal)</button>
+            <button id="discTypePercentBtn" onclick="setDiscountType('percent')"
+              class="flex-1 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-500 hover:text-slate-700">%
+              (Persen)</button>
           </div>
-          <div class="litem">
-            <div class="item">
-              <p>shawarma jumbo</p>
-              <p>Quantity: 1</p>
-            </div>
-            <div class="price">
-              <p>30,000</p>
-            </div>
+          <div class="grid grid-cols-3 gap-2 mb-2">
+            <% [1,2,3,4,5,6,7,8,9].forEach(n => { %>
+            <button onclick="appendDiscountDigit('<%= n %>')"
+              class="h-12 rounded-xl bg-slate-50 border border-slate-200 hover:bg-slate-100 text-lg font-medium active:scale-95"><%=
+              n %></button>
+            <% }) %>
+            <button onclick="clearDiscountValue()"
+              class="h-12 rounded-xl bg-red-50 border border-red-100 text-red-600 hover:bg-red-100 font-medium active:scale-95">C</button>
+            <button onclick="appendDiscountDigit('0')"
+              class="h-12 rounded-xl bg-slate-50 border border-slate-200 hover:bg-slate-100 text-lg font-medium active:scale-95">0</button>
+            <button onclick="applyDiscount()"
+              class="h-12 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 font-medium active:scale-95 shadow-md">OK</button>
           </div>
-
-          <div class="litem">
-            <div class="item">
-              <p>shawarma jumbo</p>
-              <p>Quantity: 1</p>
-            </div>
-            <div class="price">
-              <p>30,000</p>
-            </div>
-          </div>
-
         </div>
-
-        <div class="count">
-          <div class="litem">
-            <div class="item">
-              <p>total</p>
-            </div>
-            <div class="price">
-              <p>30,000</p>
-            </div>
-          </div>
-          <div class="litem">
-            <div class="item">
-              <p>discount</p>
-            </div>
-            <div class="price">
-              <p>0</p>
-            </div>
-          </div>
-          <div class="litem">
-            <div class="item">
-              <p>sub-total</p>
-            </div>
-            <div class="price">
-              <p>30,000</p>
-            </div>
-          </div>
-          <button>Checkout</button>
-          <button>pending</button>
-        </div>
-
       </div>
-    </main>
+    </div>
+
+    <div id="paymentModal" class="fixed inset-0 z-50 hidden">
+      <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+        onclick="closePaymentModal()"></div>
+      <div
+        class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-xs p-4">
+        <div class="bg-white rounded-2xl shadow-2xl p-5 text-center">
+          <div
+            class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+              viewBox="0 0 24 24" stroke="currentColor"><path
+                stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+          </div>
+          <h3 class="font-bold text-lg text-slate-800 mb-1">Konfirmasi
+            Pembayaran</h3>
+          <p class="text-xs text-slate-500 mb-4">Pilih metode pembayaran untuk
+            menyelesaikan transaksi.</p>
+          <div id="paymentOptionsInStore" class="space-y-2 mb-6 text-left">
+            <label
+              class="flex items-center p-3 border border-slate-200 rounded-xl cursor-pointer hover:border-indigo-500 hover:bg-indigo-50 transition-all has-[:checked]:border-indigo-500 has-[:checked]:bg-indigo-50">
+              <input type="radio" name="paymentRadio" value="cash" checked
+                class="w-4 h-4 text-indigo-600 border-slate-300 focus:ring-indigo-500">
+              <span class="ml-3 text-sm font-medium text-slate-700">Tunai
+                (Cash)</span>
+            </label>
+            <label
+              class="flex items-center p-3 border border-slate-200 rounded-xl cursor-pointer hover:border-indigo-500 hover:bg-indigo-50 transition-all has-[:checked]:border-indigo-500 has-[:checked]:bg-indigo-50">
+              <input type="radio" name="paymentRadio" value="transfer"
+                class="w-4 h-4 text-indigo-600 border-slate-300 focus:ring-indigo-500">
+              <span class="ml-3 text-sm font-medium text-slate-700">Transfer
+                Bank</span>
+            </label>
+            <label
+              class="flex items-center p-3 border border-slate-200 rounded-xl cursor-pointer hover:border-indigo-500 hover:bg-indigo-50 transition-all has-[:checked]:border-indigo-500 has-[:checked]:bg-indigo-50">
+              <input type="radio" name="paymentRadio" value="qris"
+                class="w-4 h-4 text-indigo-600 border-slate-300 focus:ring-indigo-500">
+              <span class="ml-3 text-sm font-medium text-slate-700">QRIS</span>
+            </label>
+          </div>
+          <div id="paymentInfoNonStore"
+            class="hidden mb-6 bg-yellow-50 text-yellow-800 p-3 rounded-xl text-xs border border-yellow-100">
+            <strong>Pesanan Online:</strong> Metode pembayaran akan dicatat
+            sesuai sumber pesanan (App).
+          </div>
+          <div class="flex gap-2">
+            <button onclick="closePaymentModal()"
+              class="flex-1 py-2.5 rounded-xl border border-slate-300 text-slate-600 text-sm font-medium hover:bg-slate-50">Batal</button>
+            <button onclick="confirmPaymentAndSubmit()"
+              class="flex-1 py-2.5 rounded-xl bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700 shadow-lg shadow-emerald-200">Simpan</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const CABANG = "<%= cabang %>";
+      const MENU_ITEMS = <%- JSON.stringify(menuItems || []) %>;
+
+      let cart = [];
+      let discountType = "flat"; 
+      let discountValueStr = "0";
+      let editingCartIndex = null; // لتحديد أي عنصر يتم تعديله
+      let currentMenuId = null; // للاستخدام داخل المودال
+      let currentModalQty = 1;
+      let mobileCartOpen = false;
+
+      function formatRupiah(num) { return num.toLocaleString('id-ID'); }
+
+      function filterMenu() {
+        const val1 = document.getElementById('searchInput') ? document.getElementById('searchInput').value.toLowerCase() : '';
+        const val2 = document.getElementById('mobileSearchInput') ? document.getElementById('mobileSearchInput').value.toLowerCase() : '';
+        const query = val1 || val2;
+        const cards = document.querySelectorAll('.menu-item-card');
+        let visibleCount = 0;
+        cards.forEach(card => {
+          const name = card.getAttribute('data-name');
+          const cat = card.getAttribute('data-category');
+          if (name.includes(query) || cat.includes(query)) {
+            card.parentElement.style.display = 'block';
+            card.style.display = 'flex';
+            visibleCount++;
+          } else {
+            card.style.display = 'none';
+          }
+        });
+        const noResult = document.getElementById('noResult');
+        if (visibleCount === 0) { noResult.classList.remove('hidden'); noResult.classList.add('flex'); }
+        else { noResult.classList.add('hidden'); noResult.classList.remove('flex'); }
+      }
+
+      function updateMenuPrices() {
+        const src = document.getElementById("sourceSelect").value;
+        document.querySelectorAll(".menu-price").forEach((el) => {
+          const id = el.getAttribute("data-menu-id");
+          let price = 0;
+          if (src === "inStore") price = Number(el.getAttribute("data-price-instore"));
+          else if (src === "goFood") price = Number(el.getAttribute("data-price-gofood"));
+          else if (src === "grabFood") price = Number(el.getAttribute("data-price-grabfood"));
+          else price = Number(el.getAttribute("data-price-shopeefood"));
+          el.textContent = formatRupiah(price);
+        });
+      }
+      function onSourceChange() { updateMenuPrices(); recalcCartPrices(); }
+      function getPriceForItem(item, priceType) { if (!item.prices) return 0; return Number(item.prices[priceType] || 0); }
+      function getAddonPrice(addon, priceType) { if (!addon.prices) return 0; return Number(addon.prices[priceType] || 0); }
+
+      // ===================== التغيير الجذري في اللوجيك هنا =====================
+
+      // دالة الإضافة السريعة (Direct Add)
+      function quickAddToCart(menuId) {
+        const item = MENU_ITEMS.find((m) => m._id === menuId);
+        if (!item) return;
+
+        const priceType = document.getElementById("sourceSelect").value;
+        const basePrice = getPriceForItem(item, priceType);
+        
+        // تحقق اذا العنصر موجود بالفعل بنفس المواصفات الافتراضية (بدون ملاحظات وبدون إضافات)
+        // حتى نقوم بزيادة العدد بدل إضافة سطر جديد
+        const existingIndex = cart.findIndex(c => 
+            c.menuId === menuId && 
+            c.priceType === priceType && 
+            (!c.addons || c.addons.length === 0) && 
+            (!c.note || c.note === "")
+        );
+
+        if (existingIndex > -1) {
+            cart[existingIndex].quantity += 1;
+            cart[existingIndex].subtotal = cart[existingIndex].unitPrice * cart[existingIndex].quantity;
+        } else {
+            cart.push({
+                menuId: menuId,
+                name: item.name,
+                priceType,
+                unitPrice: basePrice,
+                quantity: 1,
+                note: "",
+                addons: [],
+                subtotal: basePrice
+            });
+        }
+        renderCart();
+      }
+
+      // فتح نافذة التعديل لعنصر موجود في السلة
+      function openEditCartItem(index) {
+        editingCartIndex = index;
+        const cartItem = cart[index];
+        currentMenuId = cartItem.menuId;
+        currentModalQty = cartItem.quantity;
+        
+        const item = MENU_ITEMS.find((m) => m._id === currentMenuId);
+        if (!item) return;
+
+        document.getElementById("itemModalName").textContent = "Edit: " + item.name;
+        document.getElementById("itemModalQty").textContent = String(currentModalQty);
+        document.getElementById("itemModalNote").value = cartItem.note || "";
+
+        const addonsContainer = document.getElementById("itemModalAddons");
+        addonsContainer.innerHTML = "";
+        const priceType = document.getElementById("sourceSelect").value;
+        const basePrice = getPriceForItem(item, priceType);
+
+        if (item.addons && item.addons.length) {
+          item.addons.forEach((ad) => {
+            const extra = getAddonPrice(ad, priceType);
+            // نفحص اذا كانت الإضافة موجودة بالفعل في العنصر
+            const isChecked = cartItem.addons && cartItem.addons.includes(ad.name);
+            
+            const row = document.createElement("label");
+            row.className = "flex items-center justify-between gap-3 p-2 border border-slate-100 rounded-lg bg-slate-50 cursor-pointer hover:border-indigo-200 transition-colors";
+            row.innerHTML = `
+                <div class="flex items-center gap-2">
+                    <input type="checkbox" class="addon-checkbox w-4 h-4 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500" 
+                           data-name="${ad.name}" 
+                           data-extra="${extra}" 
+                           onclick="updateItemModalPricePreview()" 
+                           ${isChecked ? 'checked' : ''} />
+                    <span class="text-xs text-slate-700 font-medium">${ad.name}</span>
+                </div>
+                <span class="text-[10px] font-mono text-slate-500 bg-white px-1.5 py-0.5 rounded border border-slate-200">+${formatRupiah(extra)}</span>
+            `;
+            addonsContainer.appendChild(row);
+          });
+        } else { addonsContainer.innerHTML = '<div class="text-xs text-slate-400 italic p-2">Tidak ada opsi tambahan.</div>'; }
+
+        updateItemModalPricePreview(basePrice);
+        document.getElementById("itemModal").classList.remove("hidden");
+      }
+
+      function confirmEditItem() {
+        if (editingCartIndex === null) return; // Safety check
+
+        const item = MENU_ITEMS.find((m) => m._id === currentMenuId);
+        const priceType = document.getElementById("sourceSelect").value;
+        const basePrice = getPriceForItem(item, priceType);
+        const note = document.getElementById("itemModalNote").value.trim();
+        
+        const selectedAddons = [];
+        let addonsExtraTotal = 0;
+        document.querySelectorAll("#itemModalAddons .addon-checkbox:checked").forEach((cb) => {
+          const name = cb.getAttribute("data-name");
+          const extra = Number(cb.getAttribute("data-extra"));
+          if (name) selectedAddons.push(name);
+          addonsExtraTotal += extra;
+        });
+
+        const unitPrice = basePrice + addonsExtraTotal;
+        const subtotal = unitPrice * currentModalQty;
+
+        // تحديث العنصر في السلة
+        cart[editingCartIndex] = {
+            ...cart[editingCartIndex],
+            unitPrice,
+            quantity: currentModalQty,
+            note,
+            addons: selectedAddons,
+            subtotal
+        };
+
+        editingCartIndex = null;
+        closeItemModal();
+        renderCart();
+      }
+
+      function closeItemModal() { 
+        document.getElementById("itemModal").classList.add("hidden"); 
+        editingCartIndex = null;
+      }
+
+      function changeItemModalQty(delta) { 
+        let q = currentModalQty + delta; 
+        if (q < 1) q = 1; 
+        currentModalQty = q; 
+        document.getElementById("itemModalQty").textContent = String(q); 
+        updateItemModalPricePreview(); 
+      }
+
+      function updateItemModalPricePreview(basePriceOverride) {
+        const item = MENU_ITEMS.find((m) => m._id === currentMenuId);
+        if (!item) return;
+        const priceType = document.getElementById("sourceSelect").value;
+        const basePrice = typeof basePriceOverride === "number" ? basePriceOverride : getPriceForItem(item, priceType);
+        let addonsTotal = 0;
+        document.querySelectorAll("#itemModalAddons .addon-checkbox:checked").forEach((cb) => { addonsTotal += Number(cb.getAttribute("data-extra") || 0); });
+        const unitPrice = basePrice + addonsTotal;
+        const subtotal = unitPrice * currentModalQty;
+        document.getElementById("itemModalPricePreview").textContent = `Rp ${formatRupiah(subtotal)}`;
+      }
+
+      function recalcCartPrices() {
+        const priceType = document.getElementById("sourceSelect").value;
+        cart.forEach((c) => {
+          const item = MENU_ITEMS.find((m) => m._id === c.menuId);
+          if (!item) return;
+          const base = getPriceForItem(item, priceType);
+          let addonsExtraTotal = 0;
+          if (item.addons && c.addons) {
+            c.addons.forEach((name) => {
+              const found = item.addons.find((a) => a.name === name);
+              if (found) addonsExtraTotal += getAddonPrice(found, priceType);
+            });
+          }
+          c.priceType = priceType;
+          c.unitPrice = base + addonsExtraTotal;
+          c.subtotal = c.unitPrice * c.quantity;
+        });
+        renderCart();
+      }
+
+      function updateQuantity(index, delta) {
+        if (!cart[index]) return;
+        let q = cart[index].quantity + delta;
+        if (q < 1) { if(confirm("Hapus item ini dari keranjang?")) cart.splice(index, 1); }
+        else { cart[index].quantity = q; cart[index].subtotal = cart[index].unitPrice * q; }
+        renderCart();
+      }
+      
+      function removeItem(index) { cart.splice(index, 1); renderCart(); }
+      function clearCart() { if(cart.length > 0 && confirm("Kosongkan semua keranjang?")) { cart = []; renderCart(); } }
+      
+      function renderCart() {
+        const container = document.getElementById("cart-body");
+        const emptyState = document.getElementById("emptyCartState");
+        const mobileBar = document.getElementById("mobileCartBar");
+        container.innerHTML = "";
+        
+        const subtotal = cart.reduce((sum, c) => sum + c.subtotal, 0);
+        document.getElementById("subtotalDisplay").textContent = "Rp " + formatRupiah(subtotal);
+
+        if (cart.length === 0) {
+          emptyState.classList.remove("hidden");
+          if(window.innerWidth < 768) mobileBar.classList.remove("translate-y-0");
+          if(window.innerWidth < 768) mobileBar.classList.add("translate-y-full");
+        } else {
+          emptyState.classList.add("hidden");
+          if(window.innerWidth < 768) mobileBar.classList.remove("translate-y-full");
+          if(window.innerWidth < 768) mobileBar.classList.add("translate-y-0");
+        }
+
+        cart.forEach((c, index) => {
+          const row = document.createElement("div");
+          row.className = "bg-white p-3 rounded-xl border border-slate-100 shadow-sm flex flex-col gap-2 animate-fade-in relative group";
+          const addonsHtml = c.addons && c.addons.length ? `<div class="flex flex-wrap gap-1 mt-1">${c.addons.map(a => `<span class="text-[9px] bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded border border-slate-200">${a}</span>`).join('')}</div>` : "";
+          const noteHtml = c.note ? `<div class="text-[10px] text-amber-600 mt-1 flex items-start gap-1 bg-amber-50 p-1 rounded"><svg class="w-3 h-3 flex-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg> <span>${c.note}</span></div>` : "";
+          
+          row.innerHTML = `
+            <div class="absolute top-2 right-2 flex gap-1">
+                <button onclick="openEditCartItem(${index})" type="button" class="text-indigo-300 hover:text-indigo-600 p-1 rounded hover:bg-indigo-50 transition-colors">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+                </button>
+                <button onclick="removeItem(${index})" type="button" class="text-slate-300 hover:text-red-500 p-1 rounded hover:bg-red-50 transition-colors">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <div>
+              <div class="text-sm font-bold text-slate-800 pr-14 leading-tight cursor-pointer hover:text-indigo-600 transition-colors" onclick="openEditCartItem(${index})">${c.name}</div>
+              ${addonsHtml}
+              ${noteHtml}
+            </div>
+            <div class="flex items-center justify-between mt-1">
+              <div class="flex items-center bg-slate-50 rounded-lg border border-slate-200 h-7">
+                <button type="button" class="w-7 h-full flex items-center justify-center text-slate-500 hover:bg-slate-200 hover:text-slate-700 rounded-l-lg transition-colors" onclick="updateQuantity(${index}, -1)">-</button>
+                <div class="w-8 text-center text-xs font-bold text-slate-800">${c.quantity}</div>
+                <button type="button" class="w-7 h-full flex items-center justify-center text-indigo-600 hover:bg-indigo-50 hover:text-indigo-800 rounded-r-lg transition-colors" onclick="updateQuantity(${index}, 1)">+</button>
+              </div>
+              <div class="font-mono font-bold text-sm text-slate-700">Rp ${formatRupiah(c.subtotal)}</div>
+            </div>
+          `;
+          container.appendChild(row);
+        });
+        updateTotals();
+      }
+
+      function openDiscountModal() { document.getElementById("discountModal").classList.remove("hidden"); }
+      function closeDiscountModal() { document.getElementById("discountModal").classList.add("hidden"); }
+      function setDiscountType(type) {
+        discountType = type;
+        const flatBtn = document.getElementById("discTypeFlatBtn");
+        const pctBtn = document.getElementById("discTypePercentBtn");
+        if (type === "flat") { flatBtn.classList.replace("text-slate-500", "bg-white"); flatBtn.classList.replace("hover:text-slate-700", "shadow"); flatBtn.classList.add("text-slate-800"); pctBtn.classList.remove("bg-white", "shadow", "text-slate-800"); pctBtn.classList.add("text-slate-500", "hover:text-slate-700"); }
+        else { pctBtn.classList.replace("text-slate-500", "bg-white"); pctBtn.classList.replace("hover:text-slate-700", "shadow"); pctBtn.classList.add("text-slate-800"); flatBtn.classList.remove("bg-white", "shadow", "text-slate-800"); flatBtn.classList.add("text-slate-500", "hover:text-slate-700"); }
+      }
+      function appendDiscountDigit(d) { if (discountValueStr === "0") discountValueStr = d; else discountValueStr += d; document.getElementById("discountValueDisplay").textContent = discountType === 'percent' && Number(discountValueStr) > 100 ? '100' : discountValueStr; }
+      function clearDiscountValue() { discountValueStr = "0"; document.getElementById("discountValueDisplay").textContent = "0"; }
+      function applyDiscount() { updateTotals(); closeDiscountModal(); }
+      
+      function updateTotals() {
+        const subtotal = cart.reduce((sum, c) => sum + c.subtotal, 0);
+        let valueNum = Number(discountValueStr || "0");
+        let discountAmount = 0;
+        if (discountType === "percent") { if(valueNum > 100) valueNum = 100; discountAmount = Math.round((subtotal * valueNum) / 100); }
+        else { discountAmount = valueNum; }
+        if(discountAmount > subtotal) discountAmount = subtotal;
+        const total = subtotal - discountAmount;
+        document.getElementById("discountInput").value = String(discountAmount);
+        document.getElementById("discountLabel").textContent = discountAmount > 0 ? `-${discountType === 'percent' ? valueNum + '%' : ''} Rp ${formatRupiah(discountAmount)}` : "Rp 0";
+        document.getElementById("totalDisplay").textContent = "Rp " + formatRupiah(total);
+        const count = cart.reduce((sum, c) => sum + c.quantity, 0);
+        document.getElementById("mobileCartCount").textContent = count;
+        document.getElementById("mobileCartTotal").textContent = "Rp " + formatRupiah(total);
+      }
+
+      function toggleMobileCart() {
+        mobileCartOpen = !mobileCartOpen;
+        const wrap = document.getElementById("cartWrapper");
+        const bar = document.getElementById("mobileCartBar");
+        if (mobileCartOpen) { wrap.classList.remove("translate-y-full"); bar.classList.add("translate-y-full"); } 
+        else { wrap.classList.add("translate-y-full"); bar.classList.remove("translate-y-full"); }
+      }
+
+      function handleSaveClick() {
+        if (!cart.length) return alert("Keranjang masih kosong.");
+        const src = document.getElementById("sourceSelect").value;
+        const inStoreOpts = document.getElementById("paymentOptionsInStore");
+        const nonStoreInfo = document.getElementById("paymentInfoNonStore");
+        if (src === "inStore") { inStoreOpts.classList.remove("hidden"); nonStoreInfo.classList.add("hidden"); }
+        else { inStoreOpts.classList.add("hidden"); nonStoreInfo.classList.remove("hidden"); }
+        document.getElementById("paymentModal").classList.remove("hidden");
+      }
+      function closePaymentModal() { document.getElementById("paymentModal").classList.add("hidden"); }
+      function confirmPaymentAndSubmit() {
+        const src = document.getElementById("sourceSelect").value;
+        const paymentInput = document.getElementById("paymentMethodInput");
+        if (src === "inStore") { const checked = document.querySelector('input[name="paymentRadio"]:checked'); paymentInput.value = checked ? checked.value : "cash"; }
+        else { paymentInput.value = "app_gateway"; }
+        const itemsForServer = cart.map((c) => ({ menuId: c.menuId, name: c.name, unitPrice: c.unitPrice, quantity: c.quantity, note: c.note, addons: c.addons, subtotal: c.subtotal }));
+        document.getElementById("itemsJsonInput").value = JSON.stringify(itemsForServer);
+        document.getElementById("pos-form").submit();
+      }
+
+      updateMenuPrices();
+      renderCart();
+      setDiscountType('flat');
+    </script>
   </body>
-
 </html>

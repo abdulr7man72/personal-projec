@@ -8,14 +8,28 @@ app.use(express.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
+const http = require("http");
+const { Server } = require("socket.io");
 
+const server = http.createServer(app);
+const io = new Server(server);
+
+app.set("io", io);
 
 mongoose.connect('mongodb+srv://apslun:abdoolfree1@cluster0.vo1kj74.mongodb.net/tpos?retryWrites=true&w=majority')
   .then(() => console.log('✅ MongoDB connected'))
   .catch(err => console.error(err));
 
-app.use('/', require('./routes/menus')); // <-- هنا
-app.use('/', require('./routes/pos'));  // <-- هنا
+
+const invoiceallRoutes = require("./routes/invoiceall");
+app.use("/", invoiceallRoutes);
+
+app.use('/', require('./routes/receipts'));  // <-- هنا
+const menuRoutes = require("./routes/menu");
+app.use("/", menuRoutes);
+
+const posRoutes = require("./routes/pos");
+app.use("/", posRoutes);
 app.use('/', require('./routes/purchases'));
 app.get('/', (req,res)=> res.redirect('/purchases'));
 

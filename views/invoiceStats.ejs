@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <title><%= title || ("Stats - " + cabang) %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+
+  <body class="bg-slate-100 text-slate-800">
+    <div class="max-w-6xl mx-auto p-4">
+      <!-- الهيدر -->
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <h1 class="text-xl font-semibold">
+            Statistik – <span class="uppercase"><%= cabang %></span>
+          </h1>
+          <p class="text-xs text-slate-500">
+            Ringkasan invoice yang sudah selesai untuk cabang ini.
+          </p>
+        </div>
+
+        <a
+          href="/<%= cabang %>/invoiceall"
+          class="text-xs px-3 py-1.5 rounded-full bg-slate-800 text-white hover:bg-slate-900"
+        >
+          ← Kembali ke Invoice
+        </a>
+      </div>
+
+      <!-- كروت الأرقام الأساسية -->
+      <div class="grid gap-4 sm:grid-cols-3 mb-6">
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4">
+          <div class="text-xs text-slate-500 mb-1">Total Invoice (Selesai)</div>
+          <div class="text-2xl font-semibold"><%= totalInvoices || 0 %></div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4">
+          <div class="text-xs text-slate-500 mb-1">Total Penjualan</div>
+          <div class="text-2xl font-semibold">
+            Rp <%= (totalAmount || 0).toLocaleString('id-ID') %>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4">
+          <div class="text-xs text-slate-500 mb-1">Total Diskon</div>
+          <div class="text-2xl font-semibold">
+            Rp <%= (totalDiscount || 0).toLocaleString('id-ID') %>
+          </div>
+        </div>
+      </div>
+
+      <!-- ملخص حسب التطبيق (ShopeeFood / GoFood / GrabFood) -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 mb-6">
+        <h2 class="text-sm font-semibold mb-3">Ringkasan per Platform</h2>
+
+        <table class="w-full text-xs border-collapse">
+          <thead>
+            <tr class="border-b border-slate-200 bg-slate-50">
+              <th class="text-left py-2 px-2">Platform</th>
+              <th class="text-right py-2 px-2">Jumlah Invoice</th>
+              <th class="text-right py-2 px-2">Total Penjualan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% 
+              const srcKeys = Object.keys(bySource || {});
+              if (srcKeys.length === 0) { 
+            %>
+              <tr>
+                <td colspan="3" class="py-3 px-2 text-center text-slate-400">
+                  Belum ada data selesai untuk cabang ini.
+                </td>
+              </tr>
+            <% } else {
+              srcKeys.forEach(src => { 
+                const row = bySource[src];
+            %>
+              <tr class="border-b border-slate-100">
+                <td class="py-1.5 px-2 capitalize"><%= src %></td>
+                <td class="py-1.5 px-2 text-right"><%= row.count %></td>
+                <td class="py-1.5 px-2 text-right">
+                  Rp <%= (row.total || 0).toLocaleString('id-ID') %>
+                </td>
+              </tr>
+            <% }); } %>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- جدول آخر الفواتير -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-sm font-semibold">Invoice yang sudah selesai</h2>
+          <span class="text-[11px] text-slate-500">
+            Menampilkan <%= (list || []).length %> data terakhir
+          </span>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs border-collapse">
+            <thead>
+              <tr class="border-b border-slate-200 bg-slate-50">
+                <th class="text-left py-2 px-2">Tanggal</th>
+                <th class="text-left py-2 px-2">No. Invoice</th>
+                <th class="text-left py-2 px-2">Pelanggan</th>
+                <th class="text-left py-2 px-2">Platform</th>
+                <th class="text-right py-2 px-2">Diskon</th>
+                <th class="text-right py-2 px-2">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (!list || !list.length) { %>
+                <tr>
+                  <td colspan="6" class="py-3 px-2 text-center text-slate-400">
+                    Belum ada invoice selesai untuk cabang ini.
+                  </td>
+                </tr>
+              <% } else { 
+                   list.forEach(inv => { %>
+                <tr class="border-b border-slate-100 hover:bg-slate-50/70">
+                  <td class="py-1.5 px-2">
+                    <% if (inv.finishedAt) { %>
+                      <%= new Date(inv.finishedAt).toLocaleDateString('id-ID') %>
+                    <% } %>
+                  </td>
+                  <td class="py-1.5 px-2 font-mono text-[11px]">
+                    #<%= inv.invoiceNumber %>
+                  </td>
+                  <td class="py-1.5 px-2">
+                    <%= inv.customerName || "-" %>
+                  </td>
+                  <td class="py-1.5 px-2 capitalize">
+                    <%= inv.source || "-" %>
+                  </td>
+                  <td class="py-1.5 px-2 text-right font-mono">
+                    Rp <%= (inv.discount || 0).toLocaleString('id-ID') %>
+                  </td>
+                  <td class="py-1.5 px-2 text-right font-mono">
+                    Rp <%= (inv.total || 0).toLocaleString('id-ID') %>
+                  </td>
+                </tr>
+              <% }); } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

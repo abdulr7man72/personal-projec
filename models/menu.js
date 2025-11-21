@@ -20,6 +20,7 @@ const menuSchema = new mongoose.Schema({
       }
     }
   ],
+  catagory: String,
   imageUrl: String
 });
 
