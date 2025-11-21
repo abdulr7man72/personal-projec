@@ -2,6 +2,7 @@
 <html lang="id">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title || "Invoices" %></title>
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -32,17 +33,18 @@
   <body class="bg-slate-100 text-slate-800">
     <div class="flex min-h-screen">
 
+      <!-- Sidebar -->
       <aside
         id="sidebar"
         class="w-16 transition-all duration-300 ease-in-out
              bg-white shadow-lg p-4 sticky top-0 h-screen overflow-hidden
-             hidden lg:block z-20 collapsed"
+             hidden lg:block z-20"
         data-expanded="false"
         style="width: 4rem;">
 
         <div class="flex items-center justify-between mb-6">
           <button id="toggle-sidebar-btn"
-            class="p-2 -mr-1 rounded-lg text-slate-700 hover:bg-slate-200">
+            class="p-2 -mr-1 rounded-lg text-slate-700 hover:bg-slate-200 transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
               viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round"
@@ -58,7 +60,7 @@
             <li>
               <a
                 href="/"
-                class="flex items-center p-2 rounded-lg text-slate-700 hover:bg-slate-100 hover:text-indigo-600 font-medium group">
+                class="flex items-center p-2 rounded-lg text-slate-700 hover:bg-slate-100 hover:text-indigo-600 font-medium group transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0"
                   fill="none" viewBox="0 0 24 24" stroke="currentColor"
                   stroke-width="2">
@@ -73,8 +75,7 @@
             <li>
               <a
                 href="/<%= cabang %>/pos"
-                class="flex items-center p-2 rounded-lg text-slate-700 hover:bg-slate-100 hover:text-indigo-600 font-medium group">
-
+                class="flex items-center p-2 rounded-lg text-slate-700 hover:bg-slate-100 hover:text-indigo-600 font-medium group transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0"
                   fill="none" viewBox="0 0 24 24" stroke="currentColor"
                   stroke-width="2">
@@ -91,7 +92,7 @@
             <li>
               <a
                 href="/<%= cabang %>/stats"
-                class="flex items-center p-2 rounded-lg text-slate-700 hover:bg-slate-100 hover:text-indigo-600 font-medium group">
+                class="flex items-center p-2 rounded-lg text-slate-700 hover:bg-slate-100 hover:text-indigo-600 font-medium group transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0"
                   fill="none" viewBox="0 0 24 24" stroke="currentColor"
                   stroke-width="2">
@@ -105,102 +106,168 @@
                   <%= cabang %></span>
               </a>
             </li>
-
           </ul>
         </nav>
-
       </aside>
 
+      <!-- Mobile Menu Button -->
+      <button 
+        id="mobile-menu-btn"
+        class="lg:hidden fixed top-4 right-4 z-30 p-2 bg-white rounded-lg shadow-lg text-slate-700 hover:bg-slate-100 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+          viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+
+      <!-- Mobile Sidebar Overlay -->
+      <div id="mobile-overlay" class="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-20 hidden transition-opacity"></div>
+      
+      <!-- Mobile Sidebar -->
+      <aside
+        id="mobile-sidebar"
+        class="lg:hidden fixed top-0 right-0 h-full w-64 bg-white shadow-2xl z-30 transform translate-x-full transition-transform duration-300 p-4">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-xl font-bold text-indigo-600">القائمة</h2>
+          <button id="close-mobile-menu" class="p-2 rounded-lg text-slate-700 hover:bg-slate-200">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        <nav>
+          <ul class="space-y-2">
+            <li>
+              <a href="/" class="flex items-center p-2 rounded-lg text-slate-700 hover:bg-slate-100 hover:text-indigo-600 font-medium">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ml-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0h6m-6 0v-5m6 5v-5" />
+                </svg>
+                <span class="mr-3">الرئيسية</span>
+              </a>
+            </li>
+            <li>
+              <a href="/<%= cabang %>/pos" class="flex items-center p-2 rounded-lg text-slate-700 hover:bg-slate-100 hover:text-indigo-600 font-medium">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ml-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18h2" />
+                  <path d="M12 18h6" />
+                  <rect width="14" height="8" x="5" y="2" rx="2" />
+                  <rect width="20" height="8" x="2" y="14" rx="2" />
+                </svg>
+                <span class="mr-3">كاشير</span>
+              </a>
+            </li>
+            <li>
+              <a href="/<%= cabang %>/stats" class="flex items-center p-2 rounded-lg text-slate-700 hover:bg-slate-100 hover:text-indigo-600 font-medium">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ml-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
+                </svg>
+                <span class="mr-3">إحصائيات <%= cabang %></span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
       <div id="main-content"
-        class="page-wrap flex-grow max-w-full mx-auto p-4 transition-all duration-300 ease-in-out">
+        class="page-wrap flex-grow w-full mx-auto p-3 sm:p-4 md:p-6 transition-all duration-300 ease-in-out">
 
-        <header class="flex items-center justify-between mb-4">
-
-          <h1 class="text-2xl font-bold">
-            فاتورة – <span class="uppercase text-indigo-600"><%= cabang
-              %></span>
+        <header class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 sm:mb-6">
+          <h1 class="text-xl sm:text-2xl md:text-3xl font-bold">
+            فاتورة – <span class="uppercase text-indigo-600"><%= cabang %></span>
           </h1>
           <a
             href="/<%= cabang %>/stats"
-            class="no-print text-xs px-3 py-1.5 rounded-full bg-indigo-600 text-white hover:bg-indigo-700">
-            📊 الإحصائيات
+            class="no-print text-xs sm:text-sm px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-indigo-600 text-white hover:bg-indigo-700 transition-colors text-center">
+           الإحصائيات
           </a>
         </header>
 
-        <div id="invoice-grid" class="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+        <div id="invoice-grid" class="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
         </div>
       </div>
     </div>
+
     <script>
-    const sidebar = document.getElementById('sidebar');
-    const toggleBtn = document.getElementById('toggle-sidebar-btn');
-    const linksText = sidebar.querySelectorAll('span');
-    const titleText = sidebar.querySelector('h2');
-    
-    // الدالة الرئيسية لتبديل حالة الشريط الجانبي
-    function toggleSidebar() {
+      // Desktop Sidebar Toggle
+      const sidebar = document.getElementById('sidebar');
+      const toggleBtn = document.getElementById('toggle-sidebar-btn');
+      const linksText = sidebar.querySelectorAll('span');
+      const titleText = sidebar.querySelector('h2');
+      
+      function toggleSidebar() {
         const isExpanded = sidebar.getAttribute('data-expanded') === 'true';
         
         if (!isExpanded) {
-            // توسيع الشريط الجانبي
-            sidebar.classList.remove('w-16');
-            sidebar.classList.add('w-60');
-            sidebar.setAttribute('data-expanded', 'true');
-            sidebar.style.width = '15rem'; // 240px
+          sidebar.classList.remove('w-16');
+          sidebar.classList.add('w-60');
+          sidebar.setAttribute('data-expanded', 'true');
+          sidebar.style.width = '15rem';
 
-            // إظهار النصوص بتأخير بسيط بعد بدء الحركة
-            setTimeout(() => {
-                linksText.forEach(span => {
-                    span.classList.remove('opacity-0');
-                    span.classList.add('opacity-100');
-                });
-                titleText.classList.remove('opacity-0');
-                titleText.classList.add('opacity-100');
-            }, 100); 
+          setTimeout(() => {
+            linksText.forEach(span => {
+              span.classList.remove('opacity-0');
+              span.classList.add('opacity-100');
+            });
+            titleText.classList.remove('opacity-0');
+            titleText.classList.add('opacity-100');
+          }, 100); 
 
         } else {
-            // تصغير الشريط الجانبي
-            
-            // إخفاء النصوص فوراً
-            linksText.forEach(span => {
-                span.classList.remove('opacity-100');
-                span.classList.add('opacity-0');
-            });
-            titleText.classList.remove('opacity-100');
-            titleText.classList.add('opacity-0');
+          linksText.forEach(span => {
+            span.classList.remove('opacity-100');
+            span.classList.add('opacity-0');
+          });
+          titleText.classList.remove('opacity-100');
+          titleText.classList.add('opacity-0');
 
-            // تغيير العرض بعد الإخفاء
-            setTimeout(() => {
-                sidebar.classList.remove('w-60');
-                sidebar.classList.add('w-16');
-                sidebar.setAttribute('data-expanded', 'false');
-                sidebar.style.width = '4rem'; // 64px
-            }, 200); // تأخير بسيط لضمان اختفاء النص أولاً
+          setTimeout(() => {
+            sidebar.classList.remove('w-60');
+            sidebar.classList.add('w-16');
+            sidebar.setAttribute('data-expanded', 'false');
+            sidebar.style.width = '4rem';
+          }, 200);
         }
-    }
+      }
 
-    // ربط الدالة بزر الهامبرغر
-    toggleBtn.addEventListener('click', () => {
-        // نضمن أن الشريط الجانبي مرئي على الشاشات الكبيرة قبل التبديل
+      toggleBtn.addEventListener('click', () => {
         if (window.innerWidth >= 1024) {
-            sidebar.classList.remove('hidden');
-            toggleSidebar();
-        } 
-        // يمكن إضافة منطق إظهار القائمة المنبثقة للجوال هنا إذا لزم الأمر
-    });
+          sidebar.classList.remove('hidden');
+          toggleSidebar();
+        }
+      });
 
-    // لضمان العرض الأولي الصحيح على الشاشات الكبيرة
-    if (window.innerWidth >= 1024) {
+      if (window.innerWidth >= 1024) {
         sidebar.classList.remove('hidden');
-    }
-</script>
-    <script>
+      }
 
+      // Mobile Menu Toggle
+      const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+      const mobileSidebar = document.getElementById('mobile-sidebar');
+      const mobileOverlay = document.getElementById('mobile-overlay');
+      const closeMobileMenu = document.getElementById('close-mobile-menu');
 
-      // نخزّن اسم الفرع من السيرفر
+      function openMobileMenu() {
+        mobileSidebar.classList.remove('translate-x-full');
+        mobileOverlay.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeMobileMenuFunc() {
+        mobileSidebar.classList.add('translate-x-full');
+        mobileOverlay.classList.add('hidden');
+        document.body.style.overflow = '';
+      }
+
+      mobileMenuBtn.addEventListener('click', openMobileMenu);
+      closeMobileMenu.addEventListener('click', closeMobileMenuFunc);
+      mobileOverlay.addEventListener('click', closeMobileMenuFunc);
+
+      // Invoice Management
       const CABANG = "<%= cabang %>";
 
-      // 🔁 تحديث الفواتير كل 2 ثانية (تقريباً فوري)
       async function refreshInvoices() {
         try {
           const res = await fetch(`/${CABANG}/invoiceall/json`);
@@ -229,12 +296,11 @@
           wrapper.innerHTML = `
             <div
               id="invoice-${inv._id}"
-              class="bg-white w-full max-w-xs rounded-2xl shadow-sm border border-slate-200 px-4 pt-3 pb-0 flex flex-col"
+              class="bg-white w-full rounded-2xl shadow-sm border border-slate-200 px-3 sm:px-4 pt-3 pb-0 flex flex-col transition-shadow hover:shadow-md"
             >
-              <!-- الهيدر داخل الكرت -->
               <div class="flex items-start justify-between gap-2 mb-2">
-                <div class="text-[11px] leading-snug">
-                  <div class="text-sm font-semibold text-slate-900">
+                <div class="text-[11px] leading-snug flex-1 min-w-0">
+                  <div class="text-sm sm:text-base font-semibold text-slate-900 truncate">
                     The Shawarma
                   </div>
                   ${inv.customerName ? `
@@ -242,14 +308,14 @@
                       <div class="text-[10px] uppercase tracking-wide text-slate-500">
                         PELANGGAN
                       </div>
-                      <div class="text-[11px] font-semibold">
+                      <div class="text-[11px] font-semibold truncate">
                         ${inv.customerName}
                       </div>
                     </div>` : ""}
                 </div>
 
-                <div class="text-right">
-                  <div class="font-mono text-xl font-extrabold tracking-wide text-slate-900 leading-none">
+                <div class="text-right shrink-0">
+                  <div class="font-mono text-lg sm:text-xl font-extrabold tracking-wide text-slate-900 leading-none">
                     #${inv.invoiceNumber || ""}
                   </div>
                   <div class="mt-1 text-[10px] text-slate-600">
@@ -264,12 +330,11 @@
 
               <div class="border-t border-dotted border-slate-300 my-2"></div>
 
-              <!-- الأصناف -->
               <div class="space-y-1.5 max-h-32 overflow-y-auto pr-1 no-scrollbar">
                 ${items.map(it => `
                   <div class="flex justify-between gap-2">
-                    <div class="flex-1">
-                      <div class="text-[11px] font-semibold text-slate-900">
+                    <div class="flex-1 min-w-0">
+                      <div class="text-[11px] font-semibold text-slate-900 truncate">
                         ${it.name || ""}
                       </div>
                       <div class="text-[10px] text-slate-500 space-y-0.5">
@@ -277,20 +342,19 @@
                           ${(it.quantity || 1)}x ·
                           Rp ${(it.unitPrice || it.subtotal || 0).toLocaleString("id-ID")}
                         </div>
-                        ${it.note ? `<div>Note: ${it.note}</div>` : ""}
+                        ${it.note ? `<div class="truncate">Note: ${it.note}</div>` : ""}
                         ${(it.addons && it.addons.length)
-                          ? `<div>Add-ons: ${it.addons.join(", ")}</div>`
+                          ? `<div class="truncate">Add-ons: ${it.addons.join(", ")}</div>`
                           : ""}
                       </div>
                     </div>
-                    <div class="text-right text-[11px] font-mono text-slate-900 min-w-[72px]">
+                    <div class="text-right text-[11px] font-mono text-slate-900 min-w-[72px] shrink-0">
                       Rp ${(it.subtotal || (it.unitPrice || 0) * (it.quantity || 1)).toLocaleString("id-ID")}
                     </div>
                   </div>
                 `).join("")}
               </div>
 
-              <!-- المجموعات -->
               <div class="border-t border-slate-200 mt-3 pt-2 space-y-1 text-[11px] w-full">
                 <div class="flex justify-between">
                   <span class="text-slate-500">Sub-total</span>
@@ -313,13 +377,12 @@
               </div>
               <br>
 
-              <!-- شريط الأزرار -->
-              <div class="no-print mt-auto -mx-4">
+              <div class="no-print mt-auto -mx-3 sm:-mx-4">
                 <div class="grid grid-cols-3 text-[11px] font-medium text-white rounded-b-2xl overflow-hidden">
                   <form action="/${CABANG}/invoiceall/${inv._id}/done" method="POST">
                     <button
                       type="submit"
-                      class="w-full h-full py-2 bg-slate-900 hover:bg-slate-950"
+                      class="w-full h-full py-2 bg-slate-900 hover:bg-slate-950 transition-colors"
                     >
                       Selesai
                     </button>
@@ -327,14 +390,14 @@
                   <form action="/${CABANG}/invoiceall/${inv._id}/delete" method="POST">
                     <button
                       type="submit"
-                      class="w-full h-full py-2 bg-red-700 hover:bg-red-800"
+                      class="w-full h-full py-2 bg-red-700 hover:bg-red-800 transition-colors"
                     >
                       Hapus
                     </button>
                   </form>
                   <button
                     type="button"
-                    class="py-2 bg-emerald-600 hover:bg-emerald-700"
+                    class="py-2 bg-emerald-600 hover:bg-emerald-700 transition-colors"
                     onclick="printInvoice('${inv._id}')"
                   >
                     Print
@@ -348,16 +411,13 @@
         });
       }
 
-      // أول تحميل + تحديث كل 2 ثانية
       refreshInvoices();
       setInterval(refreshInvoices, 2000);
 
-      // 🧾 طباعة فاتورة واحدة بشكل فاتورة (receipt)
       function printInvoice(id) {
         const card = document.getElementById("invoice-" + id);
         if (!card) return;
 
-        // ناخذ محتوى الكرت بدون أزرار
         const clone = card.cloneNode(true);
         clone.querySelectorAll(".no-print").forEach(el => el.remove());
 
@@ -423,7 +483,6 @@
                 <div class="receipt-header">
                   <h1>The Shawarma</h1>
                   <div class="branch">Cabang: ${CABANG.toUpperCase()}</div>
-                  <!-- نستخرج رقم الفاتورة من الكرت -->
                   <div class="inv">${
                     card.querySelector(".font-mono") 
                       ? card.querySelector(".font-mono").textContent.trim()

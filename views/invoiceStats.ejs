@@ -1,149 +1,428 @@
-<!DOCTYPE html>
-<html lang="id">
-  <head>
-    <meta charset="UTF-8" />
-    <title><%= title || ("Stats - " + cabang) %></title>
-    <script src="https://cdn.tailwindcss.com"></script>
-  </head>
+  <!DOCTYPE html>
+  <html lang="id">
+    <head>
+      <meta charset="UTF-8" />
+      <title><%= title || ("Stats - " + cabang) %></title>
+      <script src="https://cdn.tailwindcss.com"></script>
+    </head>
 
-  <body class="bg-slate-100 text-slate-800">
-    <div class="max-w-6xl mx-auto p-4">
-      <!-- الهيدر -->
-      <div class="flex items-center justify-between mb-4">
-        <div>
-          <h1 class="text-xl font-semibold">
-            Statistik – <span class="uppercase"><%= cabang %></span>
-          </h1>
-          <p class="text-xs text-slate-500">
-            Ringkasan invoice yang sudah selesai untuk cabang ini.
+    <body class="bg-[#080807] text-amber-50 min-h-screen">
+      <!-- خلفيات ناعمة بهوية The Shawarma -->
+      <div class="pointer-events-none fixed inset-0 -z-10">
+        <div class="absolute -top-24 -right-12 h-64 w-64 rounded-full bg-orange-500/25 blur-3xl"></div>
+        <div class="absolute bottom-[-80px] left-[-40px] h-72 w-72 rounded-full bg-amber-400/20 blur-3xl"></div>
+        <div class="absolute top-1/3 right-1/4 h-40 w-40 rounded-full bg-red-500/10 blur-3xl"></div>
+      </div>
+
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+        <!-- ========== الهيدر ========== -->
+        <!-- هيدر خاص للجوال -->
+        <header class="md:hidden mb-4">
+          <div
+            class="flex items-center justify-between gap-3 rounded-3xl border border-orange-400/30 bg-gradient-to-r from-[#241106] via-[#1a130a] to-[#140f0b] px-4 py-3 shadow-lg shadow-black/40"
+          >
+            <!-- لوجو The Shawarma (مؤقت نصي) -->
+            <div class="flex items-center gap-3">
+              <div
+                class="h-10 w-10 rounded-2xl bg-gradient-to-br from-orange-500 via-amber-400 to-red-500 flex items-center justify-center text-[10px] font-bold tracking-tight text-slate-900 shadow-md shadow-orange-500/40"
+              >
+                TS
+              </div>
+              <div>
+                <div class="text-xs font-semibold uppercase tracking-[0.12em] text-amber-200">
+                  The Shawarma
+                </div>
+                <div class="text-sm font-semibold text-amber-50 leading-tight">
+                  Statistik Cabang <span class="uppercase"><%= cabang %></span>
+                </div>
+              </div>
+            </div>
+
+            <a
+              href="/<%= cabang %>/invoiceall"
+              class="inline-flex items-center gap-1 text-[11px] px-3 py-1.5 rounded-full bg-amber-300 text-slate-900 font-medium shadow-md shadow-amber-500/30"
+            >
+              <span class="text-base leading-none">←</span>
+              <span>Invoice</span>
+            </a>
+          </div>
+
+          <p class="mt-2 text-[11px] text-amber-100/70">
+            Ringkasan invoice selesai. Tampilan ini dibuat khusus agar nyaman di layar HP.
           </p>
-        </div>
+        </header>
 
-        <a
-          href="/<%= cabang %>/invoiceall"
-          class="text-xs px-3 py-1.5 rounded-full bg-slate-800 text-white hover:bg-slate-900"
+        <!-- هيدر للتابلت / دسكتوب -->
+        <header
+          class="hidden md:flex mb-8 rounded-3xl border border-orange-400/25 bg-gradient-to-r from-[#261006] via-[#1a130a] to-[#120d09] shadow-2xl shadow-black/50 px-6 py-5 lg:px-8 lg:py-7 items-center justify-between gap-6"
         >
-          ← Kembali ke Invoice
-        </a>
-      </div>
-
-      <!-- كروت الأرقام الأساسية -->
-      <div class="grid gap-4 sm:grid-cols-3 mb-6">
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4">
-          <div class="text-xs text-slate-500 mb-1">Total Invoice (Selesai)</div>
-          <div class="text-2xl font-semibold"><%= totalInvoices || 0 %></div>
-        </div>
-
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4">
-          <div class="text-xs text-slate-500 mb-1">Total Penjualan</div>
-          <div class="text-2xl font-semibold">
-            Rp <%= (totalAmount || 0).toLocaleString('id-ID') %>
+          <div class="flex items-center gap-5">
+            <div
+              class="h-14 w-14 rounded-3xl bg-gradient-to-br from-orange-500 via-amber-400 to-red-500 flex items-center justify-center text-xs font-extrabold tracking-[0.18em] text-slate-900 shadow-lg shadow-orange-500/40"
+            >
+              TS
+            </div>
+            <div>
+              <div class="inline-flex items-center gap-2 mb-1">
+                <span class="text-[11px] uppercase tracking-[0.22em] text-amber-200">
+                  The Shawarma
+                </span>
+                <span class="h-[1px] w-8 bg-amber-400/50"></span>
+                <span
+                  class="text-[10px] px-2 py-0.5 rounded-full border border-amber-400/60 bg-black/20 uppercase tracking-[0.16em]"
+                >
+                  <%= cabang %>
+                </span>
+              </div>
+              <h1 class="text-2xl lg:text-3xl font-semibold tracking-tight text-amber-50">
+                Statistik Penjualan Cabang
+              </h1>
+              <p class="mt-1 text-xs text-amber-100/75 max-w-xl">
+                Ringkasan invoice yang sudah selesai. Desain ini متنسق مع براند The Shawarma:
+                ألوان دافية، نظيفة، ومريحة للتابلت واللابتوب.
+              </p>
+            </div>
           </div>
-        </div>
 
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4">
-          <div class="text-xs text-slate-500 mb-1">Total Diskon</div>
-          <div class="text-2xl font-semibold">
-            Rp <%= (totalDiscount || 0).toLocaleString('id-ID') %>
+          <div class="flex flex-col items-end gap-3">
+            <div
+              class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-amber-400/40 bg-black/20 text-[11px] text-amber-100/80"
+            >
+              <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span>Status</span>
+              <span class="font-semibold text-emerald-300">Invoice Selesai</span>
+            </div>
+            <a
+              href="/<%= cabang %>/invoiceall"
+              class="inline-flex items-center gap-2 text-xs sm:text-sm px-4 py-2.5 rounded-full bg-amber-300 text-slate-900 font-semibold shadow-lg shadow-amber-500/40 hover:bg-amber-200 transition-colors"
+            >
+              <span class="text-lg -ml-1">←</span>
+              <span>Kembali ke Invoice</span>
+            </a>
           </div>
-        </div>
-      </div>
+        </header>
 
-      <!-- ملخص حسب التطبيق (ShopeeFood / GoFood / GrabFood) -->
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 mb-6">
-        <h2 class="text-sm font-semibold mb-3">Ringkasan per Platform</h2>
+        <!-- ========== إحصائيات رئيسية (UI للجوال + التابلت) ========== -->
+        <!-- للجوال: سلايدر كروت -->
+        <section class="md:hidden mb-5 mt-3">
+          <div class="flex items-center justify-between mb-2">
+            <h2 class="text-xs font-semibold text-amber-100/90">Ringkasan Cepat</h2>
+            <span class="text-[10px] text-amber-200/70">Swipe →</span>
+          </div>
 
-        <table class="w-full text-xs border-collapse">
-          <thead>
-            <tr class="border-b border-slate-200 bg-slate-50">
-              <th class="text-left py-2 px-2">Platform</th>
-              <th class="text-right py-2 px-2">Jumlah Invoice</th>
-              <th class="text-right py-2 px-2">Total Penjualan</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% 
-              const srcKeys = Object.keys(bySource || {});
-              if (srcKeys.length === 0) { 
-            %>
-              <tr>
-                <td colspan="3" class="py-3 px-2 text-center text-slate-400">
-                  Belum ada data selesai untuk cabang ini.
-                </td>
-              </tr>
-            <% } else {
-              srcKeys.forEach(src => { 
+          <div class="-mx-4 px-4 overflow-x-auto">
+            <div class="flex gap-3 min-w-max pb-1">
+              <!-- إجمالي الفواتير -->
+              <div
+                class="min-w-[180px] rounded-2xl border border-amber-400/40 bg-[#1a130a] px-4 py-3 flex flex-col justify-between shadow-md shadow-black/40"
+              >
+                <span class="text-[11px] text-amber-200/80 mb-1">Total Invoice</span>
+                <span class="text-xl font-semibold text-amber-100">
+                  <%= totalInvoices || 0 %>
+                </span>
+                <span class="mt-1 text-[10px] text-amber-200/60">
+                  Status selesai di cabang ini.
+                </span>
+              </div>
+
+              <!-- إجمالي المبيعات -->
+              <div
+                class="min-w-[200px] rounded-2xl border border-orange-400/60 bg-gradient-to-br from-[#2b1408] via-[#1a130a] to-[#140d09] px-4 py-3 shadow-md shadow-black/50"
+              >
+                <span class="text-[11px] text-amber-200/90 mb-1">Total Penjualan</span>
+                <span class="text-xl font-semibold text-amber-50">
+                  Rp <%= (totalAmount || 0).toLocaleString('id-ID') %>
+                </span>
+                <span class="mt-1 text-[10px] text-amber-200/70">
+                  Setelah diskon & penyesuaian.
+                </span>
+              </div>
+
+              <!-- إجمالي الخصم -->
+              <div
+                class="min-w-[190px] rounded-2xl border border-red-400/50 bg-gradient-to-br from-[#2b1212] via-[#1a1010] to-[#140b0b] px-4 py-3 shadow-md shadow-black/50"
+              >
+                <span class="text-[11px] text-amber-200/90 mb-1">Total Diskon</span>
+                <span class="text-xl font-semibold text-amber-50">
+                  Rp <%= (totalDiscount || 0).toLocaleString('id-ID') %>
+                </span>
+                <span class="mt-1 text-[10px] text-amber-200/70">
+                  Promo, voucher, dan potongan lainnya.
+                </span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- للتابلت/دسكتوب: Grid كروت -->
+        <section class="hidden md:grid gap-5 md:grid-cols-3 mb-8">
+          <div
+            class="relative overflow-hidden rounded-3xl border border-amber-400/35 bg-[#1a130a] p-5 shadow-lg shadow-black/40"
+          >
+            <div class="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-amber-500/20 blur-2xl"></div>
+            <div class="relative space-y-1.5">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] uppercase tracking-[0.16em] text-amber-200/80">
+                  Total Invoice
+                </span>
+              </div>
+              <div class="text-3xl font-semibold text-amber-50">
+                <%= totalInvoices || 0 %>
+              </div>
+              <p class="text-[11px] text-amber-200/70">
+                Semua invoice yang sudah diselesaikan di cabang
+                <span class="uppercase"><%= cabang %></span>.
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="relative overflow-hidden rounded-3xl border border-orange-400/60 bg-gradient-to-br from-[#2c1408] via-[#1b120a] to-[#140d09] p-5 shadow-lg shadow-black/50"
+          >
+            <div class="absolute -right-10 -bottom-10 h-28 w-28 rounded-full bg-orange-400/30 blur-2xl"></div>
+            <div class="relative space-y-1.5">
+              <span class="text-[11px] uppercase tracking-[0.16em] text-amber-200/90">
+                Total Penjualan
+              </span>
+              <div class="text-3xl font-semibold text-amber-50">
+                Rp <%= (totalAmount || 0).toLocaleString('id-ID') %>
+              </div>
+              <p class="text-[11px] text-amber-200/75">
+                Total omset dari semua platform dan metode pembayaran.
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="relative overflow-hidden rounded-3xl border border-red-400/60 bg-gradient-to-br from-[#2c1010] via-[#1a1010] to-[#140a0a] p-5 shadow-lg shadow-black/50"
+          >
+            <div class="absolute -left-10 -bottom-10 h-28 w-28 rounded-full bg-red-400/25 blur-2xl"></div>
+            <div class="relative space-y-1.5">
+              <span class="text-[11px] uppercase tracking-[0.16em] text-amber-200/90">
+                Total Diskon
+              </span>
+              <div class="text-3xl font-semibold text-amber-50">
+                Rp <%= (totalDiscount || 0).toLocaleString('id-ID') %>
+              </div>
+              <p class="text-[11px] text-amber-200/75">
+                Akumulasi potongan harga yang diberikan kepada pelanggan.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========== ملخص حسب التطبيق ========== -->
+        <section
+          class="mb-6 sm:mb-8 rounded-3xl border border-amber-400/35 bg-[#120e0a]/95 backdrop-blur-xl shadow-xl shadow-black/50 p-4 sm:p-5 lg:p-6"
+        >
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+            <div>
+              <h2 class="text-sm sm:text-lg font-semibold text-amber-50 tracking-tight">
+                Ringkasan per Platform
+              </h2>
+              <p class="mt-1 text-[11px] sm:text-xs text-amber-200/80">
+                Performansi ShopeeFood, GoFood, GrabFood, dan platform lainnya.
+              </p>
+            </div>
+          </div>
+
+          <% 
+            const srcKeys = Object.keys(bySource || {});
+            if (srcKeys.length === 0) { 
+          %>
+            <div class="py-6 text-center text-sm text-amber-200/70">
+              Belum ada data selesai untuk cabang ini.
+            </div>
+          <% } else { %>
+            <div class="grid gap-3 sm:gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <% srcKeys.forEach(src => { 
                 const row = bySource[src];
-            %>
-              <tr class="border-b border-slate-100">
-                <td class="py-1.5 px-2 capitalize"><%= src %></td>
-                <td class="py-1.5 px-2 text-right"><%= row.count %></td>
-                <td class="py-1.5 px-2 text-right">
-                  Rp <%= (row.total || 0).toLocaleString('id-ID') %>
-                </td>
-              </tr>
-            <% }); } %>
-          </tbody>
-        </table>
-      </div>
+              %>
+                <article
+                  class="rounded-2xl border border-amber-400/30 bg-[#1b140e] p-3.5 sm:p-4 flex flex-col gap-2 hover:border-orange-400/70 hover:bg-[#24160c] transition-colors"
+                >
+                  <div class="flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-2.5">
+                      <div
+                        class="h-8 w-8 rounded-2xl bg-gradient-to-br from-orange-500 via-amber-400 to-red-500 text-[11px] font-bold flex items-center justify-center text-slate-900"
+                      >
+                        <%= (src || "?")[0].toUpperCase() %>
+                      </div>
+                      <div>
+                        <div class="text-xs font-semibold capitalize text-amber-50">
+                          <%= src %>
+                        </div>
+                        <div class="text-[11px] text-amber-200/80">
+                          Platform order
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="px-2 py-1 rounded-full text-[10px] bg-black/30 border border-amber-400/40 text-amber-100"
+                    >
+                      <%= row.count %> invoice
+                    </div>
+                  </div>
 
-      <!-- جدول آخر الفواتير -->
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4">
-        <div class="flex items-center justify-between mb-3">
-          <h2 class="text-sm font-semibold">Invoice yang sudah selesai</h2>
-          <span class="text-[11px] text-slate-500">
-            Menampilkan <%= (list || []).length %> data terakhir
-          </span>
-        </div>
+                  <div class="mt-1">
+                    <div class="text-[11px] text-amber-200/70">Total Penjualan</div>
+                    <div class="text-sm sm:text-base font-semibold text-amber-50">
+                      Rp <%= (row.total || 0).toLocaleString('id-ID') %>
+                    </div>
+                  </div>
+                </article>
+              <% }); %>
+            </div>
+          <% } %>
+        </section>
 
-        <div class="overflow-x-auto">
-          <table class="w-full text-xs border-collapse">
-            <thead>
-              <tr class="border-b border-slate-200 bg-slate-50">
-                <th class="text-left py-2 px-2">Tanggal</th>
-                <th class="text-left py-2 px-2">No. Invoice</th>
-                <th class="text-left py-2 px-2">Pelanggan</th>
-                <th class="text-left py-2 px-2">Platform</th>
-                <th class="text-right py-2 px-2">Diskon</th>
-                <th class="text-right py-2 px-2">Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% if (!list || !list.length) { %>
-                <tr>
-                  <td colspan="6" class="py-3 px-2 text-center text-slate-400">
-                    Belum ada invoice selesai untuk cabang ini.
-                  </td>
-                </tr>
-              <% } else { 
-                   list.forEach(inv => { %>
-                <tr class="border-b border-slate-100 hover:bg-slate-50/70">
-                  <td class="py-1.5 px-2">
-                    <% if (inv.finishedAt) { %>
-                      <%= new Date(inv.finishedAt).toLocaleDateString('id-ID') %>
-                    <% } %>
-                  </td>
-                  <td class="py-1.5 px-2 font-mono text-[11px]">
-                    #<%= inv.invoiceNumber %>
-                  </td>
-                  <td class="py-1.5 px-2">
-                    <%= inv.customerName || "-" %>
-                  </td>
-                  <td class="py-1.5 px-2 capitalize">
+        <!-- ========== قائمة / جدول الفواتير ========== -->
+        <section
+          class="rounded-3xl border border-amber-400/40 bg-[#120e0a]/95 backdrop-blur-xl shadow-xl shadow-black/50 p-4 sm:p-5 lg:p-6 mb-4 sm:mb-8"
+        >
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+            <div>
+              <h2 class="text-sm sm:text-lg font-semibold text-amber-50 tracking-tight">
+                Invoice yang sudah selesai
+              </h2>
+              <p class="mt-1 text-[11px] sm:text-xs text-amber-200/80">
+                Daftar invoice terbaru yang statusnya <span class="font-semibold">Selesai</span>.
+              </p>
+            </div>
+            <span
+              class="inline-flex items-center gap-1 text-[11px] sm:text-xs px-3 py-1.5 rounded-full border border-amber-400/40 bg-black/20 text-amber-100/90"
+            >
+              Menampilkan
+              <span class="font-semibold text-amber-300">
+                <%= (list || []).length %>
+              </span>
+              data terakhir
+            </span>
+          </div>
+
+          <!-- موبايل: UI خاص على شكل بطاقات -->
+          <div class="space-y-3 md:hidden">
+            <% if (!list || !list.length) { %>
+              <div class="py-6 text-center text-sm text-amber-200/70">
+                Belum ada invoice selesai untuk cabang ini.
+              </div>
+            <% } else { 
+                list.forEach(inv => { %>
+              <article
+                class="rounded-2xl border border-amber-400/30 bg-[#1a130d] p-3.5 flex flex-col gap-2"
+              >
+                <div class="flex items-start justify-between gap-2">
+                  <div>
+                    <div class="text-xs font-semibold text-amber-50">
+                      <% if (inv.finishedAt) { %>
+                        <%= new Date(inv.finishedAt).toLocaleDateString('id-ID') %>
+                      <% } else { %>
+                        -
+                      <% } %>
+                    </div>
+                    <div class="text-[11px] text-amber-200/75 font-mono">
+                      #<%= inv.invoiceNumber %>
+                    </div>
+                  </div>
+                  <div
+                    class="px-2 py-1 rounded-full text-[10px] capitalize bg-black/30 border border-amber-400/40 text-amber-100"
+                  >
                     <%= inv.source || "-" %>
-                  </td>
-                  <td class="py-1.5 px-2 text-right font-mono">
-                    Rp <%= (inv.discount || 0).toLocaleString('id-ID') %>
-                  </td>
-                  <td class="py-1.5 px-2 text-right font-mono">
-                    Rp <%= (inv.total || 0).toLocaleString('id-ID') %>
-                  </td>
+                  </div>
+                </div>
+
+                <div class="text-xs text-amber-100">
+                  <span class="text-amber-200/80">Pelanggan:</span>
+                  <span class="ml-1 font-medium"><%= inv.customerName || "-" %></span>
+                </div>
+
+                <div
+                  class="pt-2 mt-1 border-t border-dashed border-amber-400/30 flex items-end justify-between gap-3 text-[11px]"
+                >
+                  <div>
+                    <div class="text-amber-200/80">Diskon</div>
+                    <div class="font-mono">
+                      Rp <%= (inv.discount || 0).toLocaleString('id-ID') %>
+                    </div>
+                  </div>
+                  <div class="text-right">
+                    <div class="text-amber-200/80">Total</div>
+                    <div class="font-mono font-semibold text-amber-300">
+                      Rp <%= (inv.total || 0).toLocaleString('id-ID') %>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            <% }); } %>
+          </div>
+
+          <!-- تابلت + دسكتوب: جدول كلاسيكي بهوية البراند -->
+          <div class="hidden md:block mt-3 overflow-x-auto">
+            <table class="w-full text-xs sm:text-sm border-collapse min-w-[760px]">
+              <thead>
+                <tr class="border-b border-amber-400/40 bg-black/30">
+                  <th class="text-left py-3 px-3 text-[11px] uppercase tracking-[0.16em] text-amber-200">
+                    Tanggal
+                  </th>
+                  <th class="text-left py-3 px-3 text-[11px] uppercase tracking-[0.16em] text-amber-200">
+                    No. Invoice
+                  </th>
+                  <th class="text-left py-3 px-3 text-[11px] uppercase tracking-[0.16em] text-amber-200">
+                    Pelanggan
+                  </th>
+                  <th class="text-left py-3 px-3 text-[11px] uppercase tracking-[0.16em] text-amber-200">
+                    Platform
+                  </th>
+                  <th class="text-right py-3 px-3 text-[11px] uppercase tracking-[0.16em] text-amber-200">
+                    Diskon
+                  </th>
+                  <th class="text-right py-3 px-3 text-[11px] uppercase tracking-[0.16em] text-amber-200">
+                    Total
+                  </th>
                 </tr>
-              <% }); } %>
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                <% if (!list || !list.length) { %>
+                  <tr>
+                    <td colspan="6" class="py-6 text-center text-sm text-amber-200/75">
+                      Belum ada invoice selesai untuk cabang ini.
+                    </td>
+                  </tr>
+                <% } else { 
+                    list.forEach(inv => { %>
+                  <tr
+                    class="border-b border-amber-400/20 hover:bg-[#1c140d] transition-colors"
+                  >
+                    <td class="py-2.5 px-3">
+                      <% if (inv.finishedAt) { %>
+                        <%= new Date(inv.finishedAt).toLocaleDateString('id-ID') %>
+                      <% } %>
+                    </td>
+                    <td class="py-2.5 px-3 font-mono text-[11px] text-amber-100">
+                      #<%= inv.invoiceNumber %>
+                    </td>
+                    <td class="py-2.5 px-3">
+                      <%= inv.customerName || "-" %>
+                    </td>
+                    <td class="py-2.5 px-3 capitalize">
+                      <span
+                        class="inline-flex items-center px-2 py-1 rounded-full bg-black/30 border border-amber-400/40 text-[11px] text-amber-100"
+                      >
+                        <%= inv.source || "-" %>
+                      </span>
+                    </td>
+                    <td class="py-2.5 px-3 text-right font-mono text-amber-100">
+                      Rp <%= (inv.discount || 0).toLocaleString('id-ID') %>
+                    </td>
+                    <td class="py-2.5 px-3 text-right font-mono font-semibold text-amber-300">
+                      Rp <%= (inv.total || 0).toLocaleString('id-ID') %>
+                    </td>
+                  </tr>
+                <% }); } %>
+              </tbody>
+            </table>
+          </div>
+        </section>
       </div>
-    </div>
-  </body>
-</html>
+    </body>
+  </html>
