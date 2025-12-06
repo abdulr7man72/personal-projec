@@ -33,4 +33,6 @@ app.use("/", posRoutes);
 app.use('/', require('./routes/purchases'));
 app.get('/', (req,res)=> res.redirect('/purchases'));
 
+
+
 app.listen(3000, () => console.log('http://localhost:3000'));

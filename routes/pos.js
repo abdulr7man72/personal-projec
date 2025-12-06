@@ -24,7 +24,7 @@ router.get("/:cabang/pos", async (req, res) => {
 router.post("/:cabang/pos", async (req, res) => {
   try {
     const cabang = req.params.cabang;
-    const { customerName, source, discount, itemsJson, paymentMethod } = req.body;
+    const { invoiceNumber, customerName, source, discount, itemsJson, paymentMethod } = req.body;
 
     if (!itemsJson) {
       return res.status(400).send("Keranjang kosong.");
@@ -59,14 +59,16 @@ router.post("/:cabang/pos", async (req, res) => {
     // - In-Store: P-#### (4 أرقام قصيرة)
     // - غير In-Store: فاضي
     const src = source || "inStore";
-    let invoiceNumber = "";
-    if (src === "inStore") {
+    let invoNumb = invoiceNumber || "";
+    if (src === "inStore" && !invoNumb) {
       const short = Date.now().toString().slice(-4); // آخر 4 أرقام
-      invoiceNumber = `P-${short}`;
+      invoNumb = `P-${short}`;
     }
 
+    console.log(source, paymentMethod);
+
     await InvoiceAll.create({
-      invoiceNumber,
+      invoiceNumber: invoNumb,
       customerName: customerName || "",
       date: new Date(),
       items,

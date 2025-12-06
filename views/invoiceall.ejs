@@ -34,81 +34,7 @@
     <div class="flex min-h-screen">
 
       <!-- Sidebar -->
-      <aside
-        id="sidebar"
-        class="w-16 transition-all duration-300 ease-in-out
-             bg-white shadow-lg p-4 sticky top-0 h-screen overflow-hidden
-             hidden lg:block z-20"
-        data-expanded="false"
-        style="width: 4rem;">
-
-        <div class="flex items-center justify-between mb-6">
-          <button id="toggle-sidebar-btn"
-            class="p-2 -mr-1 rounded-lg text-slate-700 hover:bg-slate-200 transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
-              viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
-          <h2
-            class="text-xl font-bold whitespace-nowrap opacity-0 transition-opacity duration-200 text-indigo-600">القائمة</h2>
-        </div>
-
-        <nav>
-          <ul class="space-y-2">
-            <li>
-              <a
-                href="/"
-                class="flex items-center p-2 rounded-lg text-slate-700 hover:bg-slate-100 hover:text-indigo-600 font-medium group transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0"
-                  fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                  stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0h6m-6 0v-5m6 5v-5" />
-                </svg>
-                <span
-                  class="ml-3 whitespace-nowrap opacity-0 transition-opacity duration-200">الرئيسية</span>
-              </a>
-            </li>
-
-            <li>
-              <a
-                href="/<%= cabang %>/pos"
-                class="flex items-center p-2 rounded-lg text-slate-700 hover:bg-slate-100 hover:text-indigo-600 font-medium group transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0"
-                  fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                  stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M6 18h2" /><path d="M12 18h6" /><rect width="14"
-                    height="8" x="5" y="2" rx="2" /><rect width="20" height="8"
-                    x="2" y="14" rx="2" />
-                </svg>
-                <span
-                  class="ml-3 whitespace-nowrap opacity-0 transition-opacity duration-200">كاشير</span>
-              </a>
-            </li>
-
-            <li>
-              <a
-                href="/<%= cabang %>/stats"
-                class="flex items-center p-2 rounded-lg text-slate-700 hover:bg-slate-100 hover:text-indigo-600 font-medium group transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0"
-                  fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                  stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
-                  <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
-                </svg>
-                <span
-                  class="ml-3 whitespace-nowrap opacity-0 transition-opacity duration-200">إحصائيات
-                  <%= cabang %></span>
-              </a>
-            </li>
-          </ul>
-        </nav>
-      </aside>
+<%- include('articles/side.ejs') %>
 
       <!-- Mobile Menu Button -->
       <button 
@@ -289,6 +215,7 @@
           const discount = inv.discount || 0;
           const total = inv.total || 0;
           const subtotal = total + discount;
+          const source = inv.paymentMethod || "";
 
           const wrapper = document.createElement("div");
           wrapper.className = "flex justify-center";
@@ -298,7 +225,7 @@
               id="invoice-${inv._id}"
               class="bg-white w-full rounded-2xl shadow-sm border border-slate-200 px-3 sm:px-4 pt-3 pb-0 flex flex-col transition-shadow hover:shadow-md"
             >
-              <div class="flex items-start justify-between gap-2 mb-2">
+              <div class="flex items-start justify_between gap-2 mb-2">
                 <div class="text-[11px] leading-snug flex-1 min-w-0">
                   <div class="text-sm sm:text-base font-semibold text-slate-900 truncate">
                     The Shawarma
@@ -308,21 +235,21 @@
                       <div class="text-[10px] uppercase tracking-wide text-slate-500">
                         PELANGGAN
                       </div>
-                      <div class="text-[11px] font-semibold truncate">
+                      <div class="text-[11px] font-semibold truncate invoice-customer">
                         ${inv.customerName}
                       </div>
                     </div>` : ""}
                 </div>
 
                 <div class="text-right shrink-0">
-                  <div class="font-mono text-lg sm:text-xl font-extrabold tracking-wide text-slate-900 leading-none">
+                  <div class="font-mono text-lg sm:text-xl font-extrabold tracking-wide text-slate-900 leading-none invoice-number">
                     #${inv.invoiceNumber || ""}
                   </div>
-                  <div class="mt-1 text-[10px] text-slate-600">
+                  <div class="mt-1 text-[10px] text-slate-600 invoice-date">
                     ${inv.date ? new Date(inv.date).toLocaleDateString("id-ID") : ""}
                   </div>
                   ${inv.source ? `
-                    <div class="mt-0.5 text-[10px] text-slate-500 capitalize">
+                    <div class="mt-0.5 text-[10px] text-slate-500 capitalize invoice-source">
                       ${inv.source}
                     </div>` : ""}
                 </div>
@@ -330,7 +257,8 @@
 
               <div class="border-t border-dotted border-slate-300 my-2"></div>
 
-              <div class="space-y-1.5 max-h-32 overflow-y-auto pr-1 no-scrollbar">
+              <!-- هنا تم إزالة max-h-32 و overflow-y-auto و no-scrollbar -->
+              <div class="space-y-1.5 pr-1 invoice-items">
                 ${items.map(it => `
                   <div class="flex justify-between gap-2">
                     <div class="flex-1 min-w-0">
@@ -355,7 +283,7 @@
                 `).join("")}
               </div>
 
-              <div class="border-t border-slate-200 mt-3 pt-2 space-y-1 text-[11px] w-full">
+              <div class="border-t border-slate-200 mt-3 pt-2 space-y-1 text-[11px] w-full invoice-totals">
                 <div class="flex justify-between">
                   <span class="text-slate-500">Sub-total</span>
                   <span class="font-mono text-slate-800">
@@ -374,11 +302,12 @@
                     Rp ${total.toLocaleString("id-ID")}
                   </span>
                 </div>
+                <p>${source ? "pembayaran " + source : "go"}</p>
               </div>
               <br>
 
               <div class="no-print mt-auto -mx-3 sm:-mx-4">
-                <div class="grid grid-cols-3 text-[11px] font-medium text-white rounded-b-2xl overflow-hidden">
+                <div class="grid grid-cols-4 text-[11px] font-medium text-white rounded-b-2xl overflow-hidden">
                   <form action="/${CABANG}/invoiceall/${inv._id}/done" method="POST">
                     <button
                       type="submit"
@@ -387,6 +316,14 @@
                       Selesai
                     </button>
                   </form>
+
+                  <a
+                    href="/${CABANG}/invoiceall/${inv._id}/edit"
+                    class="w-full h-full flex items-center justify-center py-2 bg-amber-500 hover:bg-amber-600 transition-colors"
+                  >
+                    Edit
+                  </a>
+
                   <form action="/${CABANG}/invoiceall/${inv._id}/delete" method="POST">
                     <button
                       type="submit"
@@ -395,6 +332,7 @@
                       Hapus
                     </button>
                   </form>
+
                   <button
                     type="button"
                     class="py-2 bg-emerald-600 hover:bg-emerald-700 transition-colors"
@@ -404,6 +342,7 @@
                   </button>
                 </div>
               </div>
+
             </div>
           `;
 
@@ -418,8 +357,13 @@
         const card = document.getElementById("invoice-" + id);
         if (!card) return;
 
-        const clone = card.cloneNode(true);
-        clone.querySelectorAll(".no-print").forEach(el => el.remove());
+        const invoiceNumberRaw = card.querySelector(".invoice-number")?.textContent.trim() || "";
+        const invoiceNumber = invoiceNumberRaw.replace("#", "").trim();
+        const invoiceDate = card.querySelector(".invoice-date")?.textContent.trim() || "";
+        const invoiceSource = card.querySelector(".invoice-source")?.textContent.trim() || "";
+        const invoiceCustomer = card.querySelector(".invoice-customer")?.textContent.trim() || "";
+        const itemsHtml = card.querySelector(".invoice-items")?.innerHTML || "";
+        const totalsHtml = card.querySelector(".invoice-totals")?.innerHTML || "";
 
         const win = window.open("", "_blank", "width=400,height=700");
         win.document.write(`
@@ -427,26 +371,32 @@
             <head>
               <title>Invoice</title>
               <style>
+                * {
+                  box-sizing: border-box;
+                }
                 body {
                   margin: 0;
-                  padding: 16px;
+                  padding: 0;
                   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
                   background: #ffffff;
+                  font-size: 11px;
+                  color: #0f172a;
                 }
                 .receipt {
                   max-width: 320px;
                   margin: 0 auto;
+                  padding: 12px;
+                }
+                .receipt-box {
                   border: 1px solid #e5e7eb;
                   border-radius: 12px;
-                  padding: 16px;
-                  font-size: 11px;
-                  color: #0f172a;
+                  padding: 12px;
                 }
                 .receipt-header {
                   text-align: center;
-                  margin-bottom: 12px;
+                  margin-bottom: 10px;
                   border-bottom: 1px dashed #cbd5f5;
-                  padding-bottom: 8px;
+                  padding-bottom: 6px;
                 }
                 .receipt-header h1 {
                   margin: 0;
@@ -461,14 +411,48 @@
                 }
                 .receipt-header .inv {
                   font-family: monospace;
-                  font-size: 13px;
+                  font-size: 12px;
                   font-weight: 700;
                   margin-top: 4px;
                 }
-                .receipt-body {
-                  margin-top: 8px;
+                .meta {
+                  margin-top: 6px;
+                  margin-bottom: 6px;
+                  font-size: 10px;
+                }
+                .meta-row {
+                  display: flex;
+                  justify-content: space-between;
+                  margin-bottom: 2px;
+                }
+                .meta-label {
+                  color: #64748b;
+                }
+                .meta-value {
+                  font-weight: 500;
+                }
+                .section-title {
+                  font-size: 10px;
+                  text-transform: uppercase;
+                  letter-spacing: 0.08em;
+                  color: #64748b;
+                  margin-top: 6px;
+                  margin-bottom: 4px;
                   border-bottom: 1px dashed #e2e8f0;
-                  padding-bottom: 8px;
+                  padding-bottom: 2px;
+                }
+                .items {
+                  font-size: 10px;
+                }
+                .items > div {
+                  margin-bottom: 4px;
+                }
+                .totals {
+                  margin-top: 6px;
+                  font-size: 10px;
+                }
+                .totals > div {
+                  margin-bottom: 2px;
                 }
                 .receipt-footer {
                   margin-top: 8px;
@@ -476,24 +460,50 @@
                   text-align: center;
                   color: #94a3b8;
                 }
+                @media print {
+                  body {
+                    background: #ffffff;
+                  }
+                }
               </style>
             </head>
             <body>
               <div class="receipt">
-                <div class="receipt-header">
-                  <h1>The Shawarma</h1>
-                  <div class="branch">Cabang: ${CABANG.toUpperCase()}</div>
-                  <div class="inv">${
-                    card.querySelector(".font-mono") 
-                      ? card.querySelector(".font-mono").textContent.trim()
-                      : ""
-                  }</div>
-                </div>
-                <div class="receipt-body">
-                  ${clone.innerHTML}
-                </div>
-                <div class="receipt-footer">
-                  Terima kasih 🙏
+                <div class="receipt-box">
+                  <div class="receipt-header">
+                    <h1>The Shawarma</h1>
+                    <div class="branch">Cabang: ${CABANG.toUpperCase()}</div>
+                    <div class="inv">INV: ${invoiceNumber || "-"}</div>
+                  </div>
+
+                  <div class="meta">
+                    ${invoiceDate ? `
+                      <div class="meta-row">
+                        <span class="meta-label">Tanggal</span>
+                        <span class="meta-value">${invoiceDate}</span>
+                      </div>` : ""}
+                    ${invoiceSource ? `
+                      <div class="meta-row">
+                        <span class="meta-label">Channel</span>
+                        <span class="meta-value">${invoiceSource}</span>
+                      </div>` : ""}
+                    ${invoiceCustomer ? `
+                      <div class="meta-row">
+                        <span class="meta-label">Pelanggan</span>
+                        <span class="meta-value">${invoiceCustomer}</span>
+                      </div>` : ""}
+                  </div>
+
+                  <div class="section-title">Detail Pesanan</div>
+                  <div class="items">
+                    ${itemsHtml}
+                  </div>
+
+                  <div class="section-title">Ringkasan</div>
+                  <div class="totals">
+                    ${totalsHtml}
+                  </div>
+
                 </div>
               </div>
             </body>

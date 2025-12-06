@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const InvoiceAll = require("../models/invoiceall");
 const InvoiceDone = require("../models/invoiceDone");
-
 // 📄 صفحة الفواتير الحالية لفرع معيّن
 router.get("/:cabang/invoiceall", async (req, res) => {
   try {
@@ -66,6 +65,7 @@ router.post("/:cabang/invoiceall/:id/done", async (req, res) => {
       discount: inv.discount,
       total: inv.total,
       source: inv.source,
+      paymentMethod: inv.paymentMethod,
       cabang: inv.cabang || cabang,
     });
 
@@ -78,37 +78,56 @@ router.post("/:cabang/invoiceall/:id/done", async (req, res) => {
   }
 });
 
-// 📊 صفحة الإحصائيات: تعتمد على invoicedone فقط
-router.get("/:cabang/stats", async (req, res) => {
+router.get("/invoice/:cabang/stats", async (req, res) => {
   try {
-    const cabang = req.params.cabang;
+    const cabangParam = req.params.cabang;
+    
+    // شرط البحث
+    let query = {};
+    if (cabangParam !== "all") {
+      query.cabang = cabangParam;
+    }
 
     const list = await InvoiceDone
-      .find({ cabang })
-      .sort({ finishedAt: -1 }); // 👈 الأجدد في الأعلى
+      .find(query)
+      .sort({ finishedAt: -1 });
 
     let totalInvoices = list.length;
     let totalAmount = 0;
     let totalDiscount = 0;
-    const bySource = {};
+    const statsBySource = {}; 
 
+    // تجميع البيانات للكروت
     list.forEach((inv) => {
       totalAmount += inv.total || 0;
       totalDiscount += inv.discount || 0;
-      const src = inv.source || "unknown";
-      if (!bySource[src]) bySource[src] = { count: 0, total: 0 };
-      bySource[src].count += 1;
-      bySource[src].total += inv.total || 0;
+
+      // المنطق المطلوب: إذا كان instore نأخذ paymentMethod، وإلا نأخذ source
+      let sourceName = inv.source || "Unknown";
+      if (sourceName.toLowerCase() === "instore") {
+         // تأكد أن لديك حقل paymentMethod في السكيما، أو سيظهر Unknown
+         sourceName = inv.paymentMethod || "Cash (Instore)"; 
+      }
+
+      if (!statsBySource[sourceName]) {
+          statsBySource[sourceName] = { count: 0, total: 0 };
+      }
+      statsBySource[sourceName].count += 1;
+      statsBySource[sourceName].total += inv.total || 0;
     });
 
+    // استخراج قائمة الفروع الموجودة فعلياً في البيانات للفلتر
+    const uniqueBranches = [...new Set(list.map(item => item.cabang))];
+
     res.render("invoiceStats", {
-      title: `Stats – ${cabang}`,
-      cabang,
+      title: cabangParam === "all" ? "Statistik Semua Cabang" : `Statistik - ${cabangParam}`,
+      cabang: cabangParam,
       list,
+      uniqueBranches, // نرسل قائمة الفروع للفلتر
       totalInvoices,
       totalAmount,
       totalDiscount,
-      bySource,
+      statsBySource,
     });
   } catch (err) {
     console.error(err);
@@ -116,5 +135,47 @@ router.get("/:cabang/stats", async (req, res) => {
   }
 });
 
+// ✏️ صفحة تعديل الفاتورة
+router.get("/:cabang/invoiceall/:id/edit", async (req, res) => {
+  try {
+    const cabang = req.params.cabang;
+    const invoice = await InvoiceAll.findById(req.params.id);
+
+    if (!invoice) {
+      return res.redirect(`/${cabang}/invoiceall`);
+    }
+
+    res.render("invoiceall-edit", {
+      title: `Edit Invoice – ${invoice.invoiceNumber}`,
+      cabang,
+      invoice,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error loading edit page");
+  }
+});
+
+// 💾 حفظ التعديلات
+router.post("/:cabang/invoiceall/:id/edit", async (req, res) => {
+  try {
+    const cabang = req.params.cabang;
+    const { invoiceNumber, customerName, discount, total, paymentMethod, date } = req.body;
+
+    await InvoiceAll.findByIdAndUpdate(req.params.id, {
+      invoiceNumber,
+      customerName,
+      discount: Number(discount) || 0,
+      total: Number(total) || 0,
+      paymentMethod,
+      date: date ? new Date(date) : undefined,
+    });
+
+    res.redirect(`/${cabang}/invoiceall`);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error updating invoice");
+  }
+});
 
 module.exports = router;

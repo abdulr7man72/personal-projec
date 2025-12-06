@@ -17,7 +17,7 @@ const PurchaseSchema = new mongoose.Schema({
   branchCode: String,
   PaymentMethod: String,
 
-  seller: String, // 👈 حقل البائع
+  seller: String,
 
   createdAt: {
     type: Date,

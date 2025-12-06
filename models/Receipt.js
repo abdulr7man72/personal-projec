@@ -15,11 +15,16 @@ const receiptSchema = new mongoose.Schema(
     ],
 
     discount_total: Number,
+
     grand_total: Number,
     payment_method: String,
     amount_paid: Number,
     change_amount: Number,
-    source: String             // مثلاً: "ocr_claude" أو غيره
+
+    fee: Number,
+    delivery: Number,
+    source: String
+
   },
   {
     collection: "receipts_ocr" // مهم جداً > نفس اسم الـ collection في MongoDB
