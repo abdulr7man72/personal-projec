@@ -60,7 +60,9 @@ router.post("/:cabang/invoiceall/:id/done", async (req, res) => {
     await InvoiceDone.create({
       invoiceNumber: inv.invoiceNumber,
       customerName: inv.customerName,
-      date: inv.date,
+      modalChangeCash: inv.modalChangeCash,
+      modalPaidCash: inv.modalPaidCash,
+      date: inv.date, 
       items: inv.items,
       discount: inv.discount,
       total: inv.total,
@@ -118,6 +120,7 @@ router.get("/invoice/:cabang/stats", async (req, res) => {
 
     // استخراج قائمة الفروع الموجودة فعلياً في البيانات للفلتر
     const uniqueBranches = [...new Set(list.map(item => item.cabang))];
+    console.log(list[0])
 
     res.render("invoiceStats", {
       title: cabangParam === "all" ? "Statistik Semua Cabang" : `Statistik - ${cabangParam}`,
@@ -160,10 +163,12 @@ router.get("/:cabang/invoiceall/:id/edit", async (req, res) => {
 router.post("/:cabang/invoiceall/:id/edit", async (req, res) => {
   try {
     const cabang = req.params.cabang;
-    const { invoiceNumber, customerName, discount, total, paymentMethod, date } = req.body;
+    const {modalChangeCash, modalPaidCash, invoiceNumber, customerName, discount, total, paymentMethod, date } = req.body;
 
     await InvoiceAll.findByIdAndUpdate(req.params.id, {
       invoiceNumber,
+      modalChangeCash,
+      modalPaidCash,
       customerName,
       discount: Number(discount) || 0,
       total: Number(total) || 0,

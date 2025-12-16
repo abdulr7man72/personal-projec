@@ -22,6 +22,8 @@ const InvoiceAllSchema = new mongoose.Schema({
   source: String,
   cabang: String, // bgr01, spl01, ...
   paymentMethod: String, // "cash" | "transfer" | "qris" | "" | null
+  modalPaidCash: Number,
+  modalChangeCash: Number,
   codePin: String,
 });
 

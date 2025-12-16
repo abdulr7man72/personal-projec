@@ -22,6 +22,8 @@ const InvoiceDoneSchema = new mongoose.Schema({
   source: String,
   cabang: String,             // نفس cabang
   paymentMethod: String,     // "cash" | "transfer" | "qris" | "" | null
+  modalPaidCash: Number,
+  modalChangeCash: Number,
   finishedAt: { type: Date, default: Date.now },
 });
 
