@@ -52,6 +52,7 @@
                   class="ml-3 whitespace-nowrap opacity-0 transition-opacity duration-200">كاشير</span>
               </a>
             </li>
+            
 
             <li>
               <a
@@ -70,6 +71,70 @@
                   <%= cabang %></span>
               </a>
             </li>
+            <li>
+              <a href="/<%= cabang %>/invoiceall"
+                class="flex items-center p-2 rounded-lg text-slate-700 hover:bg-slate-100 hover:text-indigo-600 font-medium group transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0"
+                  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    stroke-width="2" d="M9 7h6m0 10v-3m-6 3v-3m-6-4h12a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V9a2 2 0 012-2zm9-3V5a2 2 0 00-2-2h-2a2 2 0 00-2 2v2m0 0a2 2 0 00-2 2v3h8V9a2 2 0 00-2-2z" />
+                </svg>
+                <span class="ml-3 whitespace-nowrap opacity-0 transition-opacity duration-200">الفواتير</span>
+              </a>
+            </li>
           </ul>
         </nav>
       </aside>
+<script>
+        // Desktop Sidebar Toggle
+      const sidebar = document.getElementById('sidebar');
+      const toggleBtn = document.getElementById('toggle-sidebar-btn');
+      const linksText = sidebar.querySelectorAll('span');
+      const titleText = sidebar.querySelector('h2');
+      
+      function toggleSidebar() {
+        const isExpanded = sidebar.getAttribute('data-expanded') === 'true';
+        
+        if (!isExpanded) {
+          sidebar.classList.remove('w-16');
+          sidebar.classList.add('w-60');
+          sidebar.setAttribute('data-expanded', 'true');
+          sidebar.style.width = '15rem';
+
+          setTimeout(() => {
+            linksText.forEach(span => {
+              span.classList.remove('opacity-0');
+              span.classList.add('opacity-100');
+            });
+            titleText.classList.remove('opacity-0');
+            titleText.classList.add('opacity-100');
+          }, 100); 
+
+        } else {
+          linksText.forEach(span => {
+            span.classList.remove('opacity-100');
+            span.classList.add('opacity-0');
+          });
+          titleText.classList.remove('opacity-100');
+          titleText.classList.add('opacity-0');
+
+          setTimeout(() => {
+            sidebar.classList.remove('w-60');
+            sidebar.classList.add('w-16');
+            sidebar.setAttribute('data-expanded', 'false');
+            sidebar.style.width = '4rem';
+          }, 200);
+        }
+      }
+
+      toggleBtn.addEventListener('click', () => {
+        if (window.innerWidth >= 1024) {
+          sidebar.classList.remove('hidden');
+          toggleSidebar();
+        }
+      });
+
+      if (window.innerWidth >= 1024) {
+        sidebar.classList.remove('hidden');
+      }
+</script>

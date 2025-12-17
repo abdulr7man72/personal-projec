@@ -36,66 +36,8 @@
 
     <div class="flex flex-1 h-[calc(100vh-4rem)] overflow-hidden">
 
-      <aside
-        id="sidebar"
-        class="w-16 transition-all duration-300 ease-in-out shrink-0
-           bg-white shadow-lg p-4 h-full overflow-y-auto
-           hidden lg:block z-20"
-        data-expanded="false">
-        <button id="toggle-sidebar-btn-header"
-          class="p-2 rounded-lg text-slate-700 hover:bg-slate-200 hidden lg:block">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
-            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
-        <nav>
-          <ul class="space-y-2">
-            <li>
-              <a href="/"
-                class="flex items-center p-2 rounded-lg text-slate-700 hover:bg-slate-100 hover:text-indigo-600 font-medium group">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0"
-                  fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                  stroke-width="2"><path stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0h6m-6 0v-5m6 5v-5" /></svg>
-                <span
-                  class="ml-3 whitespace-nowrap opacity-0 transition-opacity duration-200 sidebar-text">الرئيسية</span>
-              </a>
-            </li>
-            <li>
-              <a href="/<%= cabang %>/pos"
-                class="flex items-center p-2 rounded-lg text-indigo-600 bg-indigo-50 font-bold group">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0"
-                  fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                  stroke-width="2"><path stroke-linecap="round"
-                    stroke-linejoin="round" d="M6 18h2" /><path
-                    d="M12 18h6" /><rect width="14" height="8" x="5" y="2"
-                    rx="2" /><rect width="20" height="8" x="2" y="14"
-                    rx="2" /></svg>
-                <span
-                  class="ml-3 whitespace-nowrap opacity-0 transition-opacity duration-200 sidebar-text">كاشير</span>
-              </a>
-            </li>
-            <li>
-              <a href="/<%= cabang %>/stats"
-                class="flex items-center p-2 rounded-lg text-slate-700 hover:bg-slate-100 hover:text-indigo-600 font-medium group">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0"
-                  fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                  stroke-width="2"><path stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" /><path
-                    stroke-linecap="round" stroke-linejoin="round"
-                    d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" /></svg>
-                <span
-                  class="ml-3 whitespace-nowrap opacity-0 transition-opacity duration-200 sidebar-text">إحصائيات
-                  <%= cabang %></span>
-              </a>
-            </li>
-          </ul>
-        </nav>
-      </aside>
+      <%- include('articles/side.ejs') %>
+
 
       <div class="flex-1 flex bg-slate-50 h-full relative overflow-hidden">
 
@@ -385,44 +327,7 @@
 
 
         // ----------------------------------------------------
-        //  JS للتحكم بالشريط الجانبي (Side for Navigation)
-        // ----------------------------------------------------
-        const sidebar = document.getElementById('sidebar');
-        const toggleBtnHeader = document.getElementById('toggle-sidebar-btn-header');
-        const sidebarTexts = document.querySelectorAll('.sidebar-text');
-
-        function toggleSidebar() {
-            const isExpanded = sidebar.getAttribute('data-expanded') === 'true';
-
-            if (isExpanded) {
-                // تصغير الشريط الجانبي
-                sidebar.style.width = '4rem'; // w-16
-                sidebar.setAttribute('data-expanded', 'false');
-                sidebarTexts.forEach(span => {
-                    span.classList.remove('opacity-100');
-                    span.classList.add('opacity-0');
-                });
-
-            } else {
-                // توسيع الشريط الجانبي
-                sidebar.style.width = '16rem'; // w-64
-                sidebar.setAttribute('data-expanded', 'true');
-                
-                setTimeout(() => {
-                    sidebarTexts.forEach(span => {
-                        span.classList.remove('opacity-0');
-                        span.classList.add('opacity-100');
-                    });
-                }, 100); 
-            }
-        }
-
-        if (toggleBtnHeader) {
-            toggleBtnHeader.addEventListener('click', toggleSidebar);
-            // الإعدادات الأولية (مصغرة)
-            sidebar.style.width = '4rem'; 
-            sidebar.setAttribute('data-expanded', 'false');
-        }
+        
         
         // ----------------------------------------------------
         //  JS للتحكم بشريط الفئات (Category Tabs) والتصفية

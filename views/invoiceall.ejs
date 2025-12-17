@@ -94,6 +94,17 @@
                 <span class="mr-3">كاشير</span>
               </a>
             </li>
+                        <li>
+              <a href="/<%= cabang %>/invoicall"
+                class="flex items-center p-2 rounded-lg text-slate-700 hover:bg-slate-100 hover:text-indigo-600 font-medium">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ml-3"
+                  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    stroke-width="2" d="M9 7h6m0 10v-3m-6 3v-3m-6-4h12a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V9a2 2 0 012-2zm9-3V5a2 2 0 00-2-2h-2a2 2 0 00-2 2v2m0 0a2 2 0 00-2 2v3h8V9a2 2 0 00-2-2z" />
+                </svg>
+                <span class="mr-3">الفواتير</span>
+              </a>
+            </li>
             <li>
               <a href="/<%= cabang %>/stats"
                 class="flex items-center p-2 rounded-lg text-slate-700 hover:bg-slate-100 hover:text-indigo-600 font-medium">
@@ -131,79 +142,6 @@
     </div>
 
     <script>
-      // Desktop Sidebar Toggle
-      const sidebar = document.getElementById('sidebar');
-      const toggleBtn = document.getElementById('toggle-sidebar-btn');
-      const linksText = sidebar.querySelectorAll('span');
-      const titleText = sidebar.querySelector('h2');
-      
-      function toggleSidebar() {
-        const isExpanded = sidebar.getAttribute('data-expanded') === 'true';
-        
-        if (!isExpanded) {
-          sidebar.classList.remove('w-16');
-          sidebar.classList.add('w-60');
-          sidebar.setAttribute('data-expanded', 'true');
-          sidebar.style.width = '15rem';
-
-          setTimeout(() => {
-            linksText.forEach(span => {
-              span.classList.remove('opacity-0');
-              span.classList.add('opacity-100');
-            });
-            titleText.classList.remove('opacity-0');
-            titleText.classList.add('opacity-100');
-          }, 100); 
-
-        } else {
-          linksText.forEach(span => {
-            span.classList.remove('opacity-100');
-            span.classList.add('opacity-0');
-          });
-          titleText.classList.remove('opacity-100');
-          titleText.classList.add('opacity-0');
-
-          setTimeout(() => {
-            sidebar.classList.remove('w-60');
-            sidebar.classList.add('w-16');
-            sidebar.setAttribute('data-expanded', 'false');
-            sidebar.style.width = '4rem';
-          }, 200);
-        }
-      }
-
-      toggleBtn.addEventListener('click', () => {
-        if (window.innerWidth >= 1024) {
-          sidebar.classList.remove('hidden');
-          toggleSidebar();
-        }
-      });
-
-      if (window.innerWidth >= 1024) {
-        sidebar.classList.remove('hidden');
-      }
-
-      // Mobile Menu Toggle
-      const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-      const mobileSidebar = document.getElementById('mobile-sidebar');
-      const mobileOverlay = document.getElementById('mobile-overlay');
-      const closeMobileMenu = document.getElementById('close-mobile-menu');
-
-      function openMobileMenu() {
-        mobileSidebar.classList.remove('translate-x-full');
-        mobileOverlay.classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-      }
-
-      function closeMobileMenuFunc() {
-        mobileSidebar.classList.add('translate-x-full');
-        mobileOverlay.classList.add('hidden');
-        document.body.style.overflow = '';
-      }
-
-      mobileMenuBtn.addEventListener('click', openMobileMenu);
-      closeMobileMenu.addEventListener('click', closeMobileMenuFunc);
-      mobileOverlay.addEventListener('click', closeMobileMenuFunc);
 
       // Invoice Management
       const CABANG = "<%= cabang %>";
@@ -269,7 +207,9 @@
                     <div class="mt-0.5 text-[10px] text-slate-500 capitalize invoice-source">
                       ${inv.source}
                     </div>` : ""}
-                                  <div >      ${inv.codePin || ""}        </div>
+                    <div class="mt-0.5 text-[30x] capitalize invoice-codePin">
+                      ${inv.codePin || ""}
+                    </div>
                 </div>
               </div>
 
@@ -282,11 +222,11 @@
                   <div class="flex justify-between gap-2">
                     <div class="flex-1 min-w-0">
                       <div class="text-[11px] font-semibold text-slate-900 truncate">
-                        ${it.name || ""}
+                        ${it.name || ""} 
                       </div>
                       <div class="text-[10px] text-slate-500 space-y-0.5">
                         <div>
-                          ${(it.quantity || 1)}x ·
+                          ${(it.quantity || 1)}x · 
                           Rp ${(it.unitPrice || it.subtotal || 0).toLocaleString("id-ID")}
                         </div>
                         ${it.note ? `<div class="truncate">Note: ${it.note}</div>` : ""}
@@ -325,9 +265,9 @@
 
               <div class="border-t border-slate-200 mt-3 pt-2 space-y-1 text-[11px] w-full invoice-cash">
                 <div class="flex justify-between">
-                  <span class="text-slate-500">pembayaran</span>
+                  <span class="text-slate-500">${source.toLocaleString("id-ID") ? "pembayaran " + source : ""}</span>
                   <span class="font-mono text-slate-800">
-                   ${source.toLocaleString("id-ID") || inv.source}
+                   ${source.toLocaleString("id-ID") || ""}
                   </span>
                 </div>
                 <div class="flex justify-between">
@@ -406,6 +346,7 @@
         const invoiceDate = card.querySelector(".invoice-date")?.textContent.trim() || "";
         const invoiceSource = card.querySelector(".invoice-source")?.textContent.trim() || "";
         const invoiceCustomer = card.querySelector(".invoice-customer")?.textContent.trim() || "";
+        const codePin = card.querySelector(".invoice-codePin")?.textContent.trim() || "";
         const itemsHtml = card.querySelector(".invoice-items")?.innerHTML || "";
         const totalsHtml = card.querySelector(".invoice-totals")?.innerHTML || "";
         const cashHtml = card.querySelector(".invoice-cash")?.innerHTML || "";
@@ -490,6 +431,9 @@
                   padding-bottom: 2px;
                   font-weight: bold;
                 }
+                .meta-value2 {
+                  font-size: 15px;
+                }
                 .items {
                   font-size: 10px;
                 }
@@ -497,6 +441,9 @@
                   margin-bottom: 3px;
                   border-bottom: 1px dotted #ccc;
                   padding-bottom: 2px;
+                  display: flex;
+                  justify-content: space-between;
+                  gap: 10px;
                 }
                 .totals {
                   margin-top: 6px;
@@ -532,7 +479,7 @@
                 <div class="receipt-box">
                   <div class="receipt-header">
                     <h1>The Shawarma</h1>
-                    <div class="branch">Cabang: ${CABANG.toUpperCase()}</div>
+                    <div class="branch">Cabang: ${CABANG.toUpperCase() === "BGR01" ? "BOGOR PERMAI" : CABANG.toUpperCase() === "SPL01" ? "SEMPLAK" : CABANG.toUpperCase()}</div>
                     <div class="inv">INV: ${invoiceNumber || "-"}</div>
                   </div>
 
@@ -551,6 +498,11 @@
                       <div class="meta-row">
                         <span class="meta-label">Pelanggan</span>
                         <span class="meta-value">${invoiceCustomer}</span>
+                      </div>` : ""}
+                    ${codePin ? `
+                      <div class="meta-row">
+                        <span class="meta-label">Code Pin</span>
+                        <span class="meta-value2">${codePin}</span>
                       </div>` : ""}
                   </div>
 
