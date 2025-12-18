@@ -1,372 +1,696 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= title %></title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-    
-    <style>
-        body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
-        .touch-scroll { -webkit-overflow-scrolling: touch; }
-    </style>
-    
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#2563eb',
-                        surface: '#ffffff',
-                        background: '#f3f4f6',
-                        dark: '#111827',
-                    }
-                }
-            }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+  <style>
+    body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+    .touch-scroll { -webkit-overflow-scrolling: touch; }
+  </style>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#2563eb',
+            surface: '#ffffff',
+            background: '#f3f4f6',
+            dark: '#111827',
+          }
         }
-    </script>
+      }
+    }
+  </script>
 </head>
-<body class="bg-background text-dark pb-10">
 
-    <nav class="bg-surface shadow-md sticky top-0 z-50">
+<body class="bg-background text-dark">
+
+  <div class="min-h-screen flex">
+
+    <!-- ✅ Sidebar (Desktop Only) -->
+    <aside
+      id="sidebar"
+      class="w-16 transition-all duration-300 ease-in-out
+           bg-white shadow-lg p-4 sticky top-0 h-screen overflow-hidden
+           hidden lg:block z-20 border-r border-slate-200"
+      data-expanded="false"
+      style="width: 4rem;">
+
+      <div class="flex items-center justify-between mb-6">
+        <button id="toggle-sidebar-btn"
+          class="p-2 -mr-1 rounded-lg text-slate-700 hover:bg-slate-200 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+        <h2 class="text-xl font-bold whitespace-nowrap opacity-0 transition-opacity duration-200 text-indigo-600">القائمة</h2>
+      </div>
+
+      <nav>
+        <ul class="space-y-2">
+          <li>
+            <a href="/"
+              class="flex items-center p-2 rounded-lg text-slate-700 hover:bg-slate-100 hover:text-indigo-600 font-medium group transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0"
+                fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0h6m-6 0v-5m6 5v-5" />
+              </svg>
+              <span class="ml-3 whitespace-nowrap opacity-0 transition-opacity duration-200">الرئيسية</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="/<%= cabang %>/pos"
+              class="flex items-center p-2 rounded-lg text-slate-700 hover:bg-slate-100 hover:text-indigo-600 font-medium group transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0"
+                fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18h2" />
+                <path d="M12 18h6" />
+                <rect width="14" height="8" x="5" y="2" rx="2" />
+                <rect width="20" height="8" x="2" y="14" rx="2" />
+              </svg>
+              <span class="ml-3 whitespace-nowrap opacity-0 transition-opacity duration-200">كاشير</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="/invoice/<%= cabang %>/stats"
+              class="flex items-center p-2 rounded-lg text-slate-700 hover:bg-slate-100 hover:text-indigo-600 font-medium group transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0"
+                fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
+              </svg>
+              <span class="ml-3 whitespace-nowrap opacity-0 transition-opacity duration-200">إحصائيات <%= cabang %></span>
+            </a>
+          </li>
+
+          <li>
+            <a href="/<%= cabang %>/invoiceall"
+              class="flex items-center p-2 rounded-lg text-slate-700 hover:bg-slate-100 hover:text-indigo-600 font-medium group transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0"
+                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 7h6m0 10v-3m-6 3v-3m-6-4h12a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V9a2 2 0 012-2zm9-3V5a2 2 0 00-2-2h-2a2 2 0 00-2 2v2m0 0a2 2 0 00-2 2v3h8V9a2 2 0 00-2-2z" />
+              </svg>
+              <span class="ml-3 whitespace-nowrap opacity-0 transition-opacity duration-200">الفواتير</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- ✅ Content -->
+    <div class="flex-1 min-w-0">
+
+      <!-- Navbar -->
+      <nav class="bg-surface shadow-md sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-20 items-center"> 
-                <div class="flex items-center gap-3">
-                    <div class="bg-primary/10 p-3 rounded-xl text-primary">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-                    </div>
-                    <div>
-                        <h1 class="text-xl sm:text-2xl font-extrabold text-gray-900 tracking-tight">Dashboard</h1>
-                    </div>
-                </div>
-                
-                <button onclick="toggleStats()" class="flex items-center gap-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-lg font-bold transition-all shadow-sm">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
-                    <span id="toggleBtnText">Show Filter & Stats</span>
-                </button>
+          <div class="flex justify-between h-20 items-center">
+            <div class="flex items-center gap-3">
+              <div class="bg-primary/10 p-3 rounded-xl text-primary">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+              </div>
+              <h1 class="text-xl sm:text-2xl font-extrabold text-gray-900 tracking-tight">Dashboard</h1>
             </div>
-        </div>
-    </nav>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <button onclick="toggleStats()"
+              class="flex items-center gap-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-lg font-bold transition-all shadow-sm">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
+              </svg>
+              <span id="toggleBtnText">Show Filter & Stats</span>
+            </button>
+          </div>
+        </div>
+      </nav>
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+  <!-- ✅ TOP (Hidden): Filters + Summary cards -->
+  <div id="statsContainer" class="hidden space-y-6 mb-6">
+
+    <!-- Filters -->
+    <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-200">
+      <h2 class="text-lg font-bold text-gray-800 mb-4">Filter Data</h2>
+
+      <div class="flex flex-col md:flex-row gap-4 w-full items-end">
+
+        <% if(cabang === 'all') { %>
+        <div class="w-full md:w-1/4">
+          <label class="block text-sm font-semibold text-gray-500 mb-1">Pilih Cabang</label>
+          <select id="branchFilter" onchange="applyFilters()"
+            class="w-full h-12 pl-4 pr-10 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary appearance-none font-bold text-gray-700">
+            <option value="all">Semua Cabang</option>
+            <% uniqueBranches.forEach(br => { %>
+              <option value="<%= br %>"><%= br %></option>
+            <% }) %>
+          </select>
+        </div>
+        <% } %>
+
+        <div class="w-full md:w-1/4">
+          <label class="block text-sm font-semibold text-gray-500 mb-1">Pilih Tanggal</label>
+          <select id="dateRangeFilter" onchange="handleDateSelect()"
+            class="w-full h-12 pl-4 pr-10 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary appearance-none font-bold text-gray-700">
+            <option value="all">Semua Tanggal</option>
+            <option value="today">Hari Ini</option>
+            <option value="1">1 Hari Terakhir</option>
+            <option value="3">3 Hari Terakhir</option>
+            <option value="7">1 Minggu</option>
+            <option value="30">1 Bulan</option>
+            <option value="custom">Custom Range (Dari - Sampai)</option>
+          </select>
+        </div>
+
+        <div id="customDateInputs" class="hidden flex-col md:flex-row gap-2 w-full md:w-2/4">
+          <div class="w-full">
+            <label class="block text-xs font-semibold text-gray-500 mb-1">Dari</label>
+            <input type="date" id="startDate" onchange="applyFilters()"
+              class="w-full h-12 px-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-primary">
+          </div>
+          <div class="w-full">
+            <label class="block text-xs font-semibold text-gray-500 mb-1">Sampai</label>
+            <input type="date" id="endDate" onchange="applyFilters()"
+              class="w-full h-12 px-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-primary">
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Summary Cards (3 columns) -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+      <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
+        <div>
+          <p class="text-gray-500 font-medium text-sm">Total Penjualan</p>
+          <h3 class="text-xl font-extrabold text-gray-900 mt-2" id="displayTotalAmount"><%= totalAmount.toLocaleString('id-ID') %></h3>
+        </div>
+        <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-green-600">
+          <span class="text-xl font-bold">Rp</span>
+        </div>
+      </div>
+
+      <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
+        <div>
+          <p class="text-gray-500 font-medium text-sm">Total Transaksi</p>
+          <h3 class="text-xl font-extrabold text-gray-900 mt-2" id="displayTotalCount"><%= totalInvoices %></h3>
+        </div>
+        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+          </svg>
+        </div>
+      </div>
+
+      <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
+        <div>
+          <p class="text-gray-500 font-medium text-sm">Total Diskon</p>
+          <h3 class="text-xl font-extrabold text-gray-900 mt-2" id="displayTotalDiscount"><%= totalDiscount.toLocaleString('id-ID') %></h3>
+        </div>
+        <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center text-red-600">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ✅ /statsContainer -->
+
+
+  <!-- ✅ Bottom layout: LEFT (Rincian only) + RIGHT (Invoices) -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+    <!-- LEFT: Rincian Sumber & Pembayaran (always visible) -->
+    <div class="lg:col-span-4">
+      <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-200">
+        <h3 class="text-base font-bold text-gray-800 mb-4">Rincian Sumber & Pembayaran</h3>
+        <div class="grid grid-cols-2 gap-3">
+          <% for (const [key, val] of Object.entries(statsBySource)) { %>
+          <div class="bg-gray-50 p-4 rounded-2xl border border-gray-200 text-center hover:shadow-md transition-shadow">
+            <span class="text-gray-500 text-xs font-semibold uppercase tracking-wider"><%= key %></span>
+            <div class="text-lg font-extrabold text-gray-900 mt-1"><%= val.total.toLocaleString('id-ID') %></div>
+            <div class="text-xs text-gray-400 mt-1"><%= val.count %> Transaksi</div>
+          </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+
+<!-- RIGHT: Daftar Invoice (always visible) -->
+<!-- RIGHT: Daftar Invoice (always visible) -->
+<div class="lg:col-span-8">
+  <div class="bg-gradient-to-br from-white via-blue-50/30 to-purple-50/20 rounded-3xl shadow-2xl border border-gray-100 overflow-hidden backdrop-blur-sm">
+    
+    <!-- Header with gradient -->
+    <div class="p-4 sm:p-6 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+        </div>
+        <h3 class="text-lg sm:text-xl font-black text-white tracking-tight">Daftar Invoice</h3>
+      </div>
+      <span class="text-xs sm:text-sm font-bold text-white bg-white/20 backdrop-blur-md border border-white/30 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full shadow-lg" id="rowCountBadge">
+        <%= list.length %> baris
+      </span>
+    </div>
+
+    <!-- Mobile View: Cards -->
+    <div class="block lg:hidden space-y-4 p-4">
+      <% list.forEach((inv, index) => { %>
+      <div class="bg-white rounded-2xl shadow-lg border-2 border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300 hover:border-blue-300"
+           data-date="<%= inv.finishedAt %>"
+           data-amount="<%= inv.total || 0 %>"
+           data-discount="<%= inv.discount || 0 %>"
+           data-cabang="<%= inv.cabang %>">
         
-        <div id="statsContainer" class="hidden transition-all duration-300 ease-in-out">
-            
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-200 mb-8">
-                <div class="flex flex-col gap-4">
-                    <h2 class="text-lg font-bold text-gray-800">Filter Data</h2>
-                    
-                    <div class="flex flex-col md:flex-row gap-4 w-full items-end">
-                        <% if(cabang === 'all') { %>
-                        <div class="w-full md:w-1/4">
-                            <label class="block text-sm font-semibold text-gray-500 mb-1">Pilih Cabang</label>
-                            <select id="branchFilter" onchange="applyFilters()" class="w-full h-12 pl-4 pr-10 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary appearance-none font-bold text-gray-700">
-                                <option value="all">Semua Cabang</option>
-                                <% uniqueBranches.forEach(br => { %>
-                                    <option value="<%= br %>"><%= br %></option>
-                                <% }) %>
-                            </select>
-                        </div>
-                        <% } %>
-
-                        <div class="w-full md:w-1/4">
-                            <label class="block text-sm font-semibold text-gray-500 mb-1">Pilih Tanggal</label>
-                            <select id="dateRangeFilter" onchange="handleDateSelect()" class="w-full h-12 pl-4 pr-10 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary appearance-none font-bold text-gray-700">
-                                <option value="all">Semua Tanggal</option>
-                                <option value="today">Hari Ini</option>
-                                <option value="1">1 Hari Terakhir</option>
-                                <option value="3">3 Hari Terakhir</option>
-                                <option value="7">1 Minggu</option>
-                                <option value="30">1 Bulan</option>
-                                <option value="custom">Custom Range (Dari - Sampai)</option>
-                            </select>
-                        </div>
-
-                        <div id="customDateInputs" class="hidden flex-col md:flex-row gap-2 w-full md:w-2/4">
-                            <div class="w-full">
-                                <label class="block text-xs font-semibold text-gray-500 mb-1">Dari</label>
-                                <input type="date" id="startDate" onchange="applyFilters()" class="w-full h-12 px-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-primary">
-                            </div>
-                            <div class="w-full">
-                                <label class="block text-xs font-semibold text-gray-500 mb-1">Sampai</label>
-                                <input type="date" id="endDate" onchange="applyFilters()" class="w-full h-12 px-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-primary">
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <!-- Card Header -->
+        <div class="bg-gradient-to-r from-blue-500 to-purple-600 p-4 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white font-black shadow-lg">
+              <%= (inv.customerName || 'Guest').charAt(0).toUpperCase() %>
             </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
-                    <div>
-                        <p class="text-gray-500 font-medium text-sm">Total Penjualan</p>
-                        <h3 class="text-xl font-extrabold text-gray-900 mt-2" id="displayTotalAmount"><%= totalAmount.toLocaleString('id-ID') %></h3>
-                    </div>
-                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-green-600">
-                        <span class="text-xl font-bold">Rp</span>
-                    </div>
-                </div>
-
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
-                    <div>
-                        <p class="text-gray-500 font-medium text-sm">Total Transaksi</p>
-                        <h3 class="text-xl font-extrabold text-gray-900 mt-2" id="displayTotalCount"><%= totalInvoices %></h3>
-                    </div>
-                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
-                    </div>
-                </div>
-
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
-                    <div>
-                        <p class="text-gray-500 font-medium text-sm">Total Diskon</p>
-                        <h3 class="text-xl font-extrabold text-gray-900 mt-2" id="displayTotalDiscount"><%= totalDiscount.toLocaleString('id-ID') %></h3>
-                    </div>
-                    <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center text-red-600">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    </div>
-                </div>
+            <div class="flex flex-col">
+              <span class="text-white font-bold text-sm"><%= inv.customerName || 'Guest' %></span>
+              <span class="text-white/80 text-xs font-mono">#<%= inv.invoiceNumber %></span>
             </div>
-
-            <h3 class="text-base font-bold text-gray-800 mb-4 px-1">Rincian Sumber & Pembayaran</h3>
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-8">
-                <% for (const [key, val] of Object.entries(statsBySource)) { %>
-                <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-center text-center hover:shadow-md transition-shadow">
-                    <span class="text-gray-500 text-sm font-semibold uppercase tracking-wider mb-1"><%= key %></span>
-                    <span class="text-lg font-bold text-gray-900"><%= val.total.toLocaleString('id-ID') %></span>
-                    <span class="text-xs text-gray-400 mt-1"><%= val.count %> Transaksi</span>
-                </div>
-                <% } %>
-            </div>
-            
-            <hr class="border-gray-200 my-8">
+          </div>
+          <div class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center text-white text-xs font-bold">
+            <%= index + 1 %>
+          </div>
         </div>
 
-        <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
-            <div class="p-6 border-b border-gray-200 flex justify-between items-center bg-gray-50/50">
-                <h3 class="text-lg font-bold text-gray-800">Daftar Invoice</h3>
-                <span class="text-sm text-gray-500 bg-white border px-3 py-1 rounded-full shadow-sm" id="rowCountBadge"><%= list.length %> baris</span>
+        <!-- Card Body -->
+        <div class="p-4 space-y-3">
+          <!-- Date & Time -->
+          <div class="flex items-center gap-2 bg-blue-50 rounded-lg p-3">
+            <svg class="w-5 h-5 text-blue-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+            <div class="flex-1">
+              <div class="text-xs text-gray-500 font-medium">Waktu</div>
+              <div class="text-sm font-bold text-gray-900">
+                <%= new Date(inv.finishedAt).toLocaleDateString('id-ID') %> • 
+                <%= new Date(inv.finishedAt).toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'}) %>
+              </div>
             </div>
-            
-            <div class="overflow-x-auto touch-scroll">
-                <table class="w-full text-left">
-                    <thead class="bg-gray-100 border-b border-gray-200">
-                        <tr>
-                            <th class="px-6 py-4 align-bottom">
-                                <div class="flex flex-col">
-                                    <span class="text-xs font-medium text-gray-400 uppercaheaderTotalDiscountpurchasesse">Total:</span>
-                                    <span id="headerTotalCount" class="text-sm font-extrabold text-blue-600 leading-tight">0</span>
-                                    <span class="text-xs font-bold text-gray-500 uppercase mt-1">No. Invoice</span>
-                                </div>
-                            </th>
-                            <th class="px-6 py-4 text-sm font-bold text-gray-500 uppercase align-bottom">Cabang</th>
-                            <th class="px-6 py-4 text-sm font-bold text-gray-500 uppercase align-bottom">Waktu</th>
-                            <th class="px-6 py-4 text-sm font-bold text-gray-500 uppercase align-bottom">Customer</th>
-                            <th class="px-6 py-4 text-sm font-bold text-gray-500 uppercase align-bottom">Sumber</th>
-                            <th class="px-6 py-4 align-bottom text-right">
-                                <div class="flex flex-col items-end">
-                                    <span class="text-xs font-medium text-gray-400 uppercase">Total Diskon:</span>
-                                    <span id="headerTotalDiscount" class="text-sm font-extrabold text-red-500 leading-tight">0</span>
-                                    <span class="text-xs font-bold text-gray-500 uppercase mt-1">Diskon</span>
-                                </div>
-                            </th>
-                            <th class="px-6 py-4 align-bottom text-right">
-                                <div class="flex flex-col items-end">
-                                    <span class="text-xs font-medium text-gray-400 uppercase">Grand Total:</span>
-                                    <span id="headerTotalAmount" class="text-sm font-extrabold text-gray-900 leading-tight">0</span>
-                                    <span class="text-xs font-bold text-gray-500 uppercase mt-1">Total</span>
-                                </div>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-100" id="invoiceTableBody">
-                        <% list.forEach((inv) => { %>
-                        <tr class="invoice-row hover:bg-blue-50/50 transition-colors group"
-                            data-date="<%= inv.finishedAt %>"
-                            data-amount="<%= inv.total || 0 %>"
-                            data-discount="<%= inv.discount || 0 %>"
-                            data-cabang="<%= inv.cabang %>">
-                            
-                            <td class="px-6 py-5 whitespace-nowrap">
-                                <span class="text-base font-mono font-bold text-primary group-hover:underline">
-                                    #<%= inv.invoiceNumber %>
-                                </span>
-                            </td>
-                            <td class="px-6 py-5 whitespace-nowrap">
-                                <span class="px-3 py-1 text-sm font-bold rounded-lg bg-gray-200 text-gray-700">
-                                    <%= inv.cabang %>
-                                </span>
-                            </td>
-                            <td class="px-6 py-5 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900"><%= new Date(inv.finishedAt).toLocaleDateString('id-ID') %></div>
-                                <div class="text-xs text-gray-400"><%= new Date(inv.finishedAt).toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'}) %></div>
-                            </td>
-                            <td class="px-6 py-5 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-800"><%= inv.customerName || 'Guest' %></div>
-                            </td>
-                            <td class="px-6 py-5 whitespace-nowrap">
-                                <% 
-                                   let displaySource = inv.source || 'Unknown';
-                                   let badgeColor = 'bg-orange-100 text-orange-800';
-                                   if(displaySource.toLowerCase() === 'instore') {
-                                        displaySource = inv.paymentMethod || 'Cash';
-                                        badgeColor = 'bg-purple-100 text-purple-800';
-                                   } else if (displaySource.toLowerCase().includes('gojek') || displaySource.toLowerCase().includes('grab')) {
-                                        badgeColor = 'bg-green-100 text-green-800';
-                                   }
-                                %>
-                                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold <%= badgeColor %>">
-                                    <%= displaySource %>
-                                </span>
-                            </td>
-                             <td class="px-6 py-5 whitespace-nowrap text-right">
-                                <span class="text-sm font-medium text-red-500">
-                                    <%= (inv.discount || 0).toLocaleString('id-ID') %>
-                                </span>
-                            </td>
-                            <td class="px-6 py-5 whitespace-nowrap text-right">
-                                <span class="text-base font-black text-gray-900">
-                                    <%= (inv.total || 0).toLocaleString('id-ID') %>
-                                </span>
-                            </td>
-                        </tr>
-                        <% }); %>
-                    </tbody>
-                </table>
+          </div>
+
+          <!-- Source & Branch -->
+          <div class="grid grid-cols-2 gap-2">
+            <div class="bg-gray-50 rounded-lg p-3">
+              <div class="text-xs text-gray-500 font-medium mb-1">Sumber</div>
+              <% 
+                let displaySource = inv.source || 'Unknown';
+                let badgeColor = 'bg-gradient-to-r from-orange-400 to-red-500';
+
+                if((displaySource || '').toLowerCase() === 'instore') {
+                  displaySource = inv.paymentMethod || 'Cash';
+                  badgeColor = 'bg-gradient-to-r from-purple-500 to-indigo-600';
+                } else if ((displaySource || '').toLowerCase().includes('gojek') || (displaySource || '').toLowerCase().includes('grab')) {
+                  badgeColor = 'bg-gradient-to-r from-green-500 to-emerald-600';
+                }
+              %>
+              <span class="inline-block px-3 py-1 rounded-lg text-xs font-black text-white <%= badgeColor %> shadow-md">
+                <%= displaySource %>
+              </span>
             </div>
-            <div id="noDataMessage" class="hidden text-center py-12">
-                <p class="text-lg text-gray-400 font-medium">Tidak ada data untuk filter ini</p>
+
+            <div class="bg-gray-50 rounded-lg p-3">
+              <div class="text-xs text-gray-500 font-medium mb-1">Cabang</div>
+              <span class="inline-block px-3 py-1 rounded-lg text-xs font-bold bg-gray-200 text-gray-800">
+                <%= inv.cabang %>
+              </span>
             </div>
+          </div>
+
+          <!-- Amounts -->
+          <div class="border-t-2 border-dashed border-gray-200 pt-3 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-sm text-gray-600 font-medium">Diskon</span>
+              <div class="bg-red-50 px-3 py-1 rounded-lg border border-red-200">
+                <span class="text-sm font-black text-red-600">- <%= (inv.discount || 0).toLocaleString('id-ID') %></span>
+              </div>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-base text-gray-800 font-bold">Total</span>
+              <div class="bg-gradient-to-r from-yellow-100 to-amber-100 px-4 py-2 rounded-lg border-2 border-amber-300 shadow-md">
+                <span class="text-lg font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-700 to-orange-600">
+                  <%= (inv.total || 0).toLocaleString('id-ID') %>
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
-    </main>
+      </div>
+      <% }); %>
+    </div>
 
-    <script>
-        // إعداد التواريخ الافتراضية لحقول التاريخ المخصصة (اليوم)
-        window.onload = function() {
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('startDate').value = today;
-            document.getElementById('endDate').value = today;
-            applyFilters(); // تطبيق الفلتر الأولي لملء الإحصائيات
-        };
-
-        function toggleStats() {
-            const container = document.getElementById('statsContainer');
-            const btnText = document.getElementById('toggleBtnText');
+    <!-- Desktop View: Table -->
+    <div class="hidden lg:block overflow-x-auto touch-scroll">
+      <table class="w-full text-left">
+        <thead class="bg-gradient-to-r from-gray-50 to-blue-50/50 border-b-2 border-blue-200">
+          <tr>
+            <!-- Customer -->
+            <th class="px-6 py-5 text-sm font-bold text-gray-600 uppercase align-bottom tracking-wide">Customer</th>
             
-            if (container.classList.contains('hidden')) {
-                container.classList.remove('hidden');
-                btnText.innerText = "Hide Filter & Stats";
-            } else {
-                container.classList.add('hidden');
-                btnText.innerText = "Show Filter & Stats";
-            }
+            <!-- No. Invoice -->
+            <th class="px-6 py-5 align-bottom">
+              <div class="flex flex-col">
+                <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Total:</span>
+                <span id="headerTotalCount" class="text-lg font-black text-blue-600 leading-tight mt-1 bg-blue-100 px-2 py-1 rounded-lg inline-block">0</span>
+                <span class="text-xs font-bold text-gray-600 uppercase mt-2 tracking-wide">No. Invoice</span>
+              </div>
+            </th>
+
+            <!-- Waktu -->
+            <th class="px-6 py-5 text-sm font-bold text-gray-600 uppercase align-bottom tracking-wide">Waktu</th>
+
+            <!-- Total -->
+            <th class="px-6 py-5 align-bottom text-right">
+              <div class="flex flex-col items-end">
+                <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Grand Total:</span>
+                <span id="headerTotalAmount" class="text-lg font-black text-gray-900 leading-tight mt-1 bg-gradient-to-r from-yellow-100 to-amber-100 px-2 py-1 rounded-lg inline-block">0</span>
+                <span class="text-xs font-bold text-gray-600 uppercase mt-2 tracking-wide">Total</span>
+              </div>
+            </th>
+
+            <!-- Diskon -->
+            <th class="px-6 py-5 align-bottom text-right">
+              <div class="flex flex-col items-end">
+                <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Total Diskon:</span>
+                <span id="headerTotalDiscount" class="text-lg font-black text-red-500 leading-tight mt-1 bg-red-50 px-2 py-1 rounded-lg inline-block">0</span>
+                <span class="text-xs font-bold text-gray-600 uppercase mt-2 tracking-wide">Diskon</span>
+              </div>
+            </th>
+          </tr>
+        </thead>
+
+        <tbody class="divide-y divide-gray-100" id="invoiceTableBody">
+          <% list.forEach((inv, index) => { %>
+          <tr class="invoice-row hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-300 group border-l-4 border-transparent hover:border-l-blue-500 hover:shadow-md"
+              data-date="<%= inv.finishedAt %>"
+              data-amount="<%= inv.total || 0 %>"
+              data-discount="<%= inv.discount || 0 %>"
+              data-cabang="<%= inv.cabang %>">
+
+            <!-- Customer -->
+            <td class="px-6 py-5 whitespace-nowrap">
+              <div class="flex items-center gap-2">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center text-white font-bold shadow-md">
+                  <%= (inv.customerName || 'Guest').charAt(0).toUpperCase() %>
+                </div>
+                <div class="flex flex-col">
+                  <span class="text-sm font-bold text-gray-800"><%= inv.customerName || 'Guest' %></span>
+                  <span class="text-xs text-gray-500">#<%= index + 1 %></span>
+                </div>
+              </div>
+            </td>
+
+            <!-- No. Invoice -->
+            <td class="px-6 py-5 whitespace-nowrap">
+              <div class="flex items-center gap-2">
+
+                <span class="text-base font-mono font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 group-hover:from-purple-600 group-hover:to-pink-600 transition-all">
+                  #<%= inv.invoiceNumber %>
+                   <br>
+                <%= inv.cabang %>
+                </span>
+              </div>
+            </td>
+
+            <!-- Waktu -->
+            <td class="px-6 py-5 whitespace-nowrap">
+              <div class="flex flex-col bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg px-3 py-2 border border-blue-100">
+                <div class="text-sm font-bold text-gray-900 flex items-center gap-1">
+                  <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                  </svg>
+                  <%= new Date(inv.finishedAt).toLocaleDateString('id-ID') %>
+                </div>
+                <div class="text-xs font-medium text-blue-600 flex items-center gap-1 mt-1">
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                  <%= new Date(inv.finishedAt).toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'}) %>
+                </div>
+              </div>
+            </td>
+
+
+            <!-- Total -->
+            <td class="px-6 py-5 whitespace-nowrap text-right">
+              <div class="inline-flex flex-col items-end bg-gradient-to-r from-yellow-50 to-amber-50 px-4 py-2 rounded-xl border-2 border-amber-200 shadow-md hover:shadow-lg transition-shadow">
+                <div class="flex items-center gap-1">
+                  <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                  <span class="text-xs font-bold text-amber-600"><%= inv.source === 'inStore' ?  inv.paymentMethod : inv.source %></span>
+                </div>
+                <span class="text-lg font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-700 to-orange-600">
+                  <%= (inv.total || 0).toLocaleString('id-ID') %>
+                </span>
+              </div>
+            </td>
+
+            <!-- Diskon -->
+            <td class="px-6 py-5 whitespace-nowrap text-right">
+              <div class="inline-flex flex-col items-end bg-red-50 px-4 py-2 rounded-xl border-2 border-red-200 shadow-md hover:shadow-lg transition-shadow">
+                <div class="flex items-center gap-1">
+                  <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+                  </svg>
+                  <span class="text-xs font-bold text-red-500">DISKON</span>
+                </div>
+                <span class="text-base font-black text-red-600">
+                  - <%= (inv.discount || 0).toLocaleString('id-ID') %>
+                </span>
+              </div>
+            </td>
+
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="noDataMessage" class="hidden text-center py-16">
+      <div class="flex flex-col items-center gap-4">
+        <div class="w-20 h-20 rounded-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
+          <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+        </div>
+        <p class="text-lg text-gray-500 font-bold">Tidak ada data untuk filter ini</p>
+        <p class="text-sm text-gray-400">Coba ubah filter atau periode waktu</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+  </div>
+
+</main>
+
+    </div>
+  </div>
+
+  <!-- ✅ Sidebar Toggle Script -->
+  <script>
+    const sidebar = document.getElementById('sidebar');
+    const toggleBtn = document.getElementById('toggle-sidebar-btn');
+    const linksText = sidebar.querySelectorAll('span');
+    const titleText = sidebar.querySelector('h2');
+
+    function toggleSidebar() {
+      const isExpanded = sidebar.getAttribute('data-expanded') === 'true';
+
+      if (!isExpanded) {
+        sidebar.classList.remove('w-16');
+        sidebar.classList.add('w-60');
+        sidebar.setAttribute('data-expanded', 'true');
+        sidebar.style.width = '15rem';
+
+        setTimeout(() => {
+          linksText.forEach(span => {
+            span.classList.remove('opacity-0');
+            span.classList.add('opacity-100');
+          });
+          titleText.classList.remove('opacity-0');
+          titleText.classList.add('opacity-100');
+        }, 100);
+      } else {
+        linksText.forEach(span => {
+          span.classList.remove('opacity-100');
+          span.classList.add('opacity-0');
+        });
+        titleText.classList.remove('opacity-100');
+        titleText.classList.add('opacity-0');
+
+        setTimeout(() => {
+          sidebar.classList.remove('w-60');
+          sidebar.classList.add('w-16');
+          sidebar.setAttribute('data-expanded', 'false');
+          sidebar.style.width = '4rem';
+        }, 200);
+      }
+    }
+
+    toggleBtn.addEventListener('click', () => {
+      if (window.innerWidth >= 1024) {
+        sidebar.classList.remove('hidden');
+        toggleSidebar();
+      }
+    });
+
+    if (window.innerWidth >= 1024) sidebar.classList.remove('hidden');
+  </script>
+
+  <!-- ✅ Your Filters + Stats Script (same logic) -->
+  <script>
+    window.onload = function() {
+      const today = new Date().toISOString().split('T')[0];
+      const s = document.getElementById('startDate');
+      const e = document.getElementById('endDate');
+      if (s) s.value = today;
+      if (e) e.value = today;
+      applyFilters();
+    };
+
+    function toggleStats() {
+      const container = document.getElementById('statsContainer');
+      const btnText = document.getElementById('toggleBtnText');
+
+      if (container.classList.contains('hidden')) {
+        container.classList.remove('hidden');
+        btnText.innerText = "Hide Filter & Stats";
+      } else {
+        container.classList.add('hidden');
+        btnText.innerText = "Show Filter & Stats";
+      }
+    }
+
+    function handleDateSelect() {
+      const select = document.getElementById('dateRangeFilter');
+      const customInputs = document.getElementById('customDateInputs');
+
+      if (select.value === 'custom') {
+        customInputs.classList.remove('hidden');
+        customInputs.classList.add('flex');
+      } else {
+        customInputs.classList.add('hidden');
+        customInputs.classList.remove('flex');
+        applyFilters();
+      }
+    }
+
+    function applyFilters() {
+      const dateFilter = document.getElementById('dateRangeFilter')?.value || 'all';
+      const branchSelect = document.getElementById('branchFilter');
+      const branchFilter = branchSelect ? branchSelect.value : 'all';
+
+      const startDateVal = document.getElementById('startDate')?.value;
+      const endDateVal = document.getElementById('endDate')?.value;
+
+      const rows = document.querySelectorAll('.invoice-row');
+
+      let visibleCount = 0;
+      let visibleAmount = 0;
+      let visibleDiscount = 0;
+
+      const now = new Date();
+      const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+      rows.forEach(row => {
+        const rowDateStr = row.getAttribute('data-date');
+        const rowCabang = row.getAttribute('data-cabang');
+        const rowAmount = parseFloat(row.getAttribute('data-amount'));
+        const rowDiscount = parseFloat(row.getAttribute('data-discount'));
+        const rowDate = new Date(rowDateStr);
+
+        let dateMatch = false;
+
+        if (dateFilter === 'all') {
+          dateMatch = true;
+        } else if (dateFilter === 'today') {
+          dateMatch = rowDate >= todayStart;
+        } else if (dateFilter === 'custom') {
+          if (startDateVal && endDateVal) {
+            const start = new Date(startDateVal);
+            const end = new Date(endDateVal);
+            end.setHours(23, 59, 59);
+            dateMatch = rowDate >= start && rowDate <= end;
+          } else {
+            dateMatch = true;
+          }
+        } else {
+          const daysAgo = parseInt(dateFilter);
+          const cutoffDate = new Date(now);
+          cutoffDate.setDate(now.getDate() - daysAgo);
+          dateMatch = rowDate >= cutoffDate;
         }
 
-        function handleDateSelect() {
-            const select = document.getElementById('dateRangeFilter');
-            const customInputs = document.getElementById('customDateInputs');
-            
-            if (select.value === 'custom') {
-                customInputs.classList.remove('hidden');
-                customInputs.classList.add('flex');
-            } else {
-                customInputs.classList.add('hidden');
-                customInputs.classList.remove('flex');
-                applyFilters(); // تطبيق الفلتر مباشرة إذا لم يكن مخصصاً
-            }
+        const branchMatch = (branchFilter === 'all') ? true : (rowCabang === branchFilter);
+
+        if (dateMatch && branchMatch) {
+          row.style.display = '';
+          visibleCount++;
+          visibleAmount += rowAmount;
+          visibleDiscount += rowDiscount;
+        } else {
+          row.style.display = 'none';
         }
+      });
 
-        function applyFilters() {
-            const dateFilter = document.getElementById('dateRangeFilter').value;
-            const branchSelect = document.getElementById('branchFilter');
-            const branchFilter = branchSelect ? branchSelect.value : 'all';
+      const noDataMsg = document.getElementById('noDataMessage');
+      if (visibleCount === 0) noDataMsg.classList.remove('hidden');
+      else noDataMsg.classList.add('hidden');
 
-            // قيم التاريخ المخصص
-            const startDateVal = document.getElementById('startDate').value;
-            const endDateVal = document.getElementById('endDate').value;
+      updateStats(visibleAmount, visibleCount, visibleDiscount);
+    }
 
-            const rows = document.querySelectorAll('.invoice-row');
-            
-            let visibleCount = 0;
-            let visibleAmount = 0;
-            let visibleDiscount = 0;
+    function updateStats(amount, count, discount) {
+      // cards (حتى لو مخفية)
+      const a = document.getElementById("displayTotalAmount");
+      const c = document.getElementById("displayTotalCount");
+      const d = document.getElementById("displayTotalDiscount");
+      if (a) a.innerText = amount.toLocaleString('id-ID');
+      if (c) c.innerText = count;
+      if (d) d.innerText = discount.toLocaleString('id-ID');
 
-            const now = new Date();
-            const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      // header totals
+      document.getElementById("headerTotalAmount").innerText = amount.toLocaleString('id-ID');
+      document.getElementById("headerTotalCount").innerText = count;
+      document.getElementById("headerTotalDiscount").innerText = discount.toLocaleString('id-ID');
 
-            rows.forEach(row => {
-                const rowDateStr = row.getAttribute('data-date');
-                const rowCabang = row.getAttribute('data-cabang');
-                const rowAmount = parseFloat(row.getAttribute('data-amount'));
-                const rowDiscount = parseFloat(row.getAttribute('data-discount'));
-                const rowDate = new Date(rowDateStr);
-                
-                // 1. فحص التاريخ
-                let dateMatch = false;
-                if (dateFilter === 'all') {
-                    dateMatch = true;
-                } else if (dateFilter === 'today') {
-                    dateMatch = rowDate >= todayStart;
-                } else if (dateFilter === 'custom') {
-                    // منطق التاريخ المخصص
-                    if(startDateVal && endDateVal) {
-                        const start = new Date(startDateVal);
-                        const end = new Date(endDateVal);
-                        end.setHours(23, 59, 59); // لنشمل نهاية اليوم
-                        dateMatch = rowDate >= start && rowDate <= end;
-                    } else {
-                        dateMatch = true; // إظهار الكل إذا لم يتم تحديد تواريخ
-                    }
-                } else {
-                    const daysAgo = parseInt(dateFilter);
-                    const cutoffDate = new Date(now);
-                    cutoffDate.setDate(now.getDate() - daysAgo);
-                    dateMatch = rowDate >= cutoffDate;
-                }
+      document.getElementById("rowCountBadge").innerText = count + " baris";
+    }
+  </script>
 
-                // 2. فحص الفرع
-                let branchMatch = false;
-                if (branchFilter === 'all') {
-                    branchMatch = true;
-                } else {
-                    branchMatch = (rowCabang === branchFilter);
-                }
-
-                if (dateMatch && branchMatch) {
-                    row.style.display = ''; 
-                    visibleCount++;
-                    visibleAmount += rowAmount;
-                    visibleDiscount += rowDiscount;
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-
-            const noDataMsg = document.getElementById('noDataMessage');
-            if (visibleCount === 0) {
-                noDataMsg.classList.remove('hidden');
-            } else {
-                noDataMsg.classList.add('hidden');
-            }
-
-            updateStats(visibleAmount, visibleCount, visibleDiscount);
-        }
-
-        function updateStats(amount, count, discount) {
-            // تحديث البطاقات الكبيرة (حتى لو كانت مخفية)
-            document.getElementById("displayTotalAmount").innerText = amount.toLocaleString('id-ID');
-            document.getElementById("displayTotalCount").innerText = count;
-            document.getElementById("displayTotalDiscount").innerText = discount.toLocaleString('id-ID');
-            
-            // تحديث إجماليات رأس الجدول
-            document.getElementById("headerTotalAmount").innerText = amount.toLocaleString('id-ID');
-            document.getElementById("headerTotalCount").innerText = count;
-            document.getElementById("headerTotalDiscount").innerText = discount.toLocaleString('id-ID');
-
-            // تحديث شارة عدد الصفوف
-            document.getElementById("rowCountBadge").innerText = count + " baris";
-        }
-    </script>
 </body>
+
 </html>
