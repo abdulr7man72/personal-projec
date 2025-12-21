@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إنشاء أيقونات POS - قم بتحميلها</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-indigo-50 to-blue-50 p-8">
+    <div class="max-w-2xl mx-auto">
+        <h1 class="text-4xl font-bold mb-6 text-center text-indigo-900">إنشاء أيقونات التطبيق</h1>
+        
+        <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+            <p class="text-lg text-slate-700 mb-6 leading-relaxed">
+                أدناه أيقونات SVG جاهزة. انسخ كل واحدة وحفظها كـ PNG بالحجم المناسب.
+            </p>
+
+            <!-- Icon 1: 192x192 -->
+            <div class="mb-12 p-6 bg-slate-50 rounded-xl border-2 border-indigo-200">
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <span class="bg-indigo-600 text-white px-3 py-1 rounded text-sm mr-3">1</span>
+                    icon-192.png
+                </h2>
+                <svg id="icon192" viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg" class="w-48 h-48 mx-auto mb-4 border border-slate-300 rounded">
+                    <defs>
+                        <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#4f46e5;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <rect width="192" height="192" fill="url(#grad1)"/>
+                    <rect x="48" y="40" width="96" height="112" fill="white" rx="8"/>
+                    <rect x="56" y="48" width="80" height="8" fill="#4f46e5"/>
+                    <rect x="56" y="64" width="80" height="6" fill="#e5e7eb"/>
+                    <rect x="56" y="76" width="80" height="6" fill="#e5e7eb"/>
+                    <rect x="56" y="88" width="80" height="6" fill="#e5e7eb"/>
+                    <rect x="56" y="100" width="50" height="6" fill="#e5e7eb"/>
+                    <circle cx="96" cy="140" r="8" fill="#4f46e5"/>
+                </svg>
+                <button onclick="downloadSVG('icon192', 'icon-192.png')" class="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 font-semibold">
+                    ↓ تحميل كـ PNG (192x192)
+                </button>
+            </div>
+
+            <!-- Icon 2: 512x512 -->
+            <div class="mb-12 p-6 bg-slate-50 rounded-xl border-2 border-indigo-200">
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <span class="bg-indigo-600 text-white px-3 py-1 rounded text-sm mr-3">2</span>
+                    icon-512.png
+                </h2>
+                <svg id="icon512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" class="w-48 h-48 mx-auto mb-4 border border-slate-300 rounded">
+                    <defs>
+                        <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#4f46e5;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <rect width="512" height="512" fill="url(#grad2)"/>
+                    <rect x="128" y="106" width="256" height="300" fill="white" rx="20"/>
+                    <rect x="150" y="130" width="212" height="24" fill="#4f46e5"/>
+                    <rect x="150" y="170" width="212" height="16" fill="#e5e7eb"/>
+                    <rect x="150" y="198" width="212" height="16" fill="#e5e7eb"/>
+                    <rect x="150" y="226" width="212" height="16" fill="#e5e7eb"/>
+                    <rect x="150" y="254" width="130" height="16" fill="#e5e7eb"/>
+                    <circle cx="256" cy="370" r="24" fill="#4f46e5"/>
+                </svg>
+                <button onclick="downloadSVG('icon512', 'icon-512.png')" class="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 font-semibold">
+                    ↓ تحميل كـ PNG (512x512)
+                </button>
+            </div>
+
+            <!-- Icon 3: Maskable 192 -->
+            <div class="mb-12 p-6 bg-slate-50 rounded-xl border-2 border-indigo-200">
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <span class="bg-indigo-600 text-white px-3 py-1 rounded text-sm mr-3">3</span>
+                    icon-maskable-192.png
+                </h2>
+                <svg id="maskable192" viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg" class="w-48 h-48 mx-auto mb-4 border border-slate-300 rounded">
+                    <defs>
+                        <linearGradient id="grad3" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#4f46e5;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <circle cx="96" cy="96" r="96" fill="url(#grad3)"/>
+                    <circle cx="96" cy="96" r="72" fill="white"/>
+                    <rect x="60" y="55" width="72" height="10" fill="#4f46e5"/>
+                    <rect x="60" y="75" width="72" height="8" fill="#e5e7eb"/>
+                    <rect x="60" y="90" width="72" height="8" fill="#e5e7eb"/>
+                    <circle cx="96" cy="130" r="8" fill="#4f46e5"/>
+                </svg>
+                <button onclick="downloadSVG('maskable192', 'icon-maskable-192.png')" class="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 font-semibold">
+                    ↓ تحميل كـ PNG (192x192)
+                </button>
+            </div>
+
+            <!-- Icon 4: Maskable 512 -->
+            <div class="mb-12 p-6 bg-slate-50 rounded-xl border-2 border-indigo-200">
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <span class="bg-indigo-600 text-white px-3 py-1 rounded text-sm mr-3">4</span>
+                    icon-maskable-512.png
+                </h2>
+                <svg id="maskable512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" class="w-48 h-48 mx-auto mb-4 border border-slate-300 rounded">
+                    <defs>
+                        <linearGradient id="grad4" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#4f46e5;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <circle cx="256" cy="256" r="256" fill="url(#grad4)"/>
+                    <circle cx="256" cy="256" r="192" fill="white"/>
+                    <rect x="160" y="146" width="192" height="28" fill="#4f46e5"/>
+                    <rect x="160" y="200" width="192" height="20" fill="#e5e7eb"/>
+                    <rect x="160" y="240" width="192" height="20" fill="#e5e7eb"/>
+                    <circle cx="256" cy="340" r="24" fill="#4f46e5"/>
+                </svg>
+                <button onclick="downloadSVG('maskable512', 'icon-maskable-512.png')" class="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 font-semibold">
+                    ↓ تحميل كـ PNG (512x512)
+                </button>
+            </div>
+        </div>
+
+        <!-- Instructions -->
+        <div class="bg-blue-50 border-l-4 border-blue-500 p-6 rounded mb-8">
+            <h3 class="font-bold text-blue-900 mb-3">📋 التعليمات:</h3>
+            <ol class="list-decimal list-inside space-y-2 text-blue-800">
+                <li>اضغط الأزرار أعلاه لتحميل الأيقونات</li>
+                <li>احفظها في مجلد: <code class="bg-blue-100 px-2 py-1 rounded">public/images/</code></li>
+                <li>أعد تحميل الموقع (Ctrl+F5)</li>
+                <li>الآن يجب أن يظهر خيار التثبيت! ✓</li>
+            </ol>
+        </div>
+
+        <!-- Alternative -->
+        <div class="bg-green-50 border-l-4 border-green-500 p-6 rounded">
+            <h3 class="font-bold text-green-900 mb-3">💡 خيار أسرع:</h3>
+            <p class="text-green-800 mb-3">
+                استخدم <a href="https://www.favicon-generator.org/" target="_blank" class="underline font-bold text-green-700">favicon-generator.org</a>:
+            </p>
+            <ol class="list-decimal list-inside space-y-2 text-green-800">
+                <li>اصعد أي صورة ملونة</li>
+                <li>اختر الأحجام: 192 و 512</li>
+                <li>حمّل الملفات</li>
+                <li>انقل إلى: <code class="bg-green-100 px-2 py-1 rounded">public/images/</code></li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        function downloadSVG(elementId, filename) {
+            const svg = document.getElementById(elementId);
+            const svgString = new XMLSerializer().serializeToString(svg);
+            
+            // Convert SVG to Canvas to PNG
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const img = new Image();
+            
+            canvas.width = filename.includes('512') ? 512 : 192;
+            canvas.height = filename.includes('512') ? 512 : 192;
+            
+            img.onload = function() {
+                ctx.drawImage(img, 0, 0);
+                const link = document.createElement('a');
+                link.href = canvas.toDataURL('image/png');
+                link.download = filename;
+                link.click();
+            };
+            
+            img.src = 'data:image/svg+xml;base64,' + btoa(svgString);
+        }
+    </script>
+</body>
+</html>

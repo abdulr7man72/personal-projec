@@ -1,0 +1,16 @@
+<!-- Empty placeholder - will be replaced with actual icons -->
+This directory contains app icons for the PWA.
+
+The following files are needed:
+- icon-192.png (192x192 pixels)
+- icon-512.png (512x512 pixels)
+- icon-maskable-192.png (192x192 pixels, with safe zone)
+- icon-maskable-512.png (512x512 pixels, with safe zone)
+
+To generate these icons:
+1. Open: icon-generator.html
+2. Download the icons using the buttons
+3. Refresh the browser
+
+Or use an online generator:
+https://www.favicon-generator.org/

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بدون اتصال - POS System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center min-h-screen p-4">
+    <div class="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center">
+        <div class="mb-6">
+            <svg class="w-24 h-24 mx-auto text-slate-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8.111 16.251a.375.375 0 0 1-.469.369l-2.08-.523a.375.375 0 0 1 .164-.822l2.083.522a.375.375 0 0 1 .302.454ZM15.75 12.75a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 1 0 14.998 0A7.5 7.5 0 0 0 4.5 20.119Z"/>
+            </svg>
+        </div>
+        
+        <h1 class="text-2xl font-bold text-slate-800 mb-2">بدون اتصال بالإنترنت</h1>
+        <p class="text-slate-600 mb-6">يبدو أنه لا توجد حالياً اتصالاً بالإنترنت. تحقق من اتصالك وحاول مرة أخرى.</p>
+        
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 text-left">
+            <p class="text-sm text-blue-800">
+                <strong>💡 ملاحظة:</strong> يمكنك الوصول إلى البيانات المحفوظة مسبقاً حتى مع عدم وجود اتصال بالإنترنت.
+            </p>
+        </div>
+        
+        <button onclick="location.reload()" class="w-full bg-indigo-600 text-white font-semibold py-3 rounded-lg hover:bg-indigo-700 transition-colors">
+            أعد المحاولة
+        </button>
+        
+        <p class="text-xs text-slate-400 mt-6">الإصدار 1.0</p>
+    </div>
+</body>
+</html>
