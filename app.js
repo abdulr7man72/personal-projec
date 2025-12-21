@@ -44,7 +44,7 @@ app.use("/", menuRoutes);
 const posRoutes = require("./routes/pos");
 app.use("/", posRoutes);
 app.use('/', require('./routes/purchases'));
-app.get('/', (req,res)=> res.redirect('/purchases'));
+app.get('/', (req,res)=> res.redirect('/invoice/bg01/stats'));
 
 
 
