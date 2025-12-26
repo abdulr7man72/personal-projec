@@ -57,13 +57,13 @@
   <nav class="p-4">
     <ul class="space-y-2">
       <li>
-        <a href="/"
+        <a href="/invoice/<%= (typeof cabang !== 'undefined' ? cabang : '') %>/stats"
            class="flex items-center gap-3 p-3 rounded-xl text-slate-800 hover:bg-orange-50 font-extrabold">
           <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round"
               d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0h6m-6 0v-5m6 5v-5" />
           </svg>
-          الرئيسية
+          stats
         </a>
       </li>
 
@@ -76,12 +76,12 @@
             <rect width="14" height="8" x="5" y="2" rx="2" />
             <rect width="20" height="8" x="2" y="14" rx="2" />
           </svg>
-          كاشير
+          purchases
         </a>
       </li>
 
       <li>
-        <a href="/invoice/<%= (typeof cabang !== 'undefined' ? cabang : '') %>/stats"
+        <a href="/purchases"
            class="flex items-center gap-3 p-3 rounded-xl text-slate-800 hover:bg-orange-50 font-extrabold">
           <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round"
@@ -89,7 +89,8 @@
             <path stroke-linecap="round" stroke-linejoin="round"
               d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
           </svg>
-          إحصائيات
+          purchases
+
         </a>
       </li>
 
@@ -100,7 +101,7 @@
             <path stroke-linecap="round" stroke-linejoin="round"
               d="M9 7h6m0 10v-3m-6 3v-3m-6-4h12a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V9a2 2 0 012-2zm9-3V5a2 2 0 00-2-2h-2a2 2 0 00-2 2v2m0 0a2 2 0 00-2 2v3h8V9a2 2 0 00-2-2z" />
           </svg>
-          الفواتير
+          invoices
         </a>
       </li>
     </ul>
@@ -127,13 +128,13 @@
           d="M4 6h16M4 12h16M4 18h16" />
       </svg>
     </button>
-    <h2 class="text-xl font-bold whitespace-nowrap opacity-0 transition-opacity duration-200 text-orange-600">القائمة</h2>
+    <h2 class="text-xl font-bold whitespace-nowrap opacity-0 transition-opacity duration-200 text-orange-600">menu</h2>
   </div>
 
   <nav>
     <ul class="space-y-2">
       <li>
-        <a href="/"
+        <a href="/invoice/<%= (typeof cabang !== 'undefined' ? cabang : '') %>/stats"
           class="flex items-center p-2 rounded-lg text-slate-700 hover:bg-slate-100 hover:text-orange-600 font-medium group transition-colors">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0"
             fill="none" viewBox="0 0 24 24" stroke="currentColor"
@@ -141,7 +142,7 @@
             <path stroke-linecap="round" stroke-linejoin="round"
               d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0h6m-6 0v-5m6 5v-5" />
           </svg>
-          <span class="ml-3 whitespace-nowrap opacity-0 transition-opacity duration-200">الرئيسية</span>
+          <span class="ml-3 whitespace-nowrap opacity-0 transition-opacity duration-200">stats</span>
         </a>
       </li>
 
@@ -156,12 +157,12 @@
             <rect width="14" height="8" x="5" y="2" rx="2" />
             <rect width="20" height="8" x="2" y="14" rx="2" />
           </svg>
-          <span class="ml-3 whitespace-nowrap opacity-0 transition-opacity duration-200">كاشير</span>
+          <span class="ml-3 whitespace-nowrap opacity-0 transition-opacity duration-200">pos</span>
         </a>
       </li>
 
       <li>
-        <a href="/invoice/<%= (typeof cabang !== 'undefined' ? cabang : '') %>/stats"
+        <a href="/purchases"
           class="flex items-center p-2 rounded-lg text-slate-700 hover:bg-slate-100 hover:text-orange-600 font-medium group transition-colors">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0"
             fill="none" viewBox="0 0 24 24" stroke="currentColor"
@@ -171,7 +172,7 @@
             <path stroke-linecap="round" stroke-linejoin="round"
               d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
           </svg>
-          <span class="ml-3 whitespace-nowrap opacity-0 transition-opacity duration-200">إحصائيات</span>
+          <span class="ml-3 whitespace-nowrap opacity-0 transition-opacity duration-200">purchases</span>
         </a>
       </li>
 
@@ -184,7 +185,7 @@
               stroke-width="2"
               d="M9 7h6m0 10v-3m-6 3v-3m-6-4h12a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V9a2 2 0 012-2zm9-3V5a2 2 0 00-2-2h-2a2 2 0 00-2 2v2m0 0a2 2 0 00-2 2v3h8V9a2 2 0 00-2-2z" />
           </svg>
-          <span class="ml-3 whitespace-nowrap opacity-0 transition-opacity duration-200">الفواتير</span>
+          <span class="ml-3 whitespace-nowrap opacity-0 transition-opacity duration-200">invoices</span>
         </a>
       </li>
     </ul>

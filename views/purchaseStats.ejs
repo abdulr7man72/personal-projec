@@ -3,21 +3,27 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#4f46e5" />
-  <meta name="description" content="نظام إدارة الفواتير والمبيعات" />
+  <meta name="theme-color" content="#f97316" />
+  <meta name="description" content="Statistik Pembelian - Sistem Manajemen Pembelian" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="الفواتير" />
+  <meta name="apple-mobile-web-app-title" content="Statistik Pembelian" />
   <link rel="apple-touch-icon" href="/images/icon-192.png" />
   <link rel="manifest" href="/manifest.json" />
-  <title><%= title %></title>
+  <title>Statistik Pembelian</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
 
   <style>
     body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
     .touch-scroll { -webkit-overflow-scrolling: touch; }
-    .source-card.active { background: linear-gradient(135deg,#fb923c 0%,#f97316 100%); border-color:#f97316; }
+    /* Hide scrollbar for all browsers */
+    ::-webkit-scrollbar { display: none; }
+    * { -ms-overflow-style: none; scrollbar-width: none; }
+    .purchase-row { transition: background-color 0.2s ease; }
+    .source-card { transition: all 0.2s ease; }
+    .source-card.active { background: linear-gradient(135deg,#fb923c 0%,#f97316 100%); border-color:#f97316; color: white; }
+    .source-card.active .src-count, .source-card.active .src-total { color: white; }
   </style>
 
   <script>
@@ -44,53 +50,56 @@
     <%- include('articles/side.ejs') %>
 
     <!-- ✅ Content -->
-<div class="flex-1 min-w-0 flex flex-col h-screen">
+    <div class="flex-1 min-w-0 flex flex-col h-screen">
 
-      <!-- ✅ Desktop Navbar فقط -->
+      <!-- ✅ Desktop Navbar -->
       <nav class="hidden lg:block bg-white border-b border-slate-200 sticky top-0 z-40">
         <div class="h-16 flex items-center justify-between px-4">
           <div class="flex items-center gap-3">
             <div class="p-3 rounded-xl text-white bg-gradient-to-r from-primary to-primary2 shadow-sm">
               <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                  d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
               </svg>
             </div>
             <div class="leading-tight">
-              <h1 class="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight">Dashboard</h1>
-              <div class="text-xs text-slate-500 font-semibold">The Shawarma • <%= cabang %></div>
+              <h1 class="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight">Statistik Pembelian</h1>
+              <div class="text-xs text-slate-500 font-semibold">
+                <% if(currentBranch === 'all') { %>
+                  Semua Cabang
+                <% } else { %>
+                  Cabang: <%= currentBranch %>
+                <% } %>
+              </div>
             </div>
           </div>
 
-          <!-- ✅ زر Filter زي أول -->
-          <button type="button" onclick="toggleStats()"
-            class="flex items-center gap-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 px-4 py-2 rounded-xl font-extrabold transition-all">
+          <!-- ✅ Back button -->
+          <a href="/purchases" class="flex items-center gap-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 px-4 py-2 rounded-xl font-extrabold transition-all">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
             </svg>
-            <span id="toggleBtnText">Show Filter</span>
-          </button>
+            <span>Kembali</span>
+          </a>
         </div>
       </nav>
 
-      <!-- ✅ Filter Data فوق الكل (full width) -->
-      <div id="statsContainer" class="hidden shrink-0 border-b border-slate-200 bg-white">
+      <!-- ✅ Filter Data (فقط للشاشات الكبيرة) -->
+      <div id="statsContainer" class="hidden lg:block shrink-0 border-b border-slate-200 bg-white">
         <div class="p-3 lg:p-4">
           <div class="rounded-2xl border border-slate-200 bg-slate-50 p-3 lg:p-4">
             <div class="flex items-center justify-between mb-3">
               <h2 class="text-base font-extrabold text-slate-900">Filter Data</h2>
-              <span class="text-[11px] text-slate-500 font-semibold">Reset balik ke Today</span>
+              <span class="text-[11px] text-slate-500 font-semibold">Reset untuk semua data</span>
             </div>
 
             <div class="flex flex-col md:flex-row gap-3 w-full items-end">
-
-              <% if(cabang === 'all') { %>
+              <% if(currentBranch === 'all') { %>
               <div class="w-full md:w-1/4">
                 <label class="block text-xs font-bold text-slate-600 mb-1">Pilih Cabang</label>
                 <select id="branchFilter" onchange="applyFilters()"
                   class="w-full h-11 px-3 bg-white border border-slate-200 rounded-xl font-extrabold text-slate-800
-                         focus:ring-2 focus:ring-orange-400 focus:border-orange-400">
+                         focus:ring-2 focus:ring-orange-400 focus:border-orange-400 appearance-none cursor-pointer">
                   <option value="all">Semua Cabang</option>
                   <% uniqueBranches.forEach(br => { %>
                     <option value="<%= br %>"><%= br %></option>
@@ -103,7 +112,7 @@
                 <label class="block text-xs font-bold text-slate-600 mb-1">Pilih Tanggal</label>
                 <select id="dateRangeFilter" onchange="handleDateSelect()"
                   class="w-full h-11 px-3 bg-white border border-slate-200 rounded-xl font-extrabold text-slate-800
-                         focus:ring-2 focus:ring-orange-400 focus:border-orange-400">
+                         focus:ring-2 focus:ring-orange-400 focus:border-orange-400 appearance-none cursor-pointer">
                   <option value="all">Semua Tanggal</option>
                   <option value="today">Hari Ini</option>
                   <option value="1">1 Hari Terakhir</option>
@@ -129,7 +138,6 @@
                 </div>
               </div>
 
-              <!-- ✅ Reset بدل Apply -->
               <button type="button" onclick="resetFilters()"
                 class="h-11 px-4 rounded-xl font-extrabold text-white bg-gradient-to-r from-primary to-primary2
                        hover:opacity-95 active:scale-95 transition">
@@ -143,9 +151,18 @@
       <!-- ✅ WORKSPACE -->
       <div class="flex-1 overflow-hidden">
 
-        <!-- MOBILE LAYOUT
-        ========================= -->
+        <!-- MOBILE LAYOUT ========================= -->
         <div class="lg:hidden h-full flex flex-col pt-14">
+
+          <!-- ✅ Back Button Mobile -->
+          <div class="shrink-0 bg-white border-b border-slate-200 px-3 py-2">
+            <a href="/purchases" class="flex items-center gap-2 text-slate-700 font-bold">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+              </svg>
+              Kembali ke Daftar
+            </a>
+          </div>
 
           <!-- ✅ Tabs Sticky -->
           <div class="shrink-0 bg-white border-b border-slate-200 px-3 py-2 sticky top-0 z-40">
@@ -164,13 +181,13 @@
           <!-- ✅ LIST PANEL -->
           <div id="mobilePanelList" class="flex-1 overflow-y-auto pb-28">
 
-            <!-- ✅ Summary (ملتصق بدون فراغات) -->
+            <!-- ✅ Summary -->
             <div class="bg-white border-b border-slate-200">
               <div class="p-3 space-y-2">
                 <div class="bg-orange-50 border border-orange-200 rounded-2xl p-3 flex items-center justify-between">
                   <div>
-                    <div class="text-[11px] font-bold text-slate-600">Total Penjualan</div>
-                    <div class="text-xl font-extrabold text-slate-900" id="displayTotalAmount_m"><%= totalAmount.toLocaleString('id-ID') %></div>
+                    <div class="text-[11px] font-bold text-slate-600">Total Pembelian</div>
+                    <div class="text-xl font-extrabold text-slate-900" id="displayTotalAmount_m">Rp 0</div>
                   </div>
                   <div class="w-10 h-10 rounded-xl bg-gradient-to-r from-orange-500 to-amber-400 text-white font-extrabold flex items-center justify-center">
                     Rp
@@ -179,12 +196,12 @@
 
                 <div class="grid grid-cols-2 gap-2">
                   <div class="bg-white border border-slate-200 rounded-2xl p-3">
-                    <div class="text-[11px] font-bold text-slate-500">Total Transaksi</div>
-                    <div class="text-lg font-extrabold text-slate-900" id="displayTotalCount_m"><%= totalInvoices %></div>
+                    <div class="text-[11px] font-bold text-slate-500">Jumlah Transaksi</div>
+                    <div class="text-lg font-extrabold text-slate-900" id="displayTotalCount_m">0</div>
                   </div>
                   <div class="bg-white border border-slate-200 rounded-2xl p-3">
-                    <div class="text-[11px] font-bold text-slate-500">Total Diskon</div>
-                    <div class="text-lg font-extrabold text-slate-900" id="displayTotalDiscount_m"><%= totalDiscount.toLocaleString('id-ID') %></div>
+                    <div class="text-[11px] font-bold text-slate-500">Total Biaya</div>
+                    <div class="text-lg font-extrabold text-slate-900" id="displayTotalFee_m">Rp 0</div>
                   </div>
                 </div>
               </div>
@@ -193,54 +210,37 @@
             <!-- ✅ List -->
             <div class="p-3">
               <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden">
-                <div class="divide-y divide-slate-200">
-                  <% list.forEach((inv) => { %>
-                    <div class="invoice-row p-4 cursor-pointer hover:bg-orange-50/50 transition"
-                      data-id="<%= inv._id %>"
-                      data-invoice-number="<%= inv.invoiceNumber %>"
-                      data-customer-name="<%= inv.customerName || 'Guest' %>"
-                      data-finished-at="<%= inv.finishedAt %>"
-                      data-date="<%= inv.date %>"
-                      data-amount="<%= inv.total || 0 %>"
-                      data-discount="<%= inv.discount || 0 %>"
-                      data-cabang="<%= inv.cabang %>"
-                      data-source="<%= inv.source %>"
-                      data-payment-method="<%= inv.paymentMethod %>"
-                      data-items='<%= JSON.stringify(inv.items || []) %>'
-                      onclick="openInvoiceFromCard(this)">
+                <div class="divide-y divide-slate-200" id="purchasesList">
+                  <% allPurchases.concat(branchPurchases).forEach((p) => { %>
+                    <div class="purchase-row p-4 cursor-pointer hover:bg-orange-50/50 transition"
+                      data-id="<%= p._id %>"
+                      data-seller="<%= p.seller %>"
+                      data-date="<%= p.createdAt %>"
+                      data-amount="<%= p.total || 0 %>"
+                      data-fee="<%= p.fee || 0 %>"
+                      data-cabang="<%= p.branchCode %>"
+                      data-payment="<%= p.PaymentMethod %>"
+                      data-order-type="<%= p.orderType %>">
 
                       <div class="flex items-start justify-between gap-3">
                         <div class="min-w-0">
                           <div class="text-xs text-slate-500 font-semibold">
-                            <%= new Date(inv.finishedAt).toLocaleDateString('id-ID') %> •
-                            <%= new Date(inv.finishedAt).toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'}) %>
+                            <%= new Date(p.createdAt).toLocaleDateString('id-ID') %> •
+                            <%= new Date(p.createdAt).toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'}) %>
                           </div>
-                          <div class="text-sm font-extrabold text-slate-900 truncate"><%= inv.customerName || 'Guest' %></div>
-                          <div class="text-xs text-slate-500 font-semibold"><%= inv.cabang %></div>
+                          <div class="text-sm font-extrabold text-slate-900 truncate"><%= p.seller || 'Unknown' %></div>
+                          <div class="text-xs text-slate-500 font-semibold"><%= p.branchCode %></div>
                           <div class="text-xs font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-amber-500 mt-1">
-                            #<%= inv.invoiceNumber %>
+                            <%= p.orderType || '-' %>
                           </div>
                         </div>
 
                         <div class="text-right shrink-0">
                           <div class="text-xs font-bold text-slate-500">
-                            <%= inv.source === 'inStore' ? (inv.paymentMethod || '-') : (inv.source || '-') %>
+                            <%= p.PaymentMethod || '-' %>
                           </div>
-                          <div class="text-base font-extrabold text-slate-900"><%= (inv.total || 0).toLocaleString('id-ID') %></div>
-                          <div class="text-xs font-extrabold text-orange-600">- <%= (inv.discount || 0).toLocaleString('id-ID') %></div>
-
-                          <% if (inv._id) { %>
-                            <form method="POST"
-                                  action="/invoice/<%= cabang %>/<%= inv._id %>/delete"
-                                  onsubmit="return confirm('حذف الفاتورة؟');"
-                                  onclick="event.stopPropagation();"
-                                  class="mt-2">
-                              <button type="submit"
-                                class="px-3 py-2 rounded-xl text-xs font-extrabold text-white bg-red-500 hover:bg-red-600 transition">
-                                Delete
-                              </button>
-                            </form>
-                          <% } %>
+                          <div class="text-base font-extrabold text-slate-900">Rp <%= (p.total || 0).toLocaleString('id-ID') %></div>
+                          <div class="text-xs font-extrabold text-orange-600">Biaya: Rp <%= (p.fee || 0).toLocaleString('id-ID') %></div>
                         </div>
                       </div>
                     </div>
@@ -259,12 +259,12 @@
           <!-- ✅ RINCIAN PANEL -->
           <div id="mobilePanelRincian" class="hidden flex-1 overflow-y-auto bg-white pb-28">
             <div class="p-3 border-b border-slate-200">
-              <div class="text-base font-extrabold text-slate-900">Rincian Sumber & Pembayaran</div>
-              <div class="text-xs text-slate-500 font-semibold mt-1">Klik untuk filter sumber</div>
+              <div class="text-base font-extrabold text-slate-900">Rincian Metode Pembayaran</div>
+              <div class="text-xs text-slate-500 font-semibold mt-1">Klik untuk filter metode</div>
             </div>
 
             <div class="divide-y divide-slate-200">
-              <% for (const [key, val] of Object.entries(statsBySource)) { %>
+              <% for (const [key, val] of Object.entries(statsByPayment || {})) { %>
                 <div class="source-card px-4 py-3 cursor-pointer hover:bg-orange-50 transition flex items-center justify-between"
                      data-source="<%= key %>"
                      onclick="filterBySource('<%= key %>')">
@@ -288,20 +288,18 @@
 
         </div>
 
-        <!-- =========================
-             DESKTOP LAYOUT
-        ========================= -->
+        <!-- DESKTOP LAYOUT ========================= -->
         <div class="hidden lg:flex h-full">
 
-          <!-- LEFT -->
+          <!-- LEFT SIDEBAR -->
           <div class="w-[360px] shrink-0 border-r border-slate-200 bg-white flex flex-col">
             <div class="p-4 border-b border-slate-200 bg-orange-50">
-              <h3 class="text-sm font-extrabold text-slate-900">Rincian Sumber & Pembayaran</h3>
-              <p class="text-xs text-slate-600 font-semibold mt-1">Klik untuk filter sumber</p>
+              <h3 class="text-sm font-extrabold text-slate-900">Rincian Metode Pembayaran</h3>
+              <p class="text-xs text-slate-600 font-semibold mt-1">Klik untuk filter metode</p>
             </div>
 
             <div class="flex-1 overflow-y-auto">
-              <% for (const [key, val] of Object.entries(statsBySource)) { %>
+              <% for (const [key, val] of Object.entries(statsByPayment || {})) { %>
                 <div class="source-card border-b border-slate-100 px-4 py-3 cursor-pointer hover:bg-orange-50 transition flex items-center justify-between"
                      data-source="<%= key %>"
                      onclick="filterBySource('<%= key %>')">
@@ -323,26 +321,26 @@
             </div>
           </div>
 
-          <!-- RIGHT -->
+          <!-- RIGHT CONTENT -->
           <div class="flex-1 min-w-0 flex flex-col bg-background">
             <div class="p-4 border-b border-slate-200 bg-white">
               <div class="grid grid-cols-3 gap-3">
                 <div class="bg-orange-50 border border-orange-200 rounded-2xl p-4 flex items-center justify-between">
                   <div>
-                    <div class="text-xs font-bold text-slate-600">Total Penjualan</div>
-                    <div class="text-xl font-extrabold text-slate-900" id="displayTotalAmount"><%= totalAmount.toLocaleString('id-ID') %></div>
+                    <div class="text-xs font-bold text-slate-600">Total Pembelian</div>
+                    <div class="text-xl font-extrabold text-slate-900" id="displayTotalAmount">Rp 0</div>
                   </div>
                   <div class="w-10 h-10 rounded-xl bg-gradient-to-r from-orange-500 to-amber-400 text-white font-extrabold flex items-center justify-center">Rp</div>
                 </div>
 
                 <div class="bg-white border border-slate-200 rounded-2xl p-4">
                   <div class="text-xs font-bold text-slate-500">Total Transaksi</div>
-                  <div class="text-xl font-extrabold text-slate-900" id="displayTotalCount"><%= totalInvoices %></div>
+                  <div class="text-xl font-extrabold text-slate-900" id="displayTotalCount">0</div>
                 </div>
 
                 <div class="bg-white border border-slate-200 rounded-2xl p-4">
-                  <div class="text-xs font-bold text-slate-500">Total Diskon</div>
-                  <div class="text-xl font-extrabold text-slate-900" id="displayTotalDiscount"><%= totalDiscount.toLocaleString('id-ID') %></div>
+                  <div class="text-xs font-bold text-slate-500">Total Biaya</div>
+                  <div class="text-xl font-extrabold text-slate-900" id="displayTotalFee">Rp 0</div>
                 </div>
               </div>
             </div>
@@ -353,75 +351,54 @@
                   <table class="w-full text-left">
                     <thead class="bg-orange-50 border-b border-orange-200">
                       <tr>
-                        <th class="px-6 py-4 text-xs font-extrabold text-slate-600 uppercase tracking-wider">Customer</th>
-                        <th class="px-6 py-4 text-xs font-extrabold text-slate-600 uppercase tracking-wider">No. Invoice</th>
+                        <th class="px-6 py-4 text-xs font-extrabold text-slate-600 uppercase tracking-wider">Penjual</th>
+                        <th class="px-6 py-4 text-xs font-extrabold text-slate-600 uppercase tracking-wider">Cabang</th>
                         <th class="px-6 py-4 text-xs font-extrabold text-slate-600 uppercase tracking-wider text-right">Total</th>
-                        <th class="px-6 py-4 text-xs font-extrabold text-slate-600 uppercase tracking-wider text-right">Diskon</th>
-                        <th class="px-6 py-4 text-xs font-extrabold text-slate-600 uppercase tracking-wider text-right">Action</th>
+                        <th class="px-6 py-4 text-xs font-extrabold text-slate-600 uppercase tracking-wider text-right">Biaya</th>
                       </tr>
                     </thead>
 
-                    <tbody class="divide-y divide-slate-100" id="invoiceTableBody">
-                      <% list.forEach((inv) => { %>
-                      <tr class="invoice-row hover:bg-orange-50/50 transition cursor-pointer"
-                          data-id="<%= inv._id %>"
-                          data-invoice-number="<%= inv.invoiceNumber %>"
-                          data-customer-name="<%= inv.customerName || 'Guest' %>"
-                          data-finished-at="<%= inv.finishedAt %>"
-                          data-date="<%= inv.date %>"
-                          data-amount="<%= inv.total || 0 %>"
-                          data-discount="<%= inv.discount || 0 %>"
-                          data-cabang="<%= inv.cabang %>"
-                          data-source="<%= inv.source %>"
-                          data-payment-method="<%= inv.paymentMethod %>"
-                          data-items='<%= JSON.stringify(inv.items || []) %>'
-                          onclick="openInvoiceFromCard(this)">
+                    <tbody class="divide-y divide-slate-100" id="purchaseTableBody">
+                      <% allPurchases.concat(branchPurchases).forEach((p) => { %>
+                      <tr class="purchase-row hover:bg-orange-50/50 transition cursor-pointer"
+                          data-id="<%= p._id %>"
+                          data-seller="<%= p.seller %>"
+                          data-date="<%= p.createdAt %>"
+                          data-amount="<%= p.total || 0 %>"
+                          data-fee="<%= p.fee || 0 %>"
+                          data-cabang="<%= p.branchCode %>"
+                          data-payment="<%= p.PaymentMethod %>"
+                          data-order-type="<%= p.orderType %>">
 
                         <td class="px-6 py-4 whitespace-nowrap">
                           <div class="flex flex-col">
                             <span class="text-[11px] text-slate-500 font-semibold">
-                              <%= new Date(inv.finishedAt).toLocaleDateString('id-ID') %> •
-                              <%= new Date(inv.finishedAt).toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'}) %>
+                              <%= new Date(p.createdAt).toLocaleDateString('id-ID') %> •
+                              <%= new Date(p.createdAt).toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'}) %>
                             </span>
-                            <span class="text-sm font-extrabold text-slate-900"><%= inv.customerName || 'Guest' %></span>
-                            <span class="text-xs text-slate-500 font-semibold"><%= inv.cabang %></span>
+                            <span class="text-sm font-extrabold text-slate-900"><%= p.seller || 'Unknown' %></span>
+                            <span class="text-xs font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-amber-500">
+                              <%= p.orderType || '-' %>
+                            </span>
                           </div>
                         </td>
 
                         <td class="px-6 py-4 whitespace-nowrap">
-                          <span class="text-sm font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-amber-500">
-                            #<%= inv.invoiceNumber %>
-                          </span>
+                          <span class="text-sm font-bold text-slate-900"><%= p.branchCode %></span>
                         </td>
 
                         <td class="px-6 py-4 whitespace-nowrap text-right">
                           <div class="inline-flex flex-col items-end px-3 py-2 rounded-2xl border border-slate-200 bg-slate-50">
-                            <span class="text-[11px] font-bold text-slate-500">
-                              <%= inv.source === 'inStore' ? (inv.paymentMethod || '-') : (inv.source || '-') %>
-                            </span>
-                            <span class="text-base font-extrabold text-slate-900"><%= (inv.total || 0).toLocaleString('id-ID') %></span>
+                            <span class="text-[11px] font-bold text-slate-500"><%= p.PaymentMethod || '-' %></span>
+                            <span class="text-base font-extrabold text-slate-900">Rp <%= (p.total || 0).toLocaleString('id-ID') %></span>
                           </div>
                         </td>
 
                         <td class="px-6 py-4 whitespace-nowrap text-right">
                           <div class="inline-flex flex-col items-end px-3 py-2 rounded-2xl border border-slate-200 bg-slate-50">
-                            <span class="text-[11px] font-bold text-slate-500">DISKON</span>
-                            <span class="text-sm font-extrabold text-orange-600">- <%= (inv.discount || 0).toLocaleString('id-ID') %></span>
+                            <span class="text-[11px] font-bold text-slate-500">BIAYA</span>
+                            <span class="text-sm font-extrabold text-orange-600">Rp <%= (p.fee || 0).toLocaleString('id-ID') %></span>
                           </div>
-                        </td>
-
-                        <td class="px-6 py-4 whitespace-nowrap text-right">
-                          <% if (inv._id) { %>
-                          <form method="POST"
-                                action="/invoice/<%= cabang %>/<%= inv._id %>/delete"
-                                onsubmit="return confirm('حذف الفاتورة؟');"
-                                onclick="event.stopPropagation();">
-                            <button type="submit"
-                              class="inline-flex items-center gap-2 px-4 py-2 rounded-xl font-extrabold text-white bg-red-500 hover:bg-red-600 transition">
-                              Delete
-                            </button>
-                          </form>
-                          <% } %>
                         </td>
                       </tr>
                       <% }); %>
@@ -446,7 +423,7 @@
   </div>
 
 <script>
-  // ✅ mobile list/rincian toggle
+  // ✅ Mobile list/rincian toggle
   function showMobilePanel(which) {
     const list = document.getElementById('mobilePanelList');
     const rin = document.getElementById('mobilePanelRincian');
@@ -495,20 +472,6 @@
     applyFilters();
   };
 
-  function toggleStats() {
-    const container = document.getElementById('statsContainer');
-    const btnText = document.getElementById('toggleBtnText');
-    if (!container) return;
-
-    if (container.classList.contains('hidden')) {
-      container.classList.remove('hidden');
-      if (btnText) btnText.innerText = "Hide Filter";
-    } else {
-      container.classList.add('hidden');
-      if (btnText) btnText.innerText = "Show Filter";
-    }
-  }
-
   function handleDateSelect() {
     const select = document.getElementById('dateRangeFilter');
     const customInputs = document.getElementById('customDateInputs');
@@ -555,11 +518,11 @@
     const startDateVal = document.getElementById('startDate')?.value;
     const endDateVal = document.getElementById('endDate')?.value;
 
-    const rows = document.querySelectorAll('.invoice-row');
+    const rows = document.querySelectorAll('.purchase-row');
 
     let visibleCount = 0;
     let visibleAmount = 0;
-    let visibleDiscount = 0;
+    let visibleFee = 0;
 
     const now = new Date();
     const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -568,7 +531,7 @@
       const rowDateStr = row.getAttribute('data-date');
       const rowCabang = row.getAttribute('data-cabang');
       const rowAmount = parseFloat(row.getAttribute('data-amount') || '0');
-      const rowDiscount = parseFloat(row.getAttribute('data-discount') || '0');
+      const rowFee = parseFloat(row.getAttribute('data-fee') || '0');
       const rowDate = new Date(rowDateStr);
 
       let dateMatch = false;
@@ -591,21 +554,18 @@
 
       const branchMatch = (branchFilter === 'all') ? true : (rowCabang === branchFilter);
 
-      const rowSource = (row.getAttribute('data-source') || '').trim();
-      const rowPaymentMethod = (row.getAttribute('data-payment-method') || '').trim();
+      const rowPayment = (row.getAttribute('data-payment') || '').trim();
 
-      let sourceMatch = true;
+      let paymentMatch = true;
       if (activeSourceFilter) {
-        const isPaymentMatch = rowPaymentMethod === activeSourceFilter;
-        const isSourceMatch = rowSource === activeSourceFilter;
-        sourceMatch = isPaymentMatch || isSourceMatch;
+        paymentMatch = rowPayment === activeSourceFilter;
       }
 
-      if (dateMatch && branchMatch && sourceMatch) {
+      if (dateMatch && branchMatch && paymentMatch) {
         row.style.display = '';
         visibleCount++;
         visibleAmount += rowAmount;
-        visibleDiscount += rowDiscount;
+        visibleFee += rowFee;
       } else {
         row.style.display = 'none';
       }
@@ -622,38 +582,37 @@
       noDataMsgM?.classList.add('hidden');
     }
 
-    updateStats(visibleAmount, visibleCount, visibleDiscount);
+    updateStats(visibleAmount, visibleCount, visibleFee);
     updateSourceCardsFromVisibleRows();
   }
 
-  function updateStats(amount, count, discount) {
+  function updateStats(amount, count, fee) {
     const a = document.getElementById("displayTotalAmount");
     const c = document.getElementById("displayTotalCount");
-    const d = document.getElementById("displayTotalDiscount");
-    if (a) a.innerText = amount.toLocaleString('id-ID');
+    const f = document.getElementById("displayTotalFee");
+    if (a) a.innerText = 'Rp ' + amount.toLocaleString('id-ID');
     if (c) c.innerText = count;
-    if (d) d.innerText = discount.toLocaleString('id-ID');
+    if (f) f.innerText = 'Rp ' + fee.toLocaleString('id-ID');
 
     const am = document.getElementById("displayTotalAmount_m");
     const cm = document.getElementById("displayTotalCount_m");
-    const dm = document.getElementById("displayTotalDiscount_m");
-    if (am) am.innerText = amount.toLocaleString('id-ID');
+    const fm = document.getElementById("displayTotalFee_m");
+    if (am) am.innerText = 'Rp ' + amount.toLocaleString('id-ID');
     if (cm) cm.innerText = count;
-    if (dm) dm.innerText = discount.toLocaleString('id-ID');
+    if (fm) fm.innerText = 'Rp ' + fee.toLocaleString('id-ID');
   }
 
   function updateSourceCardsFromVisibleRows() {
-    const rows = document.querySelectorAll('.invoice-row');
+    const rows = document.querySelectorAll('.purchase-row');
     const agg = {};
 
     rows.forEach(row => {
       if (row.style.display === 'none') return;
 
-      const source = (row.getAttribute('data-source') || '').trim();
-      const pm = (row.getAttribute('data-payment-method') || '').trim();
+      const payment = (row.getAttribute('data-payment') || '').trim();
       const amount = parseFloat(row.getAttribute('data-amount') || '0');
 
-      const key = (source === 'inStore') ? (pm || 'Cash') : (source || 'Unknown');
+      const key = payment || 'Unknown';
       if (!agg[key]) agg[key] = { count: 0, total: 0 };
 
       agg[key].count += 1;
@@ -694,28 +653,7 @@
       });
     });
   }
-
-  // طلب إذن إضافة التطبيق
-  let deferredPrompt;
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    showInstallPrompt();
-  });
-
-  function showInstallPrompt() {
-    // يمكنك إضافة زر أو رسالة تثبيت هنا
-    console.log('التطبيق متاح للتثبيت');
-  }
-
-  window.addEventListener('appinstalled', () => {
-    console.log('✅ تم تثبيت التطبيق بنجاح');
-    deferredPrompt = null;
-  });
 </script>
-
-<!-- Modal تفاصيل الفاتورة -->
-<%- include('articles/invoice-detail-modal.ejs') %>
 
 </body>
 </html>

@@ -24,17 +24,16 @@
       .fade-in { animation: fadeIn 0.2s ease-in-out; }
       @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-<style>
   /* إخفاء شريط التمرير الأفقي لجمالية أكثر */
   .no-scrollbar::-webkit-scrollbar { display: none; }
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
   
   @keyframes scaleIn {
     from { opacity: 0; transform: scale(0.95); }
     to   { opacity: 1; transform: scale(1); }
   }
   .animate-scaleIn { animation: scaleIn 0.15s ease-out; }
-</style>
     </style>
   </head>
 
@@ -48,9 +47,9 @@
 
       <div class="flex-1 flex bg-slate-50 h-full relative overflow-hidden">
 
-        <div class="flex-1 flex flex-col h-full relative">
+        <div class="flex-1 flex flex-col h-full relative overflow-hidden">
 
-          <div class="md:hidden p-3 bg-white border-b border-slate-200">
+          <div class="md:hidden relative p-3 bg-white border-b border-slate-200 z-20 flex-shrink-0 mt-14">
             <input type="text" onkeyup="filterMenu()" id="mobileSearchInput"
               placeholder="Cari menu..."
               class="w-full px-4 py-2 rounded-lg border border-slate-300 text-sm">
@@ -82,9 +81,9 @@
             </div>
           </div>
 
-          <div class="flex-1 overflow-y-auto p-4" id="menuContainer">
+          <div class="flex-1 overflow-y-auto p-4 md:pt-4 pt-0 md:pb-0 pb-28" id="menuContainer">
             <div
-              class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 pb-24 md:pb-0"
+              class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 md:pb-0"
               id="menuGrid">
               <% (menuItems || []).forEach(item => { %>
               <button
@@ -174,7 +173,7 @@
         </div>
 
         <div id="cartWrapper"
-          class="bg-white border-l border-slate-200 w-full md:w-[400px] lg:w-[450px] flex-none flex flex-col h-full fixed inset-0 z-40 md:static transform translate-y-full md:translate-y-0 transition-transform duration-300">
+          class="bg-white border-l border-slate-200 w-full md:w-[400px] lg:w-[450px] flex-none flex flex-col h-full fixed bottom-0 left-0 right-0 md:static z-40 transform translate-y-full md:translate-y-0 transition-transform duration-300 pt-8 md:pt-0">
           <div
             class="md:hidden bg-slate-100 p-2 flex justify-center border-b border-slate-200"
             onclick="toggleMobileCart()">
@@ -299,7 +298,7 @@
               <input type="hidden" name="paymentMethod"
                 id="paymentMethodInput" />
 
-              <div class="grid grid-cols-4 gap-3">
+              <div class="grid grid-cols-4 gap-3 md:pb-0 pb-24">
                 <button type="button" onclick="clearCart()"
                   class="col-span-1 h-12 rounded-xl border border-slate-200 text-slate-500 hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors flex items-center justify-center">
                   <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24"
@@ -395,7 +394,7 @@
     </script>
 
     <div id="mobileCartBar"
-      class="md:hidden fixed bottom-0 left-0 right-0 bg-slate-900 text-white px-4 py-3 flex items-center justify-between shadow-[0_-5px_20px_rgba(0,0,0,0.2)] z-50 cursor-pointer translate-y-full transition-transform duration-300"
+      class="md:hidden fixed bottom-0 left-0 right-0 bg-slate-900 text-white px-4 py-3 flex items-center justify-between shadow-[0_-5px_20px_rgba(0,0,0,0.2)] z-40 cursor-pointer translate-y-full transition-transform duration-300"
       onclick="toggleMobileCart()">
       <div class="flex items-center gap-3">
         <div
@@ -413,157 +412,153 @@
         KERANJANG <span class="ml-1">▲</span></div>
     </div>
 
-    <div id="itemModal" class="fixed inset-0 z-50 hidden">
+    <div id="itemModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
       <div
         class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity"
         onclick="closeItemModal()"></div>
       <div
-        class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-sm p-4">
+        class="relative w-full md:max-w-sm max-h-[90vh] overflow-y-auto">
         <div
           class="bg-white rounded-2xl shadow-2xl overflow-hidden animate-scale-up">
           <div
-            class="bg-slate-50 px-4 py-3 border-b border-slate-100 flex justify-between items-center">
-            <h3 class="font-bold text-slate-800" id="itemModalName">Edit
-              Item</h3>
+            class="bg-slate-50 px-4 py-3 border-b border-slate-100 flex justify-between items-center sticky top-0 z-10">
+            <h3 class="font-bold text-slate-800 text-sm md:text-base" id="itemModalName">Edit Item</h3>
             <button onclick="closeItemModal()"
               class="text-slate-400 hover:text-slate-600 text-xl leading-none">&times;</button>
           </div>
 
-          <div class="p-4">
-            <div class="flex items-center justify-center gap-4 mb-6">
+          <div class="p-4 space-y-4">
+            <div class="bg-slate-50 rounded-lg p-4 flex items-center justify-center gap-3">
               <button onclick="changeItemModalQty(-1)"
-                class="w-10 h-10 rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200 text-lg font-bold flex items-center justify-center transition-colors">&minus;</button>
+                class="w-10 h-10 rounded-full bg-slate-200 text-slate-700 hover:bg-slate-300 text-lg font-bold flex items-center justify-center transition-colors">&minus;</button>
               <span id="itemModalQty"
-                class="text-xl font-bold text-slate-800 w-12 text-center">1</span>
+                class="text-2xl font-bold text-slate-800 w-16 text-center">1</span>
               <button onclick="changeItemModalQty(1)"
                 class="w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 hover:bg-indigo-200 text-lg font-bold flex items-center justify-center transition-colors">&plus;</button>
             </div>
 
-            <div class="mb-4">
+            <div>
               <label
-                class="text-xs font-semibold text-slate-500 mb-1 block">Catatan
-                Khusus</label>
+                class="text-xs font-semibold text-slate-600 mb-2 block">Catatan Khusus</label>
               <input type="text" id="itemModalNote"
-                class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
-                placeholder="Cth: Jangan pedas, tanpa bawang...">
+                class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+                placeholder="Contoh: Jangan pedas, tanpa bawang...">
             </div>
 
-            <div class="mb-4">
-              <div class="flex justify-between items-center mb-2">
-                <label class="text-xs font-semibold text-slate-500">Tambahan
-                  (Add-ons)</label>
+            <div>
+              <div class="flex justify-between items-center mb-3">
+                <label class="text-xs font-semibold text-slate-600">Tambahan (Add-ons)</label>
                 <span id="itemModalPricePreview"
-                  class="text-[10px] bg-slate-100 px-2 py-0.5 rounded text-slate-600"></span>
+                  class="text-sm bg-indigo-100 text-indigo-700 px-2 py-1 rounded font-semibold"></span>
               </div>
               <div id="itemModalAddons"
-                class="space-y-2 max-h-40 overflow-y-auto pr-1"></div>
+                class="space-y-2 max-h-48 overflow-y-auto pr-2"></div>
             </div>
 
-            <div class="grid grid-cols-2 gap-3 mt-2">
+            <div class="grid grid-cols-2 gap-3 pt-2 border-t border-slate-100 sticky bottom-0 bg-white">
               <button onclick="closeItemModal()"
-                class="py-2.5 rounded-xl border border-slate-300 text-slate-600 font-semibold text-sm hover:bg-slate-50">Batal</button>
+                class="py-2.5 rounded-lg border border-slate-300 text-slate-600 font-semibold text-sm hover:bg-slate-50 transition-colors">Batal</button>
               <button onclick="confirmEditItem()"
-                class="py-2.5 rounded-xl bg-indigo-600 text-white font-semibold text-sm hover:bg-indigo-700 shadow-lg shadow-indigo-200">Simpan
-                Perubahan</button>
+                class="py-2.5 rounded-lg bg-indigo-600 text-white font-semibold text-sm hover:bg-indigo-700 shadow-md transition-colors">Simpan</button>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <div id="discountModal" class="fixed inset-0 z-50 hidden">
+    <div id="discountModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
       <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
         onclick="closeDiscountModal()"></div>
-      <div
-        class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-xs p-4">
-        <div class="bg-white rounded-2xl shadow-2xl p-4">
+      <div class="relative w-full md:max-w-xs">
+        <div class="bg-white rounded-2xl shadow-2xl p-5">
           <div class="text-center mb-4">
-            <h3 class="font-bold text-slate-800 mb-1">Atur Diskon</h3>
+            <h3 class="font-bold text-slate-800 mb-3 text-lg">Atur Diskon</h3>
             <div
-              class="text-3xl font-mono font-bold text-indigo-600 my-3 tracking-tight"
+              class="text-4xl font-mono font-bold text-indigo-600 my-4 tracking-tight"
               id="discountValueDisplay">0</div>
           </div>
-          <div class="bg-slate-100 p-1 rounded-xl flex mb-4">
+          <div class="bg-slate-100 p-1 rounded-lg flex mb-4 gap-1">
             <button id="discTypeFlatBtn" onclick="setDiscountType('flat')"
-              class="flex-1 py-1.5 rounded-lg text-xs font-bold transition-all bg-white shadow text-slate-800">Rp
-              (Nominal)</button>
+              class="flex-1 py-2 rounded-md text-xs font-bold transition-all bg-white shadow text-slate-800">Rp (Nominal)</button>
             <button id="discTypePercentBtn" onclick="setDiscountType('percent')"
-              class="flex-1 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-500 hover:text-slate-700">%
-              (Persen)</button>
+              class="flex-1 py-2 rounded-md text-xs font-bold transition-all text-slate-500 hover:text-slate-700">% (Persen)</button>
           </div>
-          <div class="grid grid-cols-3 gap-2 mb-2">
+          <div class="grid grid-cols-3 gap-2 mb-4">
             <% [1,2,3,4,5,6,7,8,9].forEach(n => { %>
             <button onclick="appendDiscountDigit('<%= n %>')"
-              class="h-12 rounded-xl bg-slate-50 border border-slate-200 hover:bg-slate-100 text-lg font-medium active:scale-95"><%=
+              class="h-12 rounded-lg bg-slate-50 border border-slate-200 hover:bg-slate-100 text-base font-semibold active:scale-95 transition-all"><%=
               n %></button>
             <% }) %>
             <button onclick="clearDiscountValue()"
-              class="h-12 rounded-xl bg-red-50 border border-red-100 text-red-600 hover:bg-red-100 font-medium active:scale-95">C</button>
+              class="h-12 rounded-lg bg-red-50 border border-red-100 text-red-600 hover:bg-red-100 font-semibold active:scale-95 transition-all">C</button>
             <button onclick="appendDiscountDigit('0')"
-              class="h-12 rounded-xl bg-slate-50 border border-slate-200 hover:bg-slate-100 text-lg font-medium active:scale-95">0</button>
+              class="h-12 rounded-lg bg-slate-50 border border-slate-200 hover:bg-slate-100 text-base font-semibold active:scale-95 transition-all">0</button>
             <button onclick="applyDiscount()"
-              class="h-12 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 font-medium active:scale-95 shadow-md">OK</button>
+              class="h-12 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 font-semibold active:scale-95 shadow-md transition-all col-span-1">OK</button>
           </div>
+          <button onclick="closeDiscountModal()"
+            class="w-full py-2.5 rounded-lg border border-slate-300 text-slate-600 font-semibold text-sm hover:bg-slate-50 transition-colors">Tutup</button>
         </div>
-      </div><button type="button"
-        onclick="openCustomerModal()"
-        class="px-4 py-2 bg-indigo-600 text-white rounded-lg active:scale-95">
-        Open Modal
-      </button>
-
+      </div>
     </div>
 
-    <div id="paymentModal" class="fixed inset-0 z-50 hidden">
+    <div id="paymentModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
       <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
         onclick="closePaymentModal()"></div>
-      <div
-        class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-xs p-4">
-        <div class="bg-white rounded-2xl shadow-2xl p-5 text-center">
-          <div
-            class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-3">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
-              viewBox="0 0 24 24" stroke="currentColor"><path
-                stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+      <div class="relative w-full md:max-w-xs">
+        <div class="bg-white rounded-2xl shadow-2xl overflow-hidden animate-scale-up max-h-[90vh] overflow-y-auto">
+          <!-- Header -->
+          <div class="bg-slate-50 px-4 py-4 border-b border-slate-100 sticky top-0 z-10">
+            <div class="flex items-center justify-center gap-3">
+              <div class="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                  viewBox="0 0 24 24" stroke="currentColor"><path
+                    stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+              </div>
+              <h3 class="font-bold text-slate-800 text-base md:text-lg">Konfirmasi Pembayaran</h3>
+            </div>
           </div>
-          <h3 class="font-bold text-lg text-slate-800 mb-1">Konfirmasi
-            Pembayaran</h3>
-          <p class="text-xs text-slate-500 mb-4">Pilih metode pembayaran untuk
-            menyelesaikan transaksi.</p>
-          <div id="paymentOptionsInStore" class="space-y-2 mb-6 text-left">
-            <label
-              class="flex items-center p-3 border border-slate-200 rounded-xl cursor-pointer hover:border-indigo-500 hover:bg-indigo-50 transition-all has-[:checked]:border-indigo-500 has-[:checked]:bg-indigo-50">
-              <input type="radio" name="paymentRadio" value="cash"
-                class="w-4 h-4 text-indigo-600 border-slate-300 focus:ring-indigo-500">
-              <span class="ml-3 text-sm font-medium text-slate-700">Tunai
-                (Cash)</span>
-            </label>
-            <label
-              class="flex items-center p-3 border border-slate-200 rounded-xl cursor-pointer hover:border-indigo-500 hover:bg-indigo-50 transition-all has-[:checked]:border-indigo-500 has-[:checked]:bg-indigo-50">
-              <input type="radio" name="paymentRadio" value="transfer" checked
-                class="w-4 h-4 text-indigo-600 border-slate-300 focus:ring-indigo-500">
-              <span class="ml-3 text-sm font-medium text-slate-700">Transfer
-                Bank</span>
-            </label>
-            <label
-              class="flex items-center p-3 border border-slate-200 rounded-xl cursor-pointer hover:border-indigo-500 hover:bg-indigo-50 transition-all has-[:checked]:border-indigo-500 has-[:checked]:bg-indigo-50">
-              <input type="radio" name="paymentRadio" value="qris"
-                class="w-4 h-4 text-indigo-600 border-slate-300 focus:ring-indigo-500">
-              <span class="ml-3 text-sm font-medium text-slate-700">QRIS</span>
-            </label>
-          </div>
-          <div id="paymentInfoNonStore"
-            class="hidden mb-6 bg-yellow-50 text-yellow-800 p-3 rounded-xl text-xs border border-yellow-100">
-            <strong>Pesanan Online:</strong> Metode pembayaran akan dicatat
-            sesuai sumber pesanan (App).
-          </div>
-              <%- include('articles/cash.ejs') %>
 
-          <div class="flex gap-2">
+          <!-- Content -->
+          <div class="p-4 space-y-4">
+            <p class="text-xs text-slate-500 text-center">Pilih metode pembayaran untuk menyelesaikan transaksi.</p>
+            
+            <div id="paymentOptionsInStore" class="space-y-2">
+              <label
+                class="flex items-center p-3 border border-slate-200 rounded-lg cursor-pointer hover:border-indigo-500 hover:bg-indigo-50 transition-all has-[:checked]:border-indigo-500 has-[:checked]:bg-indigo-50">
+                <input type="radio" name="paymentRadio" value="cash"
+                  class="w-4 h-4 text-indigo-600 border-slate-300 focus:ring-indigo-500">
+                <span class="ml-3 text-sm font-medium text-slate-700">Tunai (Cash)</span>
+              </label>
+              <label
+                class="flex items-center p-3 border border-slate-200 rounded-lg cursor-pointer hover:border-indigo-500 hover:bg-indigo-50 transition-all has-[:checked]:border-indigo-500 has-[:checked]:bg-indigo-50">
+                <input type="radio" name="paymentRadio" value="transfer" checked
+                  class="w-4 h-4 text-indigo-600 border-slate-300 focus:ring-indigo-500">
+                <span class="ml-3 text-sm font-medium text-slate-700">Transfer Bank</span>
+              </label>
+              <label
+                class="flex items-center p-3 border border-slate-200 rounded-lg cursor-pointer hover:border-indigo-500 hover:bg-indigo-50 transition-all has-[:checked]:border-indigo-500 has-[:checked]:bg-indigo-50">
+                <input type="radio" name="paymentRadio" value="qris"
+                  class="w-4 h-4 text-indigo-600 border-slate-300 focus:ring-indigo-500">
+                <span class="ml-3 text-sm font-medium text-slate-700">QRIS</span>
+              </label>
+            </div>
+
+            <div id="paymentInfoNonStore"
+              class="hidden bg-yellow-50 text-yellow-800 p-3 rounded-lg text-xs border border-yellow-100">
+              <strong>Pesanan Online:</strong> Metode pembayaran akan dicatat sesuai sumber pesanan (App).
+            </div>
+
+            <%- include('articles/cash.ejs') %>
+          </div>
+
+          <!-- Footer -->
+          <div class="grid grid-cols-2 gap-3 pt-2 border-t border-slate-100 sticky bottom-0 bg-white p-4">
             <button onclick="closePaymentModal()"
-              class="flex-1 py-2.5 rounded-xl border border-slate-300 text-slate-600 text-sm font-medium hover:bg-slate-50">Batal</button>
+              class="py-2.5 rounded-lg border border-slate-300 text-slate-600 text-sm font-medium hover:bg-slate-50 transition-colors">Batal</button>
             <button onclick="confirmPaymentAndSubmit()"
-              class="flex-1 py-2.5 rounded-xl bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700 shadow-lg shadow-emerald-200">Simpan</button>
+              class="py-2.5 rounded-lg bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700 shadow-lg shadow-emerald-200 transition-colors">Simpan</button>
           </div>
         </div>
       </div>
@@ -882,8 +877,15 @@
         mobileCartOpen = !mobileCartOpen;
         const wrap = document.getElementById("cartWrapper");
         const bar = document.getElementById("mobileCartBar");
-        if (mobileCartOpen) { wrap.classList.remove("translate-y-full"); bar.classList.add("translate-y-full"); } 
-        else { wrap.classList.add("translate-y-full"); bar.classList.remove("translate-y-full"); }
+        if (mobileCartOpen) { 
+          wrap.classList.remove("translate-y-full");
+          bar.classList.add("translate-y-full");
+          document.body.style.overflow = "hidden";
+        } else { 
+          wrap.classList.add("translate-y-full");
+          bar.classList.remove("translate-y-full");
+          document.body.style.overflow = "";
+        }
       }
 
       function handleSaveClick() {

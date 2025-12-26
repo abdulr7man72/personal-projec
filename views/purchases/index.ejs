@@ -1,312 +1,816 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Pembelian</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#4f46e5" />
+  <meta name="description" content="نظام إدارة المشتريات" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="المشتريات" />
+  <link rel="apple-touch-icon" href="/images/icon-192.png" />
+  <link rel="manifest" href="/manifest.json" />
+  <title>h</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
+
   <style>
-    *{box-sizing:border-box} body{font-family:system-ui,Arial,sans-serif;background:#f8fafc;margin:0}
-    .wrap{max-width:1100px;margin:24px auto;padding:16px}
-    .card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;box-shadow:0 1px 2px rgba(0,0,0,.04);padding:16px;margin-bottom:18px}
-    h2{margin:0 0 12px}
-    label{display:block;font-size:12px;color:#475569;margin-bottom:4px}
-    input,select,button{font-family:inherit}
-    input,select{width:100%;padding:10px;border:1px solid #e5e7eb;border-radius:10px;background:#fff}
-    .grid{display:grid;gap:12px}
-    .g2{grid-template-columns: repeat(2,minmax(0,1fr))}
-    .g3{grid-template-columns: repeat(3,minmax(0,1fr))}
-    .row{display:flex;gap:10px;align-items:center}
-    .btn{padding:10px 12px;border-radius:10px;border:1px solid #e5e7eb;background:#0ea5e9;color:#fff;cursor:pointer}
-    .btn.ghost{background:#fff;color:#0f172a}
-    .muted{color:#64748b;font-size:12px}
-    .stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
-    .stat{background:#0b1220;color:#e5e7eb;border-radius:12px;padding:12px}
-    .stat b{display:block;font-size:12px;color:#9ca3af}
-    .stat .v{font-size:18px;font-weight:700}
-    .list .row-head{display:flex;justify-content:space-between;align-items:center;cursor:pointer;padding:10px;border:1px solid #e5e7eb;border-radius:10px;background:#fff}
-    .list .row-head:hover{background:#f8fafc}
-    .list .row-body{display:none;padding:10px 14px;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 10px 10px;background:#fcfcfd}
-    .tag{font-size:12px;background:#eef2ff;color:#3730a3;border-radius:999px;padding:2px 8px;margin-left:6px}
-    .money{font-weight:700}
-    .filters .grid{align-items:end}
-    .pill{padding:4px 8px;border-radius:999px;background:#eef2ff;color:#111827;font-size:11px}
-    /* Modal */
-    .modal{position:fixed;inset:0;background:rgba(0,0,0,.32);display:none;align-items:center;justify-content:center;z-index:1000}
-    .modal .panel{width:min(920px,92vw);max-height:90vh;overflow:auto;background:#fff;border-radius:14px;padding:16px;border:1px solid #e5e7eb}
-    .addon{display:grid;grid-template-columns:1.2fr 1fr 1fr 70px;gap:10px;align-items:end}
+    body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+    .touch-scroll { -webkit-overflow-scrolling: touch; }
   </style>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#f97316',
+            primary2: '#fb923c',
+            surface: '#ffffff',
+            background: '#f8fafc',
+            dark: '#111827',
+          }
+        }
+      }
+    }
+  </script>
 </head>
-<body>
 
-  <div class="wrap">
-    <!-- FILTTER -->
-    <div class="card filters">
-      <h2>Filter</h2>
-      <form method="get" action="/purchases" class="grid g3">
-        <div>
-          <label>Dari Tanggal</label>
-          <input type="date" name="from" value="<%= filters?.from || '' %>">
-        </div>
-        <div>
-          <label>Sampai Tanggal</label>
-          <input type="date" name="to" value="<%= filters?.to || '' %>">
-        </div>
-        <div class="g2" style="display:grid;gap:10px">
-          <div>
-            <label>Cabang</label>
-            <input name="branch" placeholder="BGR01 / SPL01" value="<%= filters?.branch || '' %>">
+<body class="bg-background text-dark overflow-hidden">
+  <div class="h-screen flex">
+
+    <!-- ✅ ASIDE -->
+    <%- include('../articles/side.ejs') %>
+
+    <!-- ✅ Content -->
+<div class="flex-1 min-w-0 flex flex-col h-screen">
+
+      <!-- ✅ Desktop Navbar فقط -->
+      <nav class="hidden lg:block bg-white border-b border-slate-200 sticky top-0 z-40">
+        <div class="h-16 flex items-center justify-between px-4">
+          <div class="flex items-center gap-3">
+            <div class="p-3 rounded-xl text-white bg-gradient-to-r from-primary to-primary2 shadow-sm">
+              <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+              </svg>
+            </div>
+            <div class="leading-tight">
+              <h1 class="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight">Pembelian</h1>
+              <div class="text-xs text-slate-500 font-semibold">Manajemen Pembelian</div>
+            </div>
           </div>
-          <div>
-            <label>Metode Pembayaran</label>
-            <input name="payment" placeholder="cash / transfer / qris" value="<%= filters?.payment || '' %>">
+
+          <!-- ✅ زر Filter -->
+          <button type="button" onclick="toggleStats()"
+            class="flex items-center gap-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 px-4 py-2 rounded-xl font-extrabold transition-all">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
+            </svg>
+            <span id="toggleBtnText">Show Filter</span>
+          </button>
+        </div>
+      </nav>
+
+      <!-- ✅ Filter Data فوق الكل (full width) -->
+      <div id="statsContainer" class="hidden shrink-0 border-b border-slate-200 bg-white">
+        <div class="p-3 lg:p-4">
+          <div class="rounded-2xl border border-slate-200 bg-slate-50 p-3 lg:p-4">
+            <div class="flex items-center justify-between mb-3">
+              <h2 class="text-base font-extrabold text-slate-900">Filter Data</h2>
+              <span class="text-[11px] text-slate-500 font-semibold">Reset balik ke All</span>
+            </div>
+
+            <div class="flex flex-col md:flex-row gap-3 w-full items-end">
+
+              <div class="w-full md:w-1/4">
+                <label class="block text-xs font-bold text-slate-600 mb-1">Dari Tanggal</label>
+                <input type="date" id="startDate"
+                  class="w-full h-11 px-3 bg-white border border-slate-200 rounded-xl text-slate-800
+                         focus:ring-2 focus:ring-orange-400 focus:border-orange-400">
+              </div>
+
+              <div class="w-full md:w-1/4">
+                <label class="block text-xs font-bold text-slate-600 mb-1">Sampai Tanggal</label>
+                <input type="date" id="endDate"
+                  class="w-full h-11 px-3 bg-white border border-slate-200 rounded-xl text-slate-800
+                         focus:ring-2 focus:ring-orange-400 focus:border-orange-400">
+              </div>
+
+              <div class="w-full md:w-1/4">
+                <label class="block text-xs font-bold text-slate-600 mb-1">Cabang</label>
+                <select id="branchFilter"
+                  class="w-full h-11 px-3 bg-white border border-slate-200 rounded-xl text-slate-800 font-bold
+                         focus:ring-2 focus:ring-orange-400 focus:border-orange-400 appearance-none cursor-pointer">
+                  <option value="">Semua Cabang</option>
+                  <% 
+                    const uniqueBranches = [...new Set((purchases || []).map(p => p.branchCode))].filter(b => b);
+                    uniqueBranches.forEach(branch => { %>
+                      <option value="<%= branch %>"><%= branch %></option>
+                  <% }); %>
+                </select>
+              </div>
+
+              <div class="w-full md:w-1/4">
+                <label class="block text-xs font-bold text-slate-600 mb-1">Metode Pembayaran</label>
+                <select id="paymentFilter"
+                  class="w-full h-11 px-3 bg-white border border-slate-200 rounded-xl text-slate-800 font-bold
+                         focus:ring-2 focus:ring-orange-400 focus:border-orange-400 appearance-none cursor-pointer">
+                  <option value="">Semua Metode</option>
+                  <option value="cash">Cash</option>
+                  <option value="transfer">Transfer</option>
+                  <option value="qris">QRIS</option>
+                </select>
+              </div>
+
+              <!-- ✅ Reset بدل Apply -->
+              <button type="button" onclick="resetFilters()"
+                class="h-11 px-4 rounded-xl font-extrabold text-white bg-gradient-to-r from-primary to-primary2
+                       hover:opacity-95 active:scale-95 transition">
+                Reset
+              </button>
+            </div>
           </div>
         </div>
-        <div class="row" style="gap:10px">
-          <button class="btn" type="submit">Terapkan</button>
-          <a class="btn ghost" href="/purchases">Reset</a>
-          <span class="pill"><%= (purchases||[]).length %> hasil</span>
+      </div>
+
+      <!-- ✅ WORKSPACE -->
+      <div class="flex-1 overflow-hidden">
+
+        <!-- MOBILE LAYOUT
+        ========================= -->
+        <div class="lg:hidden h-full flex flex-col pt-14">
+
+          <!-- ✅ Tabs Sticky -->
+          <div class="shrink-0 bg-white border-b border-slate-200 px-3 py-2 sticky top-0 z-40">
+            <div class="grid grid-cols-2 bg-slate-100 rounded-2xl p-1">
+              <button id="btnMobileList" type="button" onclick="showMobilePanel('list')"
+                class="h-10 rounded-xl font-extrabold text-slate-800 bg-white shadow-sm">
+                List
+              </button>
+              <button id="btnMobileRincian" type="button" onclick="showMobilePanel('rincian')"
+                class="h-10 rounded-xl font-extrabold text-slate-600">
+                Stats
+              </button>
+            </div>
+          </div>
+
+          <!-- ✅ LIST PANEL -->
+          <div id="mobilePanelList" class="flex-1 overflow-y-auto pb-28">
+
+            <!-- ✅ Summary -->
+            <div class="bg-white border-b border-slate-200">
+              <div class="p-3 space-y-2">
+                <div class="bg-orange-50 border border-orange-200 rounded-2xl p-3 flex items-center justify-between">
+                  <div>
+                    <div class="text-[11px] font-bold text-slate-600">Total Pembelian</div>
+                    <div class="text-xl font-extrabold text-slate-900" id="displayTotalAmount_m"><%= stats?.totalSum?.toLocaleString('id-ID') || '0' %></div>
+                  </div>
+                  <div class="w-10 h-10 rounded-xl bg-gradient-to-r from-orange-500 to-amber-400 text-white font-extrabold flex items-center justify-center">
+                    Rp
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                  <div class="bg-white border border-slate-200 rounded-2xl p-3">
+                    <div class="text-[11px] font-bold text-slate-500">Jumlah Transaksi</div>
+                    <div class="text-lg font-extrabold text-slate-900" id="displayTotalCount_m"><%= stats?.count || 0 %></div>
+                  </div>
+                  <div class="bg-white border border-slate-200 rounded-2xl p-3">
+                    <div class="text-[11px] font-bold text-slate-500">Total Fee</div>
+                    <div class="text-lg font-extrabold text-slate-900" id="displayTotalDiscount_m"><%= stats?.feeSum?.toLocaleString('id-ID') || '0' %></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ✅ Branch Filter Cards -->
+            <div class="p-3">
+              <div class="text-xs font-extrabold text-slate-600 mb-3">Filter Cabang</div>
+              <div class="space-y-2 mb-4" id="branchCardsContainer">
+                <% 
+                  const uniqueBranches2 = [...new Set((purchases || []).map(p => p.branchCode))].filter(b => b);
+                  uniqueBranches2.forEach(branch => {
+                    const branchTotal = (purchases || [])
+                      .filter(p => p.branchCode === branch)
+                      .reduce((sum, p) => sum + (p.total || 0), 0);
+                %>
+                  <div class="branch-filter-card bg-white border border-slate-200 rounded-2xl p-3 cursor-pointer hover:border-orange-400 hover:bg-orange-50 transition flex items-center justify-between" onclick="filterByBranch('<%= branch %>')">
+                    <div>
+                      <div class="text-sm font-extrabold text-slate-900"><%= branch %></div>
+                      <div class="text-xs text-slate-500">Pembelian</div>
+                    </div>
+                    <div class="text-right">
+                      <div class="text-sm font-extrabold text-slate-900">Rp <%= branchTotal.toLocaleString('id-ID') %></div>
+                    </div>
+                  </div>
+                <% }); %>
+              </div>
+            </div>
+
+            <!-- ✅ List -->
+            <div class="p-3">
+              <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+                <div class="divide-y divide-slate-200" id="purchasesList">
+                  <% (purchases || []).forEach((p) => { %>
+                    <div class="purchase-row p-4 cursor-pointer hover:bg-orange-50/50 transition" onclick="openPurchaseDetail('<%= p._id %>', '<%= p.seller %>', '<%= new Date(p.createdAt).toLocaleDateString('id-ID') %>', '<%= p.branchCode %>', '<%= p.PaymentMethod %>', '<%= p.orderType %>', '<%= p.total || 0 %>', '<%= p.fee || 0 %>', '<%= p.subtotalDelivery || 0 %>', '<%= p.subtotalDiscount || 0 %>', '<%= JSON.stringify(p.items || []) %>')">
+                      <div class="flex items-start justify-between gap-3">
+                        <div class="min-w-0">
+                          <div class="text-xs text-slate-500 font-semibold">
+                            <%= new Date(p.createdAt).toLocaleDateString('id-ID') %> •
+                            <%= new Date(p.createdAt).toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'}) %>
+                          </div>
+                          <div class="text-sm font-extrabold text-slate-900 truncate"><%= p.seller || 'Seller Unknown' %></div>
+                          <div class="text-xs text-slate-500 font-semibold"><%= p.branchCode %></div>
+                          <div class="text-xs font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-amber-500 mt-1">
+                            <%= p.orderType || '-' %>
+                          </div>
+                        </div>
+
+                        <div class="text-right shrink-0">
+                          <div class="text-xs font-bold text-slate-500">
+                            <%= p.PaymentMethod || '-' %>
+                          </div>
+                          <div class="text-base font-extrabold text-slate-900"><%= (p.total || 0).toLocaleString('id-ID') %></div>
+                          <div class="text-xs font-extrabold text-orange-600">Fee: <%= (p.fee || 0).toLocaleString('id-ID') %></div>
+                        </div>
+                      </div>
+                    </div>
+                  <% }); %>
+                </div>
+
+                <div id="noDataMessage_mobile" class="hidden text-center py-10">
+                  <p class="text-slate-700 font-extrabold">Tidak ada data untuk filter ini</p>
+                  <p class="text-slate-500 text-sm font-semibold">Coba ubah filter atau periode waktu</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- ✅ Action Button -->
+            <div class="p-3 fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 md:hidden">
+              <button type="button" onclick="openAddPurchaseModal()"
+                class="w-full h-12 rounded-xl bg-gradient-to-r from-primary to-primary2 text-white font-extrabold shadow-lg shadow-orange-200 hover:opacity-95 active:scale-95 transition">
+                + Tambah Pembelian
+              </button>
+            </div>
+          </div>
+
+          <!-- ✅ STATS PANEL -->
+          <div id="mobilePanelRincian" class="hidden flex-1 overflow-y-auto bg-white pb-28">
+            <div class="p-3 border-b border-slate-200">
+              <div class="text-base font-extrabold text-slate-900">Statistik Pembelian</div>
+              <div class="text-xs text-slate-500 font-semibold mt-1">Ringkasan data transaksi</div>
+            </div>
+
+            <div class="divide-y divide-slate-200 p-3">
+              <div class="py-3 flex items-center justify-between">
+                <div>
+                  <div class="text-xs font-extrabold uppercase tracking-wider text-slate-700">Total Pembelian</div>
+                  <div class="text-[11px] text-slate-500 font-semibold mt-1">Nilai transaksi</div>
+                </div>
+                <div class="text-right">
+                  <div class="text-sm font-extrabold text-slate-900">Rp <%= stats?.totalSum?.toLocaleString('id-ID') || '0' %></div>
+                </div>
+              </div>
+
+              <div class="py-3 flex items-center justify-between">
+                <div>
+                  <div class="text-xs font-extrabold uppercase tracking-wider text-slate-700">Biaya Kirim</div>
+                  <div class="text-[11px] text-slate-500 font-semibold mt-1">Total pengiriman</div>
+                </div>
+                <div class="text-right">
+                  <div class="text-sm font-extrabold text-slate-900">Rp <%= stats?.deliverySum?.toLocaleString('id-ID') || '0' %></div>
+                </div>
+              </div>
+
+              <div class="py-3 flex items-center justify-between">
+                <div>
+                  <div class="text-xs font-extrabold uppercase tracking-wider text-slate-700">Diskon</div>
+                  <div class="text-[11px] text-slate-500 font-semibold mt-1">Potongan harga</div>
+                </div>
+                <div class="text-right">
+                  <div class="text-sm font-extrabold text-slate-900">Rp <%= stats?.discountSum?.toLocaleString('id-ID') || '0' %></div>
+                </div>
+              </div>
+
+              <div class="py-3 flex items-center justify-between">
+                <div>
+                  <div class="text-xs font-extrabold uppercase tracking-wider text-slate-700">Fee</div>
+                  <div class="text-[11px] text-slate-500 font-semibold mt-1">Biaya tambahan</div>
+                </div>
+                <div class="text-right">
+                  <div class="text-sm font-extrabold text-slate-900">Rp <%= stats?.feeSum?.toLocaleString('id-ID') || '0' %></div>
+                </div>
+              </div>
+
+              <div class="py-3 flex items-center justify-between">
+                <div>
+                  <div class="text-xs font-extrabold uppercase tracking-wider text-slate-700">Jumlah Transaksi</div>
+                  <div class="text-[11px] text-slate-500 font-semibold mt-1">Total pembelian</div>
+                </div>
+                <div class="text-right">
+                  <div class="text-sm font-extrabold text-slate-900"><%= stats?.count || 0 %> trx</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
-      </form>
+
+        <!-- DESKTOP LAYOUT -->
+        <div class="hidden lg:flex h-full">
+
+          <!-- LEFT -->
+          <div class="w-[360px] shrink-0 border-r border-slate-200 bg-white flex flex-col">
+            <div class="p-4 border-b border-slate-200 bg-orange-50">
+              <h3 class="text-sm font-extrabold text-slate-900">Statistik Pembelian</h3>
+            </div>
+            <div class="flex-1 overflow-y-auto">
+              <div class="divide-y divide-slate-200">
+                <div class="p-4 hover:bg-slate-50 transition cursor-pointer">
+                  <div class="text-[11px] font-extrabold text-slate-500 uppercase tracking-wider">Total Pembelian</div>
+                  <div class="text-lg font-extrabold text-slate-900 mt-2">Rp <%= stats?.totalSum?.toLocaleString('id-ID') || '0' %></div>
+                </div>
+                <div class="p-4 hover:bg-slate-50 transition cursor-pointer">
+                  <div class="text-[11px] font-extrabold text-slate-500 uppercase tracking-wider">Biaya Kirim</div>
+                  <div class="text-lg font-extrabold text-slate-900 mt-2">Rp <%= stats?.deliverySum?.toLocaleString('id-ID') || '0' %></div>
+                </div>
+                <div class="p-4 hover:bg-slate-50 transition cursor-pointer">
+                  <div class="text-[11px] font-extrabold text-slate-500 uppercase tracking-wider">Diskon</div>
+                  <div class="text-lg font-extrabold text-slate-900 mt-2">Rp <%= stats?.discountSum?.toLocaleString('id-ID') || '0' %></div>
+                </div>
+                <div class="p-4 hover:bg-slate-50 transition cursor-pointer">
+                  <div class="text-[11px] font-extrabold text-slate-500 uppercase tracking-wider">Fee</div>
+                  <div class="text-lg font-extrabold text-slate-900 mt-2">Rp <%= stats?.feeSum?.toLocaleString('id-ID') || '0' %></div>
+                </div>
+                <div class="p-4 hover:bg-slate-50 transition cursor-pointer">
+                  <div class="text-[11px] font-extrabold text-slate-500 uppercase tracking-wider">Jumlah Transaksi</div>
+                  <div class="text-lg font-extrabold text-slate-900 mt-2"><%= stats?.count || 0 %> trx</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Branch Filter Cards -->
+            <div class="border-t border-slate-200 p-4">
+              <div class="text-xs font-extrabold text-slate-600 mb-3">Filter Cabang</div>
+              <div class="space-y-2" id="desktopBranchCards">
+                <% 
+                  const uniqueBranches3 = [...new Set((purchases || []).map(p => p.branchCode))].filter(b => b);
+                  uniqueBranches3.forEach(branch => {
+                    const branchTotal = (purchases || [])
+                      .filter(p => p.branchCode === branch)
+                      .reduce((sum, p) => sum + (p.total || 0), 0);
+                %>
+                  <div class="branch-filter-card bg-slate-50 border border-slate-200 rounded-xl p-2.5 cursor-pointer hover:border-orange-400 hover:bg-orange-50 transition flex items-center justify-between text-xs" onclick="filterByBranch('<%= branch %>')">
+                    <span class="font-bold text-slate-900"><%= branch %></span>
+                    <span class="font-extrabold text-orange-600">Rp <%= branchTotal.toLocaleString('id-ID') %></span>
+                  </div>
+                <% }); %>
+              </div>
+            </div>
+
+            <div class="p-4 border-t border-slate-200">
+              <button type="button" onclick="openAddPurchaseModal()"
+                class="w-full h-12 rounded-xl bg-gradient-to-r from-primary to-primary2 text-white font-extrabold shadow-lg hover:opacity-95 active:scale-95 transition">
+                + Tambah Pembelian
+              </button>
+            </div>
+          </div>
+
+          <!-- RIGHT -->
+          <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- List Header -->
+            <div class="shrink-0 border-b border-slate-200 bg-white px-4 py-3 sticky top-0 z-10">
+              <h3 class="text-sm font-extrabold text-slate-900">Daftar Pembelian</h3>
+            </div>
+
+            <!-- List Content -->
+            <div class="flex-1 overflow-y-auto">
+              <div class="divide-y divide-slate-200">
+                <% (purchases || []).forEach((p) => { %>
+                  <div class="purchase-row p-4 cursor-pointer hover:bg-slate-50 transition border-b border-slate-100 flex items-center justify-between" onclick="openPurchaseDetail('<%= p._id %>', '<%= p.seller %>', '<%= new Date(p.createdAt).toLocaleDateString('id-ID') %>', '<%= p.branchCode %>', '<%= p.PaymentMethod %>', '<%= p.orderType %>', '<%= p.total || 0 %>', '<%= p.fee || 0 %>', '<%= p.subtotalDelivery || 0 %>', '<%= p.subtotalDiscount || 0 %>', '<%= JSON.stringify(p.items || []) %>')">
+                    <div class="min-w-0 flex-1">
+                      <div class="text-sm font-extrabold text-slate-900"><%= p.seller || 'Unknown' %></div>
+                      <div class="text-xs text-slate-500 font-semibold mt-0.5">
+                        <%= new Date(p.createdAt).toLocaleDateString('id-ID') %> • <%= p.branchCode %>
+                      </div>
+                      <div class="text-xs text-slate-400 mt-1"><%= p.orderType || '-' %></div>
+                    </div>
+                    <div class="text-right shrink-0 ml-4">
+                      <div class="text-base font-extrabold text-slate-900">Rp <%= (p.total || 0).toLocaleString('id-ID') %></div>
+                      <div class="text-xs text-slate-500 font-semibold mt-0.5"><%= p.PaymentMethod %></div>
+                    </div>
+                  </div>
+                <% }); %>
+              </div>
+
+              <div id="noDataMessage_desktop" class="hidden text-center py-20">
+                <p class="text-slate-700 font-extrabold">Tidak ada data untuk filter ini</p>
+                <p class="text-slate-500 text-sm font-semibold">Coba ubah filter atau periode waktu</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
     </div>
 
-    <!-- STATS -->
-    <div class="card">
-      <h2>Statistik</h2>
-      <div class="stats">
-        <div class="stat"><b>Total Transaksi</b><div class="v">Rp <%= Number(stats.totalSum||0).toLocaleString('id-ID') %></div></div>
-        <div class="stat"><b>Biaya Kirim</b><div class="v">Rp <%= Number(stats.deliverySum||0).toLocaleString('id-ID') %></div></div>
-        <div class="stat"><b>Diskon</b><div class="v">Rp <%= Number(stats.discountSum||0).toLocaleString('id-ID') %></div></div>
-        <div class="stat"><b>Fee</b><div class="v">Rp <%= Number(stats.feeSum||0).toLocaleString('id-ID') %></div></div>
-        <div class="stat"><b>Jumlah</b><div class="v"><%= stats.count || 0 %> trx</div></div>
-      </div>
-    </div>
+  </div>
 
-    <!-- ACTIONS -->
-    <div class="card">
-      <div class="row" style="justify-content:space-between">
-        <h2>Pembelian</h2>
-        <button class="btn" id="btnOpen">+ Tambah Pembelian</button>
-      </div>
-      <!-- LIST -->
-      <div class="list" id="list">
-        <% (purchases||[]).forEach(p => { %>
-          <div class="row-wrap" style="margin-bottom:10px">
-            <div class="row-head" data-toggle>
+  <!-- MODAL: تفاصيل المشتريات -->
+  <div id="purchaseDetailModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+    <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closePurchaseDetail()"></div>
+    <div class="relative w-full md:max-w-2xl max-h-[90vh] overflow-y-auto">
+      <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
+        <!-- Header -->
+        <div class="bg-slate-50 px-4 py-4 border-b border-slate-100 sticky top-0 z-10 flex items-center justify-between">
+          <h3 class="font-bold text-slate-800 text-base md:text-lg" id="modalPurchaseSeller">تفاصيل المشتريات</h3>
+          <button onclick="closePurchaseDetail()" class="text-slate-400 hover:text-slate-600 text-2xl leading-none">&times;</button>
+        </div>
+
+        <!-- Content -->
+        <div class="p-4 space-y-4">
+          <!-- معلومات الشراء -->
+          <div class="bg-orange-50 border border-orange-200 rounded-2xl p-4">
+            <div class="grid grid-cols-2 gap-4">
               <div>
-                <b><%= new Date(p.createdAt).toLocaleString('id-ID') %></b>
-                <span class="tag"><%= p.PaymentMethod || '-' %></span>
+                <div class="text-xs font-bold text-slate-600">البائع</div>
+                <div class="text-sm font-extrabold text-slate-900 mt-1" id="modalSeller">-</div>
               </div>
-              <div class="money">Rp <%= Number(p.total||0).toLocaleString('id-ID') %></div>
-            </div>
-            <div class="row-body">
-              <div class="row" style="justify-content:space-between;flex-wrap:wrap">
-                <div>
-                  <div><b>Cabang:</b> <%= p.branchCode || '-' %></div>
-                  <div><b>Order Type:</b> <%= p.orderType || '-' %></div>
-                  <div><b>Seller:</b> <%= p.seller || '-' %></div>
-                </div>
-                <div>
-                  <div><b>Biaya Kirim:</b> Rp <%= Number(p.subtotalDelivery||0).toLocaleString('id-ID') %></div>
-                  <div><b>Diskon:</b> Rp <%= Number(p.subtotalDiscount||0).toLocaleString('id-ID') %></div>
-                  <div><b>Fee:</b> Rp <%= Number(p.fee||0).toLocaleString('id-ID') %></div>
-                </div>
+              <div>
+                <div class="text-xs font-bold text-slate-600">التاريخ</div>
+                <div class="text-sm font-extrabold text-slate-900 mt-1" id="modalDate">-</div>
               </div>
-              <div style="margin-top:10px">
-                <b>Item:</b>
-                <% (p.items||[]).forEach(it => { %>
-                  <div>- <%= it.name %> × <%= it.quantity %> — Rp <%= Number(it.price||0).toLocaleString('id-ID') %></div>
-                <% }) %>
+              <div>
+                <div class="text-xs font-bold text-slate-600">الفرع</div>
+                <div class="text-sm font-extrabold text-slate-900 mt-1" id="modalBranch">-</div>
+              </div>
+              <div>
+                <div class="text-xs font-bold text-slate-600">طريقة الدفع</div>
+                <div class="text-sm font-extrabold text-slate-900 mt-1" id="modalPayment">-</div>
+              </div>
+              <div>
+                <div class="text-xs font-bold text-slate-600">نوع الطلب</div>
+                <div class="text-sm font-extrabold text-slate-900 mt-1" id="modalOrderType">-</div>
               </div>
             </div>
           </div>
-        <% }) %>
+
+          <!-- العناصر المشتراة -->
+          <div>
+            <h4 class="text-sm font-extrabold text-slate-900 mb-3">العناصر المشتراة</h4>
+            <div class="divide-y divide-slate-200 border border-slate-200 rounded-2xl overflow-hidden">
+              <div id="modalItemsList" class="divide-y divide-slate-200">
+                <!-- Items will be inserted here -->
+              </div>
+            </div>
+          </div>
+
+          <!-- الملخص المالي -->
+          <div class="bg-white rounded-2xl p-4 border border-slate-200">
+            <h4 class="text-sm font-extrabold text-slate-900 mb-3">الملخص المالي</h4>
+            <div class="space-y-2">
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-slate-600">إجمالي العناصر</span>
+                <span id="modalItemsTotal" class="text-sm font-extrabold text-slate-900">Rp 0</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-slate-600">الشحن</span>
+                <span id="modalDelivery" class="text-sm font-extrabold text-slate-900">Rp 0</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-slate-600">الخصم</span>
+                <span id="modalDiscount" class="text-sm font-extrabold text-orange-600">-Rp 0</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-slate-600">الرسوم</span>
+                <span id="modalFee" class="text-sm font-extrabold text-slate-900">Rp 0</span>
+              </div>
+              <div class="border-t border-slate-100 pt-2 flex justify-between items-center">
+                <span class="text-base font-extrabold text-slate-900">الإجمالي</span>
+                <span id="modalTotal" class="text-lg font-extrabold text-orange-600">Rp 0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="grid grid-cols-1 gap-3 pt-2 border-t border-slate-100 sticky bottom-0 bg-white p-4">
+          <button onclick="closePurchaseDetail()" class="py-2.5 rounded-lg border border-slate-300 text-slate-600 text-sm font-medium hover:bg-slate-50 transition-colors">
+            إغلاق
+          </button>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- MODAL FORM -->
-  <div class="modal" id="modal">
-    <div class="panel">
-      <div class="row" style="justify-content:space-between">
-        <h2>Tambah Pembelian</h2>
-        <button class="btn ghost" id="btnClose">Tutup</button>
-      </div>
+  <!-- MODAL: Tambah Pembelian -->
+  <div id="purchaseModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+    <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closePurchaseModal()"></div>
+    <div class="relative w-full md:max-w-2xl max-h-[90vh] overflow-y-auto">
+      <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
+        <!-- Header -->
+        <div class="bg-slate-50 px-4 py-4 border-b border-slate-100 sticky top-0 z-10 flex items-center justify-between">
+          <h3 class="font-bold text-slate-800 text-base md:text-lg">Tambah Pembelian</h3>
+          <button onclick="closePurchaseModal()" class="text-slate-400 hover:text-slate-600 text-2xl leading-none">&times;</button>
+        </div>
 
-      <div class="grid g3" style="margin-top:8px">
-        <div>
-          <label>Cabang (branchCode)</label>
-          <input id="branchCode" placeholder="BGR01 / SPL01">
+        <!-- Content -->
+        <div class="p-4 space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1">Cabang (branchCode)</label>
+              <input id="branchCode" placeholder="BGR01 / SPL01" class="w-full h-10 px-3 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-orange-400 outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1">Order Type</label>
+              <input id="orderType" placeholder="supplier / internal" class="w-full h-10 px-3 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-orange-400 outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1">Seller</label>
+              <input id="seller" placeholder="Nama penjual" class="w-full h-10 px-3 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-orange-400 outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1">Metode Pembayaran</label>
+              <input id="PaymentMethod" placeholder="cash / transfer / qris" class="w-full h-10 px-3 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-orange-400 outline-none">
+            </div>
+            <div class="md:col-span-2">
+              <label class="block text-xs font-bold text-slate-600 mb-1">Tanggal & Waktu</label>
+              <input id="createdAt" type="datetime-local" class="w-full h-10 px-3 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-orange-400 outline-none">
+            </div>
+          </div>
+
+          <!-- Items -->
+          <div class="border-t border-slate-200 pt-4">
+            <div class="flex items-center justify-between mb-3">
+              <h4 class="text-sm font-extrabold text-slate-900">Item Pembelian</h4>
+              <button type="button" onclick="addItemRow()" class="text-xs font-bold text-orange-600 hover:text-orange-700 px-3 py-1 rounded-lg border border-orange-200 hover:bg-orange-50 transition">
+                + Tambah Item
+              </button>
+            </div>
+            <div id="itemsBox" class="space-y-2"></div>
+          </div>
+
+          <!-- Additional Costs -->
+          <div class="border-t border-slate-200 pt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1">Biaya Kirim</label>
+              <input id="subtotalDelivery" type="number" min="0" value="0" class="w-full h-10 px-3 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-orange-400 outline-none" onchange="computeTotal()">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1">Diskon</label>
+              <input id="subtotalDiscount" type="number" min="0" value="0" class="w-full h-10 px-3 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-orange-400 outline-none" onchange="computeTotal()">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1">Fee</label>
+              <input id="fee" type="number" min="0" value="0" class="w-full h-10 px-3 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-orange-400 outline-none" onchange="computeTotal()">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1">Total (otomatis)</label>
+              <input id="total" type="number" min="0" value="0" readonly class="w-full h-10 px-3 bg-slate-100 border border-slate-200 rounded-lg text-sm font-bold text-slate-700">
+            </div>
+          </div>
         </div>
-        <div>
-          <label>Order Type</label>
-          <input id="orderType" placeholder="supplier / internal / lainnya">
-        </div>
-        <div>
-          <label>Metode Pembayaran</label>
-          <input id="PaymentMethod" placeholder="cash / transfer / qris">
-        </div>
-        <div>
-          <label>Seller</label>
-          <input id="seller" placeholder="Nama penjual / toko">
-        </div>
-        <div>
-          <label>Tanggal & Waktu</label>
-          <input id="createdAt" type="datetime-local">
+
+        <!-- Footer -->
+        <div class="grid grid-cols-2 gap-3 pt-2 border-t border-slate-100 sticky bottom-0 bg-white p-4">
+          <button onclick="closePurchaseModal()" class="py-2.5 rounded-lg border border-slate-300 text-slate-600 text-sm font-medium hover:bg-slate-50 transition-colors">
+            Batal
+          </button>
+          <button onclick="savePurchase()" class="py-2.5 rounded-lg bg-gradient-to-r from-primary to-primary2 text-white text-sm font-medium hover:opacity-95 shadow-lg transition-all">
+            Simpan
+          </button>
         </div>
       </div>
-
-      <div class="row" style="justify-content:space-between;margin:12px 0 8px">
-        <h3 style="margin:0;font-size:16px">Item</h3>
-        <button type="button" class="btn ghost" id="addItemBtn">+ Tambah Item</button>
-      </div>
-
-      <div id="itemsBox" class="grid" style="gap:10px"></div>
-
-      <div class="grid g2" style="margin-top:8px">
-        <div>
-          <label>Biaya Kirim (subtotalDelivery)</label>
-          <input id="subtotalDelivery" type="number" min="0" value="0">
-        </div>
-        <div>
-          <label>Diskon (subtotalDiscount)</label>
-          <input id="subtotalDiscount" type="number" min="0" value="0">
-        </div>
-      </div>
-      <div class="grid g2" style="margin-top:8px">
-        <div>
-          <label>Fee</label>
-          <input id="fee" type="number" min="0" value="0">
-        </div>
-        <div>
-          <label>Total (otomatis)</label>
-          <input id="total" type="number" min="0" value="0" readonly style="background:#f1f5f9">
-        </div>
-      </div>
-
-      <div class="row" style="justify-content:space-between;margin-top:12px">
-        <button type="button" class="btn ghost" id="previewBtn">Lihat JSON</button>
-        <button type="button" class="btn" id="saveBtn">Simpan</button>
-      </div>
-
-      <pre id="jsonPreview" class="card muted" style="margin-top:12px;white-space:pre-wrap;max-height:220px;overflow:auto"></pre>
     </div>
   </div>
 
   <script>
-    // ===== Helpers
-    const $$ = s => document.querySelector(s);
+    const $ = s => document.querySelector(s);
+    const $$ = s => document.querySelectorAll(s);
     const toNum = v => { const n = Number(v); return Number.isFinite(n) ? n : 0; };
-    const money = n => Number(n||0).toLocaleString('id-ID');
+    const money = n => Number(n || 0).toLocaleString('id-ID');
 
-    // ===== Expand/Collapse list
-    document.getElementById('list')?.addEventListener('click', (e)=>{
-      const head = e.target.closest('[data-toggle]');
-      if(!head) return;
-      const body = head.nextElementSibling;
-      body.style.display = body.style.display === 'block' ? 'none' : 'block';
-    });
+    // Mobile Panel Toggle
+    function showMobilePanel(panel) {
+      const listBtn = $('#btnMobileList');
+      const rincianBtn = $('#btnMobileRincian');
+      const listPanel = $('#mobilePanelList');
+      const rincianPanel = $('#mobilePanelRincian');
 
-    // ===== Modal
-    const modal = $$('#modal');
-    $$('#btnOpen')?.addEventListener('click', ()=> { modal.style.display='flex'; initDateNow(); });
-    $$('#btnClose')?.addEventListener('click', ()=> modal.style.display='none');
+      if (panel === 'list') {
+        listBtn.classList.add('bg-white', 'shadow-sm', 'text-slate-800');
+        listBtn.classList.remove('text-slate-600');
+        rincianBtn.classList.remove('bg-white', 'shadow-sm', 'text-slate-800');
+        rincianBtn.classList.add('text-slate-600');
+        listPanel.classList.remove('hidden');
+        rincianPanel.classList.add('hidden');
+      } else {
+        rincianBtn.classList.add('bg-white', 'shadow-sm', 'text-slate-800');
+        rincianBtn.classList.remove('text-slate-600');
+        listBtn.classList.remove('bg-white', 'shadow-sm', 'text-slate-800');
+        listBtn.classList.add('text-slate-600');
+        rincianPanel.classList.remove('hidden');
+        listPanel.classList.add('hidden');
+      }
+    }
 
-    // ===== Items in modal
-    const itemsBox = $$('#itemsBox');
-    function newItemRow(data=null){
+    // Filter Toggle
+    function toggleStats() {
+      const container = $('#statsContainer');
+      const btnText = $('#toggleBtnText');
+      container.classList.toggle('hidden');
+      btnText.textContent = container.classList.contains('hidden') ? 'Show Filter' : 'Hide Filter';
+    }
+
+    // Filter by Branch
+    function filterByBranch(branch) {
+      const rows = document.querySelectorAll('.purchase-row');
+      rows.forEach(row => {
+        if (branch === '' || row.getAttribute('onclick').includes(branch)) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+
+    function resetFilters() {
+      $('#startDate').value = '';
+      $('#endDate').value = '';
+      $('#branchFilter').value = '';
+      $('#paymentFilter').value = '';
+      window.location.reload();
+    }
+
+    // Purchase Detail Modal
+    function openPurchaseDetail(id, seller, date, branch, payment, orderType, total, fee, delivery, discount, itemsJson) {
+      $('#modalPurchaseSeller').textContent = seller || 'Unknown';
+      $('#modalSeller').textContent = seller || '-';
+      $('#modalDate').textContent = date || '-';
+      $('#modalBranch').textContent = branch || '-';
+      $('#modalPayment').textContent = payment || '-';
+      $('#modalOrderType').textContent = orderType || '-';
+
+      let items = [];
+      try {
+        items = JSON.parse(itemsJson);
+      } catch (e) {
+        items = [];
+      }
+
+      const itemsContainer = $('#modalItemsList');
+      itemsContainer.innerHTML = '';
+
+      items.forEach((item, idx) => {
+        const itemTotal = (toNum(item.price) * toNum(item.quantity));
+        const row = document.createElement('div');
+        row.className = 'p-3 bg-slate-50 flex items-center justify-between';
+        row.innerHTML = `
+          <div class="min-w-0">
+            <div class="text-sm font-bold text-slate-900">${item.name}</div>
+            <div class="text-xs text-slate-500 mt-1">${item.quantity} × Rp ${money(item.price)}</div>
+          </div>
+          <div class="text-right shrink-0">
+            <div class="text-base font-extrabold text-slate-900">Rp ${money(itemTotal)}</div>
+          </div>
+        `;
+        itemsContainer.appendChild(row);
+      });
+
+      const itemsTotal = items.reduce((sum, i) => sum + (toNum(i.price) * toNum(i.quantity)), 0);
+
+      $('#modalItemsTotal').textContent = 'Rp ' + money(itemsTotal);
+      $('#modalDelivery').textContent = 'Rp ' + money(delivery);
+      $('#modalDiscount').textContent = '-Rp ' + money(discount);
+      $('#modalFee').textContent = 'Rp ' + money(fee);
+      $('#modalTotal').textContent = 'Rp ' + money(total);
+
+      $('#purchaseDetailModal').classList.remove('hidden');
+    }
+
+    function closePurchaseDetail() {
+      $('#purchaseDetailModal').classList.add('hidden');
+    }
+
+    // Modal Functions
+    function openAddPurchaseModal() {
+      initDateNow();
+      $('#itemsBox').innerHTML = '';
+      addItemRow({ name: 'Contoh Item', price: 10000, quantity: 1 });
+      $('#purchaseModal').classList.remove('hidden');
+    }
+
+    function closePurchaseModal() {
+      $('#purchaseModal').classList.add('hidden');
+    }
+
+    function addItemRow(data = null) {
+      const itemsBox = $('#itemsBox');
       const row = document.createElement('div');
-      row.className = 'addon';
+      row.className = 'grid grid-cols-4 gap-2 md:gap-3 items-end bg-slate-50 p-3 rounded-lg border border-slate-200';
       row.innerHTML = `
         <div>
-          <label>Nama</label>
-          <input class="it-name" placeholder="Ayam 1kg" value="${data?.name ?? ''}">
+          <label class="text-xs font-bold text-slate-600">Nama</label>
+          <input class="it-name w-full h-10 px-2 bg-white border border-slate-200 rounded-lg text-sm" placeholder="Item name" value="${data?.name || ''}" onchange="computeTotal()">
         </div>
         <div>
-          <label>Harga (price)</label>
-          <input class="it-price" type="number" min="0" value="${data?.price ?? ''}">
+          <label class="text-xs font-bold text-slate-600">Harga</label>
+          <input class="it-price w-full h-10 px-2 bg-white border border-slate-200 rounded-lg text-sm" type="number" min="0" value="${data?.price || ''}" onchange="computeTotal()">
         </div>
         <div>
-          <label>Qty</label>
-          <input class="it-qty" type="number" min="1" value="${data?.quantity ?? 1}">
+          <label class="text-xs font-bold text-slate-600">Qty</label>
+          <input class="it-qty w-full h-10 px-2 bg-white border border-slate-200 rounded-lg text-sm" type="number" min="1" value="${data?.quantity || 1}" onchange="computeTotal()">
         </div>
-        <button type="button" class="btn ghost" onclick="this.parentElement.remove(); computeTotal();">Hapus</button>
+        <button type="button" onclick="this.closest('div').remove(); computeTotal();" class="h-10 rounded-lg bg-red-50 border border-red-100 text-red-600 hover:bg-red-100 font-semibold active:scale-95 transition-all">
+          Hapus
+        </button>
       `;
-      row.querySelectorAll('input').forEach(inp => inp.addEventListener('input', computeTotal));
       itemsBox.appendChild(row);
     }
 
-    function collectPayload(){
+    function computeTotal() {
       const items = [];
-      itemsBox.querySelectorAll('.addon').forEach(row=>{
+      $$('#itemsBox .grid').forEach(row => {
         const name = row.querySelector('.it-name').value.trim();
         const price = toNum(row.querySelector('.it-price').value);
         const quantity = toNum(row.querySelector('.it-qty').value) || 1;
-        if(!name) return;
-        items.push({ name, price, quantity });
+        if (name) items.push({ name, price, quantity });
       });
 
-      const subtotalDelivery = toNum($$('#subtotalDelivery').value);
-      const subtotalDiscount = toNum($$('#subtotalDiscount').value);
-      const fee = toNum($$('#fee').value);
+      const subtotalDelivery = toNum($('#subtotalDelivery').value);
+      const subtotalDiscount = toNum($('#subtotalDiscount').value);
+      const fee = toNum($('#fee').value);
 
-      const itemsTotal = items.reduce((s,i)=> s + (toNum(i.price)*toNum(i.quantity)), 0);
+      const itemsTotal = items.reduce((s, i) => s + (toNum(i.price) * toNum(i.quantity)), 0);
       const total = itemsTotal + fee + subtotalDelivery - subtotalDiscount;
 
-      return {
-        items,
-        total,
-        subtotalDelivery,
-        subtotalDiscount,
-        fee,
-        orderType: $$('#orderType').value.trim(),
-        branchCode: $$('#branchCode').value.trim(),
-        PaymentMethod: $$('#PaymentMethod').value.trim(),
-        seller: $$('#seller').value.trim(),
-        createdAt: $$('#createdAt').value // datetime-local string
-      };
+      $('#total').value = total;
     }
 
-    function computeTotal(){
-      const p = collectPayload();
-      $$('#total').value = p.total;
-    }
-
-    function initDateNow(){
-      const el = $$('#createdAt');
-      if(!el.value){
+    function initDateNow() {
+      const el = $('#createdAt');
+      if (!el.value) {
         const now = new Date();
-        const pad = n => String(n).padStart(2,'0');
-        const s = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
+        const pad = n => String(n).padStart(2, '0');
+        const s = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
         el.value = s;
       }
     }
 
-    // Buttons
-    $$('#addItemBtn')?.addEventListener('click', ()=> newItemRow());
-    $$('#previewBtn')?.addEventListener('click', ()=>{
-      const p = collectPayload();
-      $$('#jsonPreview').textContent = JSON.stringify(p, null, 2);
-    });
-    $$('#saveBtn')?.addEventListener('click', async ()=>{
-      const payload = collectPayload();
-      $$('#jsonPreview').textContent = JSON.stringify(payload, null, 2);
-      try{
+    async function savePurchase() {
+      const items = [];
+      $$('#itemsBox .grid').forEach(row => {
+        const name = row.querySelector('.it-name').value.trim();
+        const price = toNum(row.querySelector('.it-price').value);
+        const quantity = toNum(row.querySelector('.it-qty').value) || 1;
+        if (name) items.push({ name, price, quantity });
+      });
+
+      if (items.length === 0) {
+        alert('Tambahkan minimal satu item');
+        return;
+      }
+
+      const payload = {
+        items,
+        total: toNum($('#total').value),
+        subtotalDelivery: toNum($('#subtotalDelivery').value),
+        subtotalDiscount: toNum($('#subtotalDiscount').value),
+        fee: toNum($('#fee').value),
+        orderType: $('#orderType').value.trim(),
+        branchCode: $('#branchCode').value.trim(),
+        PaymentMethod: $('#PaymentMethod').value.trim(),
+        seller: $('#seller').value.trim(),
+        createdAt: $('#createdAt').value
+      };
+
+      try {
         const res = await fetch('/purchases', {
-          method:'POST',
-          headers:{ 'Content-Type':'application/json' },
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
-        if(res.ok){ alert('✅ Tersimpan'); location.reload(); }
-        else{
-          const out = await res.json().catch(()=>({}));
+
+        if (res.ok) {
+          alert('✅ Pembelian tersimpan');
+          location.reload();
+        } else {
+          const out = await res.json().catch(() => ({}));
           alert('❌ Gagal: ' + (out.message || res.status));
         }
-      }catch(e){ console.error(e); alert('❌ Jaringan bermasalah'); }
-    });
+      } catch (e) {
+        console.error(e);
+        alert('❌ Jaringan bermasalah');
+      }
+    }
 
-    // init
-    newItemRow({ name:'Contoh: Kentang 1kg', price:15000, quantity:1 });
-    computeTotal();
+    // Initialize
+    initDateNow();
   </script>
+
 </body>
 </html>

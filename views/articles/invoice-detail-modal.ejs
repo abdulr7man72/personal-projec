@@ -1,0 +1,345 @@
+<!-- Modal تفاصيل الفاتورة -->
+<div id="invoiceDetailModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+  <div class="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+    
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-orange-500 to-amber-500 p-6 text-white">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-2xl font-extrabold">تفاصيل الفاتورة</h2>
+        <button onclick="closeInvoiceModal()" class="p-2 hover:bg-white/20 rounded-lg transition">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+      <div class="text-sm opacity-90">
+        <div id="modalInvoiceNumber" class="font-extrabold">#INV-001</div>
+        <div id="modalInvoiceDate" class="text-sm mt-1">2024-01-01</div>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="flex-1 overflow-y-auto p-6 bg-background">
+      
+      <!-- معلومات العميل -->
+      <div class="bg-white rounded-2xl p-4 mb-4 border border-slate-200">
+        <h3 class="text-sm font-extrabold text-slate-900 mb-3">معلومات العميل</h3>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <div class="text-xs text-slate-500 font-semibold">اسم العميل</div>
+            <div id="modalCustomerName" class="text-sm font-extrabold text-slate-900">-</div>
+          </div>
+          <div>
+            <div class="text-xs text-slate-500 font-semibold">الفرع</div>
+            <div id="modalCabang" class="text-sm font-extrabold text-slate-900">-</div>
+          </div>
+          <div>
+            <div class="text-xs text-slate-500 font-semibold">المصدر</div>
+            <div id="modalSource" class="text-sm font-extrabold text-slate-900">-</div>
+          </div>
+          <div>
+            <div class="text-xs text-slate-500 font-semibold">طريقة الدفع</div>
+            <div id="modalPaymentMethod" class="text-sm font-extrabold text-slate-900">-</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- الأصناف -->
+      <div class="bg-white rounded-2xl p-4 mb-4 border border-slate-200">
+        <h3 class="text-sm font-extrabold text-slate-900 mb-3">الأصناف</h3>
+        <div class="divide-y divide-slate-200" id="modalItemsList">
+          <!-- Items will be inserted here -->
+        </div>
+      </div>
+
+      <!-- الملخص المالي -->
+      <div class="bg-white rounded-2xl p-4 border border-slate-200">
+        <h3 class="text-sm font-extrabold text-slate-900 mb-3">الملخص المالي</h3>
+        <div class="space-y-2">
+          <div class="flex justify-between items-center">
+            <span class="text-sm text-slate-600">المجموع الفرعي</span>
+            <span id="modalSubtotal" class="text-sm font-extrabold text-slate-900">0</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-sm text-slate-600">الخصم</span>
+            <span id="modalDiscount" class="text-sm font-extrabold text-orange-600">-0</span>
+          </div>
+          <div class="border-t border-slate-200 pt-2 flex justify-between items-center">
+            <span class="text-base font-extrabold text-slate-900">الإجمالي</span>
+            <span id="modalTotal" class="text-lg font-extrabold text-orange-600">0</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Footer - Buttons -->
+    <div class="border-t border-slate-200 p-6 bg-white flex gap-3">
+      <button onclick="printInvoice()" 
+        class="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white font-extrabold py-3 rounded-xl transition-all">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4H7a2 2 0 01-2-2v-4a2 2 0 012-2h10a2 2 0 012 2v4a2 2 0 01-2 2zm2-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+        </svg>
+        طباعة
+      </button>
+      <button onclick="closeInvoiceModal()" 
+        class="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-900 font-extrabold py-3 rounded-xl transition-all">
+        إغلاق
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Print Styles -->
+<style>
+  @media print {
+    #invoiceDetailModal {
+      position: static;
+      background: white;
+    }
+    #invoiceDetailModal > div {
+      box-shadow: none;
+      max-height: 100vh;
+    }
+  }
+</style>
+
+<!-- JavaScript Functions -->
+<script>
+  // Store current invoice data
+  let currentInvoiceData = null;
+
+  function openInvoiceFromCard(element) {
+    // جمع البيانات من data attributes
+    const invoiceData = {
+      _id: element.getAttribute('data-id'),
+      invoiceNumber: element.getAttribute('data-invoice-number'),
+      customerName: element.getAttribute('data-customer-name'),
+      finishedAt: element.getAttribute('data-finished-at'),
+      date: element.getAttribute('data-date'),
+      cabang: element.getAttribute('data-cabang'),
+      source: element.getAttribute('data-source'),
+      paymentMethod: element.getAttribute('data-payment-method'),
+      total: parseFloat(element.getAttribute('data-amount')),
+      discount: parseFloat(element.getAttribute('data-discount')),
+      items: JSON.parse(element.getAttribute('data-items') || '[]')
+    };
+    
+    populateModal(invoiceData);
+    document.getElementById('invoiceDetailModal').classList.remove('hidden');
+  }
+
+  function openInvoiceModal(invoiceId, invoiceData = null) {
+    // إذا لم يتم توفير البيانات، جلبها من الخادم
+    if (!invoiceData) {
+      const cabang = '<%= cabang %>';
+      fetch(`/invoice/${cabang}/${invoiceId}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            populateModal(data.invoice);
+          }
+        })
+        .catch(err => console.error('Error fetching invoice:', err));
+    } else {
+      populateModal(invoiceData);
+    }
+
+    document.getElementById('invoiceDetailModal').classList.remove('hidden');
+  }
+
+  function closeInvoiceModal() {
+    document.getElementById('invoiceDetailModal').classList.add('hidden');
+    currentInvoiceData = null;
+  }
+
+  function populateModal(invoice) {
+    currentInvoiceData = invoice;
+
+    // Header info
+    document.getElementById('modalInvoiceNumber').textContent = `#${invoice.invoiceNumber || 'N/A'}`;
+    document.getElementById('modalInvoiceDate').textContent = 
+      new Date(invoice.finishedAt || invoice.date).toLocaleDateString('id-ID') + ' ' +
+      new Date(invoice.finishedAt || invoice.date).toLocaleTimeString('id-ID', {hour: '2-digit', minute: '2-digit'});
+
+    // Customer info
+    document.getElementById('modalCustomerName').textContent = invoice.customerName || 'Guest';
+    document.getElementById('modalCabang').textContent = invoice.cabang || '-';
+    document.getElementById('modalSource').textContent = 
+      invoice.source === 'inStore' ? 'In Store' : (invoice.source || '-');
+    document.getElementById('modalPaymentMethod').textContent = 
+      invoice.paymentMethod || (invoice.source === 'inStore' ? 'Cash' : '-');
+
+    // Items list
+    const itemsList = document.getElementById('modalItemsList');
+    itemsList.innerHTML = '';
+    
+    let subtotal = 0;
+    (invoice.items || []).forEach(item => {
+      const itemTotal = item.subtotal || (item.unitPrice * item.quantity);
+      subtotal += itemTotal;
+      
+      const itemHtml = `
+        <div class="py-3">
+          <div class="flex justify-between items-start mb-1">
+            <div>
+              <div class="text-sm font-extrabold text-slate-900">${item.name || 'Unknown'}</div>
+              <div class="text-xs text-slate-500">× ${item.quantity} × ${(item.unitPrice || 0).toLocaleString('id-ID')}</div>
+            </div>
+            <div class="text-sm font-extrabold text-slate-900">${(itemTotal || 0).toLocaleString('id-ID')}</div>
+          </div>
+          ${item.note ? `<div class="text-xs text-slate-500 italic">Note: ${item.note}</div>` : ''}
+          ${item.addons && item.addons.length > 0 ? `<div class="text-xs text-slate-500">Addons: ${item.addons.join(', ')}</div>` : ''}
+        </div>
+      `;
+      itemsList.innerHTML += itemHtml;
+    });
+
+    // Financial summary
+    const discount = invoice.discount || 0;
+    const total = invoice.total || subtotal - discount;
+    
+    document.getElementById('modalSubtotal').textContent = subtotal.toLocaleString('id-ID');
+    document.getElementById('modalDiscount').textContent = `-${discount.toLocaleString('id-ID')}`;
+    document.getElementById('modalTotal').textContent = total.toLocaleString('id-ID');
+  }
+
+  function printInvoice() {
+    if (!currentInvoiceData) return;
+    
+    const invoice = currentInvoiceData;
+    const printWindow = window.open('', '', 'height=600,width=800');
+    
+    let itemsHtml = '';
+    (invoice.items || []).forEach(item => {
+      const itemTotal = item.subtotal || (item.unitPrice * item.quantity);
+      itemsHtml += `
+        <tr style="border-bottom: 1px solid #ddd;">
+          <td style="padding: 10px; text-align: left;">${item.name}</td>
+          <td style="padding: 10px; text-align: center;">${item.quantity}</td>
+          <td style="padding: 10px; text-align: right;">${(item.unitPrice || 0).toLocaleString('id-ID')}</td>
+          <td style="padding: 10px; text-align: right; font-weight: bold;">${itemTotal.toLocaleString('id-ID')}</td>
+        </tr>
+      `;
+    });
+
+    const discount = invoice.discount || 0;
+    const subtotal = invoice.items.reduce((sum, item) => sum + (item.subtotal || (item.unitPrice * item.quantity)), 0);
+    const total = invoice.total || (subtotal - discount);
+
+    const printContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Invoice #${invoice.invoiceNumber}</title>
+        <style>
+          * { margin: 0; padding: 0; font-family: Arial, sans-serif; }
+          body { padding: 20px; }
+          .container { max-width: 800px; margin: 0 auto; border: 1px solid #ddd; padding: 20px; }
+          .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #f97316; padding-bottom: 20px; }
+          .header h1 { font-size: 28px; margin-bottom: 10px; color: #f97316; }
+          .invoice-number { font-size: 18px; color: #666; margin-bottom: 20px; }
+          .info-row { display: flex; justify-content: space-between; margin-bottom: 10px; }
+          .info-label { font-weight: bold; width: 150px; }
+          .info-value { flex: 1; }
+          .section-title { font-weight: bold; margin-top: 20px; margin-bottom: 10px; font-size: 14px; background: #f5f5f5; padding: 10px; }
+          table { width: 100%; margin: 20px 0; }
+          table th { background: #f97316; color: white; padding: 10px; text-align: left; }
+          table td { padding: 10px; }
+          .total-section { margin-top: 20px; text-align: right; }
+          .total-row { display: flex; justify-content: flex-end; gap: 30px; margin: 5px 0; }
+          .total-label { width: 150px; }
+          .total-value { width: 100px; text-align: right; }
+          .grand-total { font-size: 18px; font-weight: bold; color: #f97316; margin-top: 10px; padding-top: 10px; border-top: 2px solid #f97316; }
+          .footer { margin-top: 30px; text-align: center; color: #666; font-size: 12px; }
+          @media print {
+            body { margin: 0; padding: 0; }
+            .container { border: none; }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>INVOICE</h1>
+            <div class="invoice-number">#${invoice.invoiceNumber}</div>
+          </div>
+
+          <div class="info-row">
+            <div class="info-label">Tanggal:</div>
+            <div class="info-value">${new Date(invoice.finishedAt || invoice.date).toLocaleDateString('id-ID')}</div>
+          </div>
+          <div class="info-row">
+            <div class="info-label">Waktu:</div>
+            <div class="info-value">${new Date(invoice.finishedAt || invoice.date).toLocaleTimeString('id-ID')}</div>
+          </div>
+          <div class="info-row">
+            <div class="info-label">Nama Pelanggan:</div>
+            <div class="info-value">${invoice.customerName || 'Guest'}</div>
+          </div>
+          <div class="info-row">
+            <div class="info-label">Cabang:</div>
+            <div class="info-value">${invoice.cabang}</div>
+          </div>
+          <div class="info-row">
+            <div class="info-label">Metode Pembayaran:</div>
+            <div class="info-value">${invoice.paymentMethod || '-'}</div>
+          </div>
+
+          <div class="section-title">Daftar Item</div>
+          <table>
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th style="text-align: center;">Qty</th>
+                <th style="text-align: right;">Harga</th>
+                <th style="text-align: right;">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${itemsHtml}
+            </tbody>
+          </table>
+
+          <div class="total-section">
+            <div class="total-row">
+              <div class="total-label">Subtotal:</div>
+              <div class="total-value">${subtotal.toLocaleString('id-ID')}</div>
+            </div>
+            <div class="total-row">
+              <div class="total-label">Diskon:</div>
+              <div class="total-value">-${discount.toLocaleString('id-ID')}</div>
+            </div>
+            <div class="grand-total">
+              <div class="total-row">
+                <div class="total-label">TOTAL:</div>
+                <div class="total-value">${total.toLocaleString('id-ID')}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="footer">
+            <p>Terima kasih atas pembelian Anda</p>
+            <p style="margin-top: 10px;">The Shawarma POS System</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    printWindow.document.write(printContent);
+    printWindow.document.close();
+    
+    setTimeout(() => {
+      printWindow.print();
+      printWindow.close();
+    }, 250);
+  }
+
+  // Close modal when clicking outside
+  document.getElementById('invoiceDetailModal')?.addEventListener('click', (e) => {
+    if (e.target.id === 'invoiceDetailModal') {
+      closeInvoiceModal();
+    }
+  });
+</script>
